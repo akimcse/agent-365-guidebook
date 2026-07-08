@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>② 에이전트 신원 · 위험 — Agent 365 가이드북</title>
+<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const t=p||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
+<style>
+:root{
+  color-scheme: light;
+  --cp-bg:#faf9fb; --cp-bg-elevated:#ffffff; --cp-surface:#ffffff; --cp-surface-soft:#f3f2f6;
+  --cp-border:#e4e2ea; --cp-border-strong:#a9a7b4;
+  --cp-text:#1b1a21; --cp-text-muted:#4a4858; --cp-text-soft:#6b6980;
+  --cp-accent:#5b5fc7; --cp-accent-hover:#4a4eb5; --cp-accent-soft:rgba(91,95,199,0.10); --cp-accent-fg:#ffffff;
+  --cp-success:#0f7b3f; --cp-danger:#c4314b; --cp-warning:#b8860b; --cp-link:#0f6cbd;
+  --cp-grad:linear-gradient(120deg,#ece9fb 0%,#e8f1fb 52%,#f6fbff 100%);
+  --cp-grad-accent:linear-gradient(120deg,#5b5fc7 0%,#0f6cbd 100%);
+  --cp-shadow:0 18px 48px rgba(38,36,64,0.12);
+}
+html[data-theme="dark"]{
+  color-scheme: dark;
+  --cp-bg:#1c1b22; --cp-bg-elevated:#232230; --cp-surface:#26252f; --cp-surface-soft:#2d2c38;
+  --cp-border:#3a3947; --cp-border-strong:#57556a;
+  --cp-text:#e7e6ee; --cp-text-muted:#a9a7ba; --cp-text-soft:#8f8da3;
+  --cp-accent:#a6a9f2; --cp-accent-hover:#b8bbf6; --cp-accent-soft:rgba(166,169,242,0.14); --cp-accent-fg:#1a1a22;
+  --cp-success:#4ade80; --cp-danger:#f87171; --cp-warning:#fbbf24; --cp-link:#6cb2f0;
+  --cp-grad:linear-gradient(120deg,#2a2740 0%,#22283c 52%,#20232e 100%);
+  --cp-grad-accent:linear-gradient(120deg,#7c80e0 0%,#3f8ed0 100%);
+  --cp-shadow:0 18px 48px rgba(0,0,0,0.36);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.65;-webkit-font-smoothing:antialiased}
+.gb-layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.gb-side{background:var(--cp-bg-elevated);border-right:1px solid var(--cp-border);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.gb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 2px}
+.gb-logo{width:34px;height:34px;border-radius:9px;background:var(--cp-grad-accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem;letter-spacing:-.02em}
+.gb-btxt{font-weight:800;font-size:.98rem;letter-spacing:-.01em}
+.gb-bsub{font-size:.72rem;color:var(--cp-text-soft);padding:2px 8px 18px}
+.gb-glabel{font-size:.64rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--cp-text-soft);padding:0 8px;margin:14px 0 7px}
+.gb-nav a{display:flex;align-items:flex-start;gap:10px;text-decoration:none;color:var(--cp-text);padding:10px 12px;border-radius:10px;font-size:.88rem;transition:background .15s;margin-bottom:3px}
+.gb-nav a .ic{font-size:.95rem;line-height:1.5}
+.gb-nav a .lb{font-weight:600}
+.gb-nav a .lb small{display:block;font-weight:400;font-size:.72rem;color:var(--cp-text-soft);margin-top:1px}
+.gb-nav a:hover{background:var(--cp-surface-soft)}
+.gb-nav a.on{background:var(--cp-accent-soft);color:var(--cp-accent)}
+.gb-nav a.on .lb small{color:var(--cp-accent)}
+.gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
+.gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
+.gb-main{min-width:0}
+@media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--cp-border)}}
+
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; background: var(--cp-bg); color: var(--cp-text); line-height: 1.5; padding: 32px 24px 56px; }
+.wrap { max-width: 1220px; margin: 0 auto; }
+code, .mono { font-family: Consolas, "Courier New", Courier, monospace; }
+header.page { margin-bottom: 22px; }
+header.page .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cp-accent); margin-bottom: 6px; }
+header.page h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6px; }
+.section-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cp-text-soft); margin: 30px 0 12px; }
+.card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14); padding: 18px 20px; }
+.src { margin-top: 10px; font-size: 10.5px; color: var(--cp-text-soft); line-height: 1.7; }
+.src b { color: var(--cp-text-muted); font-weight: 700; }
+.src a { color: var(--cp-link); text-decoration: none; word-break: break-all; }
+.src a:hover { text-decoration: underline; }
+
+/* Axis banner */
+.axis-banner { background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); border-radius: 12px; padding: 12px 16px; font-size: 12.5px; color: var(--cp-text-muted); margin-bottom: 16px; }
+.axis-banner b { color: var(--cp-text); }
+.axis-banner .pill { display:inline-block; font-size:10.5px; font-weight:700; padding:1px 8px; border-radius:999px; margin:0 2px; }
+.pill.conv { background: rgba(0,120,212,0.12); color: var(--cp-link); }
+.pill.auto { background: rgba(245,158,11,0.16); color: var(--cp-warning); }
+
+/* 3 identity cards */
+.id-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.id-card { position: relative; border-radius: 14px; border: 1px solid var(--cp-border); background: var(--cp-surface); padding: 0 0 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.10); }
+.id-card .top { height: 5px; }
+.id-card.user .top { background: var(--user); }
+.id-card.agent .top { background: var(--agent); }
+.id-card.dw .top { background: var(--dw); }
+.id-card .inner { padding: 16px 18px 0; }
+.id-card .ico { width: 42px; height: 42px; border-radius: 11px; display:flex; align-items:center; justify-content:center; font-size: 22px; margin-bottom: 11px; }
+.id-card.user .ico { background: var(--user-soft); }
+.id-card.agent .ico { background: var(--agent-soft); }
+.id-card.dw .ico { background: var(--dw-soft); }
+.id-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+.id-card .sub2 { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.id-card.user .sub2 { color: var(--user); }
+.id-card.agent .sub2 { color: var(--agent); }
+.id-card.dw .sub2 { color: var(--dw); }
+.id-card .badges { margin-bottom: 12px; }
+.id-card .badges .pill { font-size:10px; }
+.fld { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cp-text-soft); margin: 12px 0 3px; }
+.val { font-size: 13px; font-weight: 700; color: var(--cp-text); }
+.val.mono { font-size: 12px; }
+.note-red { font-size: 11px; color: var(--cp-accent); margin-top: 10px; line-height: 1.5; }
+.logbox { margin: 12px 18px 0; border-radius: 9px; padding: 9px 12px; font-size: 11.5px; font-weight: 600; }
+.id-card.user .logbox { background: var(--user-soft); color: var(--user); }
+.id-card.agent .logbox { background: var(--agent-soft); color: var(--agent); }
+.id-card.dw .logbox { background: var(--dw-soft); color: var(--dw); }
+.logbox .sm { display:block; font-weight: 500; color: var(--cp-text-soft); font-size: 10.5px; margin-top: 2px; }
+.riskrow { margin: 10px 18px 0; display:flex; align-items:center; gap:8px; font-size: 12px; }
+.riskrow .lbl { color: var(--cp-text-soft); }
+.riskrow .rv { font-weight: 700; }
+.rv.ru { color: var(--user); }
+.rv.ra { color: var(--agent); }
+
+/* four tabs mapping */
+.tabmap { display:grid; grid-template-columns: 1fr; gap: 0; }
+.tabmap table { width:100%; border-collapse: collapse; font-size: 12.5px; }
+.tabmap th { text-align:left; font-size: 10.5px; letter-spacing:0.04em; text-transform:uppercase; color: var(--cp-text-soft); padding: 8px 10px; border-bottom: 2px solid var(--cp-border); }
+.tabmap td { padding: 10px; border-bottom: 1px dashed var(--cp-border); vertical-align: middle; }
+.tabmap tr:last-child td { border-bottom: none; }
+.tabmap .tab-nm { font-weight: 700; }
+.chip { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+.chip.yes { background: rgba(22,163,74,0.14); color: var(--cp-success); }
+.chip.no { background: var(--cp-surface-soft); color: var(--cp-text-soft); border:1px solid var(--cp-border); }
+.chip.user { background: var(--user-soft); color: var(--user); }
+.chip.agent { background: var(--agent-soft); color: var(--agent); }
+.chip.dw { background: var(--dw-soft); color: var(--dw); }
+.chip.out { background: rgba(220,38,38,0.10); color: var(--cp-danger); }
+
+/* flow svg */
+.flowcard svg { width: 100%; height: auto; display: block; }
+
+/* findings */
+.find-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.finding { border-radius: 11px; border: 1px solid var(--cp-border); padding: 13px 15px; background: var(--cp-surface); }
+.finding .h { font-size: 12.5px; font-weight: 700; margin-bottom: 5px; display:flex; align-items:center; gap:7px; }
+.finding .h .n { width:20px; height:20px; border-radius:6px; background: var(--cp-accent-soft); color: var(--cp-accent); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
+.finding p { font-size: 11.5px; color: var(--cp-text-muted); line-height: 1.55; }
+.finding .tag2 { display:inline-block; font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:999px; margin-left:4px; }
+.tag2.emp { background: rgba(15,157,140,0.14); color: var(--dw); }
+.tag2.doc { background: rgba(0,120,212,0.12); color: var(--cp-link); }
+
+/* detections */
+.det-wrap { display:grid; grid-template-columns: repeat(2,1fr); gap: 9px; }
+.det { display:flex; gap:9px; align-items:flex-start; background: var(--cp-surface-soft); border-radius: 9px; padding: 9px 11px; font-size: 11.5px; }
+.det code { font-size: 11px; color: var(--cp-accent); font-weight: 700; }
+.det .d2 { color: var(--cp-text-muted); font-size: 11px; }
+
+/* linchpin / gap */
+.linchpin { margin-top: 14px; background: rgba(245,158,11,0.08); border: 1px solid var(--cp-warning); border-radius: 10px; padding: 12px 15px; font-size: 12px; color: var(--cp-text-muted); }
+.linchpin b { color: var(--cp-text); }
+.gapbox { margin-top: 12px; background: rgba(220,38,38,0.05); border: 1px solid rgba(220,38,38,0.35); border-radius: 10px; padding: 12px 15px; font-size: 11.5px; color: var(--cp-text-muted); }
+.gapbox b { color: var(--cp-danger); }
+.gapbox ol { margin: 6px 0 0 18px; }
+.gapbox li { margin: 3px 0; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 12px; color: var(--cp-text-muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+@media (max-width: 900px){ .id-grid,.find-grid,.det-wrap,.cplane{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body><div class="gb-layout"><aside class="gb-side">
+    <div class="gb-brand"><div class="gb-logo">A365</div><div class="gb-btxt">Agent 365 가이드북</div></div>
+    <div class="gb-bsub">에이전트를 관찰·관리·보호하는 컨트롤 플레인</div>
+    <div class="gb-glabel">시작</div>
+    <nav class="gb-nav">
+      <a href="index.html" class=""><span class="ic">🏠</span><span class="lb">홈<small>Agent 365 개요</small></span></a>
+      <div class="gb-glabel">심화 문서</div>
+      <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
+      <a href="identity-risk.html" class="on"><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
+      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">③ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
+    </nav>
+    <div class="gb-sfoot">공식 근거
+      <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
+      <a href="https://github.com/akimcse/agent-365-guidebook" target="_blank" rel="noopener">GitHub 레포 ↗</a>
+    </div>
+  </aside><main class="gb-main">
+<div class="wrap">
+  <header class="page">
+    <div class="eyebrow">Microsoft Entra Agent ID · ID Protection</div>
+    <h1>Copilot Studio 에이전트 — 신원 · Sign-in 로그 · Risky Agents 흐름</h1>
+    <p class="sub">3가지 신원 축이 어떤 sign-in 로그에 찍히고, 어떤 위험 리포트로 라우팅되는가 — 공식 문서 + 데모 테넌트 실측 기준 (2026-07)</p>
+  </header>
+
+  <!-- ================= SECTION 1 : 3-axis identity ================= -->
+  <div class="section-label">① 신원 3축 — 누구로 인증하나가 탐지 루트를 결정</div>
+
+  <div class="axis-banner">
+    <b>축 A · 신원 모델</b> (탐지 루트 결정) &nbsp;|&nbsp; <b>축 B · 실행 방식</b> (신원과 <u>독립적으로</u> 겹쳐 적용):
+    <span class="pill conv">대화형</span> · <span class="pill auto">오토노머스</span>
+    &nbsp;— 오토노머스(트리거·Recurrence)라고 자동으로 "자체 신원"이 아님. <b>표준 커넥터는 오토노머스여도 여전히 User로 인증됨.</b>
+  </div>
+
+  <div class="id-grid">
+    <!-- USER / OBO -->
+    <div class="id-card user">
+      <div class="top"></div>
+      <div class="inner">
+        <div class="ico">👤</div>
+        <h3>사용자를 대신하여</h3>
+        <div class="sub2">OBO · 위임 (Delegated)</div>
+        <div class="badges"><span class="pill conv">대화형</span><span class="pill auto">오토노머스</span></div>
+        <div class="fld">토큰 주체 (Sign-in subject)</div>
+        <div class="val">사용자 (User)</div>
+        <div class="fld">Entra 객체 타입</div>
+        <div class="val mono">user</div>
+        <div class="note-red">표준 PP 커넥터(SharePoint·Teams 툴)는 <b>항상 사용자(위임)로 인증</b>. 툴 호출을 에이전트 자체 신원으로 하는 일은 원천적으로 없음.</div>
+      </div>
+      <div class="logbox">Users ▸ Sign-in logs<span class="sm">에이전트=client app 컨텍스트로 태깅</span></div>
+      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ru">Risky users</span></div>
+    </div>
+
+    <!-- AGENT / app-only -->
+    <div class="id-card agent">
+      <div class="top"></div>
+      <div class="inner">
+        <div class="ico">🤖</div>
+        <h3>자체 신원으로</h3>
+        <div class="sub2">App-only · Service principal</div>
+        <div class="badges"><span class="pill auto">오토노머스</span> <span class="pill conv">대화형(Teams채널)</span></div>
+        <div class="fld">토큰 주체 (Sign-in subject)</div>
+        <div class="val">에이전트 ID (Entra Agent ID)</div>
+        <div class="fld">Entra 객체 타입</div>
+        <div class="val mono">servicePrincipal</div>
+        <div class="note-red">★ 현재 <b>Teams 채널</b>만 Entra Agent ID 토큰으로 E2E 인증하는 유일한 표면. M365 Copilot 등 다른 표면은 아직 커넥터 인증. <span style="color:var(--cp-text-soft)">(실측 진행 중)</span></div>
+      </div>
+      <div class="logbox">Agents ▸ Service principal sign-ins<span class="sm">데모 실측: Contoso Helper SP 로그 확인됨 ✓</span></div>
+      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ra">Risky agents</span> <span class="chip agent">riskyAgentIdentity</span></div>
+    </div>
+
+    <!-- DIGITAL WORKER -->
+    <div class="id-card dw">
+      <div class="top"></div>
+      <div class="inner">
+        <div class="ico">🪪</div>
+        <h3>사용자로서</h3>
+        <div class="sub2">Digital Worker · AI teammate</div>
+        <div class="badges"><span class="pill auto">오토노머스</span></div>
+        <div class="fld">토큰 주체 (Sign-in subject)</div>
+        <div class="val">에이전트 전용 사용자 계정</div>
+        <div class="fld">Entra 객체 타입</div>
+        <div class="val mono">agentUser <span style="color:var(--cp-text-soft);font-weight:500">(user 하위타입)</span></div>
+        <div class="note-red">OBO 아님 → 뒤에 사람 없음. 그 계정이 곧 에이전트. agent identity와 <b>1:1</b>로 짝(둘 다 존재). <span style="color:var(--cp-danger)">일반 user 계정을 쓰면 Risky <u>users</u>로 새고 ML 저하 — 반드시 agentUser 타입.</span></div>
+      </div>
+      <div class="logbox">Agents ▸ User sign-ins<span class="sm">interactive · non-interactive (agentType=agentIDuser)</span></div>
+      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ra">Risky agents</span> <span class="chip dw">riskyAgentUser</span></div>
+    </div>
+  </div>
+  <div class="card src" style="margin-top:12px">
+    <b>출처</b>
+    <a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/agent-id">conditional-access/agent-id</a> (3 access patterns · "digital worker") ·
+    <a href="https://learn.microsoft.com/en-us/entra/agent-id/concept-agent-id-design-patterns">concept-agent-id-design-patterns</a> ·
+    <a href="https://learn.microsoft.com/en-us/entra/agent-id/agent-users">agent-users</a> ·
+    <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-certificates-configuration-values">requirements-certificates-configuration-values</a> (Teams-only E2E)
+  </div>
+
+  <!-- ================= SECTION 2 : 4 tabs → risk routing ================= -->
+  <div class="section-label">② Agents ▸ Sign-in logs 4개 탭 → 위험 라우팅 (라우팅 기준 = 탭 위치 ✗, Entra 객체 타입 ✓)</div>
+  <div class="card tabmap">
+    <table>
+      <thead>
+        <tr><th>Sign-in 로그 탭</th><th>찍히는 신원</th><th>객체 타입</th><th>Risky Agents?</th><th>가는 곳 / Graph</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tab-nm">User sign-ins (interactive)</td>
+          <td><span class="chip user">사용자 (위임)</span></td>
+          <td class="mono">user</td>
+          <td><span class="chip no">✗ 아님</span></td>
+          <td>Risky <b>users</b> · <span class="mono">riskyUsers</span></td>
+        </tr>
+        <tr>
+          <td class="tab-nm">User sign-ins (non-interactive)</td>
+          <td><span class="chip user">사용자/작성자 (OBO)</span> <span class="chip dw">agentUser</span></td>
+          <td class="mono">user / agentUser</td>
+          <td><span class="chip no">✗ (OBO)</span> <span class="chip yes">✓ (agentUser)</span></td>
+          <td>OBO→riskyUsers · <b>agentUser→riskyAgents</b></td>
+        </tr>
+        <tr>
+          <td class="tab-nm">Service principal sign-ins</td>
+          <td><span class="chip agent">에이전트 신원 (app-only)</span></td>
+          <td class="mono">servicePrincipal</td>
+          <td><span class="chip yes">✓ 여기!</span></td>
+          <td>Risky <b>agents</b> · <span class="mono">riskyAgentIdentity</span></td>
+        </tr>
+        <tr>
+          <td class="tab-nm">Managed identity sign-ins</td>
+          <td><span class="chip no">관리 ID (MI)</span></td>
+          <td class="mono">managedIdentity</td>
+          <td><span class="chip out">범위 밖</span></td>
+          <td>ID Protection workload risk 제외</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="linchpin" style="margin-top:14px">
+      🔑 <b>핵심:</b> "Agents 블레이드 User 탭에 뜬다"가 자동으로 Risky Agents를 뜻하지 않음. 위험 파이프라인은 <b>객체 타입</b>으로 갈림 — <span class="mono">agentUser</span>는 riskyAgents로, 일반 <span class="mono">user</span>는 <span class="mono">Is Agent=Yes</span> 태그가 있어도 riskyUsers로 라우팅됨.
+    </div>
+    <div class="src">
+      <b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/identity-professional/sign-in-audit-logs-agents">sign-in-audit-logs-agents</a> (4탭·agentIDuser) ·
+      <a href="https://learn.microsoft.com/en-us/graph/api/resources/riskyagent">graph/riskyagent</a> (identityType: agentIdentity·agentUser·blueprint) ·
+      <a href="https://learn.microsoft.com/en-us/graph/api/resources/riskyagentuser">graph/riskyagentuser</a> ·
+      <a href="https://learn.microsoft.com/en-us/entra/id-protection/concept-risky-agents">concept-risky-agents</a> (OBO→user)
+    </div>
+  </div>
+
+  <!-- ================= SECTION 3 : end-to-end flow SVG ================= -->
+  <div class="section-label">③ 전체 흐름 — 표면(채널) → 인증 신원 → Sign-in 탭 → 위험 리포트</div>
+  <div class="card flowcard">
+    <svg viewBox="0 0 1160 430" role="img" aria-label="에이전트 인증 흐름도">
+      <defs>
+        <marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#919191"/></marker>
+        <marker id="arwR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#b11f4b"/></marker>
+      </defs>
+      <!-- column headers -->
+      <text x="120" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#6f6f6f">표면 / 채널</text>
+      <text x="410" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#6f6f6f">인증 신원</text>
+      <text x="720" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#6f6f6f">Sign-in 로그 탭</text>
+      <text x="1030" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#6f6f6f">위험 리포트</text>
+
+      <!-- SURFACES -->
+      <g font-size="12" font-weight="600">
+        <rect x="20" y="48" width="200" height="46" rx="9" fill="#fff" stroke="#dedede"/>
+        <text x="120" y="68" text-anchor="middle" fill="#242424">커넥터 툴 호출</text>
+        <text x="120" y="84" text-anchor="middle" fill="#6f6f6f" font-size="10.5" font-weight="500">SharePoint·Teams 툴 (OBO/Maker)</text>
+
+        <rect x="20" y="126" width="200" height="46" rx="9" fill="#fff" stroke="#7c3aed"/>
+        <text x="120" y="146" text-anchor="middle" fill="#242424">Teams 채널 대화</text>
+        <text x="120" y="162" text-anchor="middle" fill="#6f6f6f" font-size="10.5" font-weight="500">사람 → 에이전트 (E2E auth)</text>
+
+        <rect x="20" y="204" width="200" height="46" rx="9" fill="#fff" stroke="#dedede"/>
+        <text x="120" y="224" text-anchor="middle" fill="#242424">M365 Copilot 표면</text>
+        <text x="120" y="240" text-anchor="middle" fill="#6f6f6f" font-size="10.5" font-weight="500">아직 커넥터 인증 (SP 미생성)</text>
+
+        <rect x="20" y="298" width="200" height="46" rx="9" fill="#fff" stroke="#0f9d8c"/>
+        <text x="120" y="318" text-anchor="middle" fill="#242424">자율 실행 (Digital Worker)</text>
+        <text x="120" y="334" text-anchor="middle" fill="#6f6f6f" font-size="10.5" font-weight="500">트리거/스케줄 · 사람 없음</text>
+      </g>
+
+      <!-- IDENTITIES -->
+      <g font-size="12.5" font-weight="700">
+        <rect x="320" y="52" width="180" height="40" rx="9" fill="rgba(0,120,212,0.10)" stroke="#0078d4"/>
+        <text x="410" y="76" text-anchor="middle" fill="#0078d4">사용자 (user)</text>
+
+        <rect x="320" y="130" width="180" height="40" rx="9" fill="rgba(124,58,237,0.10)" stroke="#7c3aed"/>
+        <text x="410" y="154" text-anchor="middle" fill="#7c3aed">Agent ID (SP)</text>
+
+        <rect x="320" y="300" width="180" height="40" rx="9" fill="rgba(15,157,140,0.10)" stroke="#0f9d8c"/>
+        <text x="410" y="324" text-anchor="middle" fill="#0f9d8c">agentUser 계정</text>
+      </g>
+
+      <!-- SIGN-IN TABS -->
+      <g font-size="11.5" font-weight="700">
+        <rect x="630" y="52" width="180" height="40" rx="9" fill="#fff" stroke="#dedede"/>
+        <text x="720" y="76" text-anchor="middle" fill="#242424">Users ▸ Sign-in</text>
+
+        <rect x="630" y="130" width="180" height="40" rx="9" fill="#fff" stroke="#7c3aed"/>
+        <text x="720" y="154" text-anchor="middle" fill="#242424">Agents ▸ Service principal</text>
+
+        <rect x="630" y="300" width="180" height="40" rx="9" fill="#fff" stroke="#0f9d8c"/>
+        <text x="720" y="324" text-anchor="middle" fill="#242424">Agents ▸ User sign-ins</text>
+      </g>
+
+      <!-- RISK REPORTS -->
+      <g font-size="12.5" font-weight="700">
+        <rect x="940" y="52" width="180" height="40" rx="9" fill="rgba(0,120,212,0.10)" stroke="#0078d4"/>
+        <text x="1030" y="76" text-anchor="middle" fill="#0078d4">Risky users</text>
+
+        <rect x="940" y="196" width="180" height="60" rx="9" fill="var(--cp-highlight)" stroke="#b11f4b" stroke-width="1.5"/>
+        <text x="1030" y="220" text-anchor="middle" fill="#b11f4b">Risky agents</text>
+        <text x="1030" y="238" text-anchor="middle" fill="#6f6f6f" font-size="10" font-weight="500">signInSpike 등</text>
+
+        <rect x="940" y="298" width="180" height="40" rx="9" fill="#f5f5f5" stroke="#dedede"/>
+        <text x="1030" y="322" text-anchor="middle" fill="#6f6f6f" font-size="11">범위 밖 (MI)</text>
+      </g>
+
+      <!-- edges surface->identity -->
+      <g fill="none" stroke="#919191" stroke-width="1.6" marker-end="url(#arw)">
+        <path d="M220,71 L318,72"/>
+        <path d="M220,149 L318,150"/>
+        <path d="M220,227 C270,227 275,150 318,150"/>
+        <path d="M220,321 L318,321"/>
+      </g>
+      <!-- edges identity->tab -->
+      <g fill="none" stroke="#919191" stroke-width="1.6" marker-end="url(#arw)">
+        <path d="M500,72 L628,72"/>
+        <path d="M500,150 L628,150"/>
+        <path d="M500,320 L628,320"/>
+      </g>
+      <!-- edges tab->risk -->
+      <g fill="none" stroke-width="1.8">
+        <path d="M810,72 L938,72" stroke="#919191" marker-end="url(#arw)"/>
+        <path d="M810,150 C880,150 880,215 938,220" stroke="#b11f4b" marker-end="url(#arwR)"/>
+        <path d="M810,320 C880,320 880,250 938,235" stroke="#b11f4b" marker-end="url(#arwR)"/>
+      </g>
+
+      <!-- spike callout -->
+      <text x="720" y="112" text-anchor="middle" font-size="10.5" fill="#b11f4b" font-weight="700">★ signInSpike 연료 = 이 탭 건수 급증</text>
+    </svg>
+    <div class="legend">
+      <span><i style="background:var(--user)"></i> 사용자 / OBO → Risky users</span>
+      <span><i style="background:var(--agent)"></i> Agent ID(SP) → Risky agents</span>
+      <span><i style="background:var(--dw)"></i> Digital Worker(agentUser) → Risky agents</span>
+    </div>
+  </div>
+
+  <!-- ================= SECTION 4 : empirical + doc findings ================= -->
+  <div class="section-label">④ 실측 + 문서로 확정된 사실 <span style="font-weight:500;text-transform:none;letter-spacing:0"> (<span class="tag2 emp">실측</span> 데모 테넌트 · <span class="tag2 doc">문서</span> Microsoft Learn)</span></div>
+  <div class="find-grid">
+    <div class="finding">
+      <div class="h"><span class="n">1</span> 커넥터 툴 = 항상 User <span class="tag2 emp">실측</span><span class="tag2 doc">문서</span></div>
+      <p>SharePoint·Teams 툴 호출은 End-user든 Maker든 <b>전부 User sign-in에 찍힘</b>. 데모에서 "전부 User로 찍힘" 확인. 에이전트 신원 sign-in 없음.</p>
+    </div>
+    <div class="finding">
+      <div class="h"><span class="n">2</span> Teams 채널 대화 = 에이전트 신원 <span class="tag2 emp">실측</span><span class="tag2 doc">문서</span></div>
+      <p>Contoso Helper에 Teams로 말 걸자 <b>Service principal 탭에 SP sign-in 실제로 찍힘</b> (SP ID e10678ab…). 채널만이 Entra Agent ID로 E2E 인증.</p>
+    </div>
+    <div class="finding">
+      <div class="h"><span class="n">3</span> 메시지 수 ≠ sign-in 수 <span class="tag2 emp">실측</span></div>
+      <p>같은 세션에서 연속 메시지 보내도 <b>토큰 캐싱(~60–90분)으로 로그 안 늘어남</b>. 간격 두고 새 상호작용하면 새 sign-in 발생. → <b>연료는 "새 세션/토큰 발급"</b>.</p>
+    </div>
+    <div class="finding">
+      <div class="h"><span class="n">4</span> Digital Worker = Risky Agents <span class="tag2 doc">문서</span></div>
+      <p>OBO 아님. <span class="mono">agentUser</span>는 <span class="mono">riskyAgents</span>의 하위타입 <span class="mono">riskyAgentUser</span>로 라우팅. CA도 "Agent risk" 조건 사용. <b>User가 아니라 Agent 위험.</b></p>
+    </div>
+  </div>
+
+  <!-- ================= SECTION 5 : detections ================= -->
+  <div class="section-label">⑤ Risky Agents 탐지 목록 — 모두 "에이전트 자체 신원 활동"(SP / agentUser) 기반</div>
+  <div class="card">
+    <div class="det-wrap">
+      <div class="det"><code>signInSpike</code><span class="d2">에이전트 sign-in 볼륨 비정상 급증 <b style="color:var(--cp-accent)">← 우리 표적</b></span></div>
+      <div class="det"><code>unfamiliarResourceAccess</code><span class="d2">평소 안 쓰던 리소스 접근</span></div>
+      <div class="det"><code>entraDirectoryReconnaissance</code><span class="d2">디렉터리 정찰성 조작</span></div>
+      <div class="det"><code>failedAccessAttempt</code><span class="d2">무권한 리소스 접근 실패</span></div>
+      <div class="det"><code>earlyLifeMaliciousActivity</code><span class="d2">신규 에이전트의 이상 행동</span></div>
+      <div class="det"><code>threatIntelligenceAccount</code><span class="d2">알려진 공격 패턴</span></div>
+      <div class="det"><code>suspiciousCredentialUsage</code><span class="d2">새 자격증명 추가 후 사용</span></div>
+      <div class="det"><code>riskyAgentIdentityBlueprintPrincipal</code><span class="d2">블루프린트 주체 위험</span></div>
+    </div>
+    <div class="linchpin">
+      🔑 <b>signInSpike 유발 공식:</b> 표면 = <b>Teams</b>(유일하게 Agent ID 인증) · 연료 = <b>새 세션/토큰 발급</b>(메시지 수 아님) · 방법 = 다수 사용자 × 새 대화 또는 DirectLine API로 conversation 대량 생성 · 관측 = <b>Service principal 탭</b> · 검증 = Risky agents (ML 배치, 최대 24h 지연).
+    </div>
+    <div class="gapbox">
+      <b>⚠️ 문서가 침묵하는 갭 (확정 전 주의)</b>
+      <ol>
+        <li>개별 탐지(signInSpike 등)가 <span class="mono">agentUser</span>에도 모두 적용되는지는 타입별로 명시 없음 (같이 적용될 가능성 높으나 미확정).</li>
+        <li><span class="mono">riskyAgentUser</span> 위험이 riskyUsers에도 동시 게시되는지 명시 없음 (CA 설계상 riskyAgents 전용이 강하게 시사됨).</li>
+        <li>M365 Copilot 표면이 SP sign-in을 생성하는지는 <b>격리 실측 미완</b> — "for Web" 로그가 반례일 수 있어 확정 문구는 실측 후.</li>
+        <li>관련 Graph API 대부분 <span class="mono">/beta</span> (agentUser는 v1.0).</li>
+      </ol>
+    </div>
+    <div class="src">
+      <b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/entra/id-protection/concept-risky-agents">concept-risky-agents</a> ·
+      <a href="https://learn.microsoft.com/en-us/graph/api/resources/agentriskdetection">graph/agentriskdetection</a> ·
+      <a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-autonomous-agents">policy-autonomous-agents</a> (Block risky agents' user accounts) ·
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/how-to-plan-agent-identity-architecture">how-to-plan-agent-identity-architecture</a> (일반 user 계정 금지)
+    </div>
+  </div>
+
+  <div class="card src" style="margin-top:18px; text-align:center; font-size:11px;">
+    출처: Microsoft Learn — Entra Agent ID · ID Protection (Risky Agents) · Copilot Studio · Conditional Access for Agents · Microsoft Graph (beta) &nbsp;|&nbsp; 실측: 데모 테넌트 M365CPI66527359 (Contoso Helper) &nbsp;|&nbsp; 2026-07-01
+  </div>
+</div>
+</main></div></body></html>

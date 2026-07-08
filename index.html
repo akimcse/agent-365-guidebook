@@ -1,290 +1,249 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="ko"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Microsoft Agent 365 가이드북</title>
-<script>
-  (() => {
-    const param = new URLSearchParams(window.location.search).get("scoutTheme");
-    const theme = param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    document.documentElement.setAttribute("data-theme", theme);
-  })();
-</script>
+<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const t=p||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
-:root {
+:root{
   color-scheme: light;
-  --cp-bg: #f7f4ef; --cp-bg-elevated: #fcfbf8; --cp-surface: #ffffff; --cp-surface-soft: #f5f5f5;
-  --cp-border: #dedede; --cp-border-strong: #919191;
-  --cp-text: #242424; --cp-text-muted: #5c5c5c; --cp-text-soft: #6f6f6f;
-  --cp-accent: #b11f4b; --cp-accent-hover: #9a1a41; --cp-accent-soft: rgba(177,31,75,0.08); --cp-accent-fg: #ffffff;
-  --cp-link: #0078d4; --cp-shadow: 0 18px 48px rgba(0,0,0,0.12);
+  --cp-bg:#faf9fb; --cp-bg-elevated:#ffffff; --cp-surface:#ffffff; --cp-surface-soft:#f3f2f6;
+  --cp-border:#e4e2ea; --cp-border-strong:#a9a7b4;
+  --cp-text:#1b1a21; --cp-text-muted:#4a4858; --cp-text-soft:#6b6980;
+  --cp-accent:#5b5fc7; --cp-accent-hover:#4a4eb5; --cp-accent-soft:rgba(91,95,199,0.10); --cp-accent-fg:#ffffff;
+  --cp-success:#0f7b3f; --cp-danger:#c4314b; --cp-warning:#b8860b; --cp-link:#0f6cbd;
+  --cp-grad:linear-gradient(120deg,#ece9fb 0%,#e8f1fb 52%,#f6fbff 100%);
+  --cp-grad-accent:linear-gradient(120deg,#5b5fc7 0%,#0f6cbd 100%);
+  --cp-shadow:0 18px 48px rgba(38,36,64,0.12);
 }
-html[data-theme="dark"] {
+html[data-theme="dark"]{
   color-scheme: dark;
-  --cp-bg: #3d3b3a; --cp-bg-elevated: #343231; --cp-surface: #292929; --cp-surface-soft: #2e2e2e;
-  --cp-border: #474747; --cp-border-strong: #5f5f5f;
-  --cp-text: #dedede; --cp-text-muted: #919191; --cp-text-soft: #b0b0b0;
-  --cp-accent: #fd8ea1; --cp-accent-hover: #fb7b91; --cp-accent-soft: rgba(253,142,161,0.14); --cp-accent-fg: #1a1a1a;
-  --cp-link: #4da6ff; --cp-shadow: 0 18px 48px rgba(0,0,0,0.32);
+  --cp-bg:#1c1b22; --cp-bg-elevated:#232230; --cp-surface:#26252f; --cp-surface-soft:#2d2c38;
+  --cp-border:#3a3947; --cp-border-strong:#57556a;
+  --cp-text:#e7e6ee; --cp-text-muted:#a9a7ba; --cp-text-soft:#8f8da3;
+  --cp-accent:#a6a9f2; --cp-accent-hover:#b8bbf6; --cp-accent-soft:rgba(166,169,242,0.14); --cp-accent-fg:#1a1a22;
+  --cp-success:#4ade80; --cp-danger:#f87171; --cp-warning:#fbbf24; --cp-link:#6cb2f0;
+  --cp-grad:linear-gradient(120deg,#2a2740 0%,#22283c 52%,#20232e 100%);
+  --cp-grad-accent:linear-gradient(120deg,#7c80e0 0%,#3f8ed0 100%);
+  --cp-shadow:0 18px 48px rgba(0,0,0,0.36);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--cp-bg); color: var(--cp-text); line-height: 1.65; -webkit-font-smoothing: antialiased;
-}
-.layout { display: grid; grid-template-columns: 288px 1fr; min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.65;-webkit-font-smoothing:antialiased}
+.gb-layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.gb-side{background:var(--cp-bg-elevated);border-right:1px solid var(--cp-border);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.gb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 2px}
+.gb-logo{width:34px;height:34px;border-radius:9px;background:var(--cp-grad-accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem;letter-spacing:-.02em}
+.gb-btxt{font-weight:800;font-size:.98rem;letter-spacing:-.01em}
+.gb-bsub{font-size:.72rem;color:var(--cp-text-soft);padding:2px 8px 18px}
+.gb-glabel{font-size:.64rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--cp-text-soft);padding:0 8px;margin:14px 0 7px}
+.gb-nav a{display:flex;align-items:flex-start;gap:10px;text-decoration:none;color:var(--cp-text);padding:10px 12px;border-radius:10px;font-size:.88rem;transition:background .15s;margin-bottom:3px}
+.gb-nav a .ic{font-size:.95rem;line-height:1.5}
+.gb-nav a .lb{font-weight:600}
+.gb-nav a .lb small{display:block;font-weight:400;font-size:.72rem;color:var(--cp-text-soft);margin-top:1px}
+.gb-nav a:hover{background:var(--cp-surface-soft)}
+.gb-nav a.on{background:var(--cp-accent-soft);color:var(--cp-accent)}
+.gb-nav a.on .lb small{color:var(--cp-accent)}
+.gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
+.gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
+.gb-main{min-width:0}
+@media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--cp-border)}}
 
-/* Sidebar */
-aside.sidebar {
-  background: var(--cp-bg-elevated); border-right: 1px solid var(--cp-border);
-  padding: 26px 18px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
-}
-.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; padding: 0 8px; }
-.brand .logo {
-  width: 30px; height: 30px; border-radius: 8px; background: var(--cp-accent);
-  color: var(--cp-accent-fg); display: grid; place-items: center; font-weight: 800; font-size: 0.95rem;
-}
-.brand .btxt { font-weight: 800; font-size: 0.98rem; letter-spacing: -0.01em; }
-.brand-sub { font-size: 0.72rem; color: var(--cp-text-soft); padding: 0 8px; margin-bottom: 22px; }
-.nav-group-label {
-  font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--cp-text-soft); padding: 0 8px; margin: 18px 0 8px;
-}
-nav.side-nav a {
-  display: flex; align-items: flex-start; gap: 10px; text-decoration: none;
-  color: var(--cp-text); padding: 10px 12px; border-radius: 10px; font-size: 0.88rem;
-  transition: background .15s ease, color .15s ease; margin-bottom: 3px;
-}
-nav.side-nav a .ico { font-size: 0.95rem; line-height: 1.5; }
-nav.side-nav a .lbl { font-weight: 600; }
-nav.side-nav a .lbl small { display: block; font-weight: 400; font-size: 0.72rem; color: var(--cp-text-soft); margin-top: 1px; }
-nav.side-nav a:hover { background: var(--cp-surface-soft); }
-nav.side-nav a.active { background: var(--cp-accent-soft); color: var(--cp-accent); }
-nav.side-nav a.active .lbl small { color: var(--cp-accent); }
-.side-foot { margin-top: 26px; padding: 12px 8px 0; border-top: 1px solid var(--cp-border); font-size: 0.72rem; color: var(--cp-text-soft); }
-.side-foot a { color: var(--cp-link); text-decoration: none; }
-
-/* Main */
-main.content { padding: 0; min-width: 0; }
-.content-inner { max-width: 940px; margin: 0 auto; padding: 44px 40px 80px; }
-
-/* Home hero */
-.hero {
-  background: linear-gradient(135deg, var(--cp-accent-soft), transparent 70%);
-  border: 1px solid var(--cp-border); border-radius: 18px; padding: 40px 36px; margin-bottom: 28px;
-}
-.hero .eyebrow {
-  display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--cp-accent); background: var(--cp-surface); border: 1px solid var(--cp-border);
-  padding: 5px 12px; border-radius: 999px; margin-bottom: 16px;
-}
-.hero h1 { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
-.hero p { font-size: 1.02rem; color: var(--cp-text-muted); max-width: 760px; }
-
-/* Tabs */
-.tabs { display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--cp-border); margin-bottom: 24px; }
-.tab-btn {
-  appearance: none; border: none; background: none; cursor: pointer;
-  font-family: inherit; font-size: 0.9rem; font-weight: 600; color: var(--cp-text-muted);
-  padding: 12px 16px; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s ease;
-}
-.tab-btn:hover { color: var(--cp-text); }
-.tab-btn.active { color: var(--cp-accent); border-bottom-color: var(--cp-accent); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; animation: fade .2s ease; }
-@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-
-.persona-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 8px; }
-@media (max-width: 760px){ .persona-grid { grid-template-columns: 1fr; } }
-.persona {
-  background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 14px; padding: 18px 20px;
-  box-shadow: 0 0 2px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.12);
-}
-.persona h4 { font-size: 0.98rem; font-weight: 800; margin-bottom: 6px; color: var(--cp-accent); }
-.persona p { font-size: 0.86rem; color: var(--cp-text-muted); }
-.fact { background: var(--cp-surface); border: 1px solid var(--cp-border); border-left: 3px solid var(--cp-accent);
-  border-radius: 10px; padding: 14px 18px; margin-top: 14px; font-size: 0.9rem; }
-.cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
-.cta {
-  text-decoration: none; font-size: 0.86rem; font-weight: 600; padding: 10px 16px; border-radius: 10px;
-  border: 1px solid var(--cp-border); color: var(--cp-text); background: var(--cp-surface);
-}
-.cta.primary { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
-
-/* Markdown render area */
-.md-body h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; }
-.md-body h2 { font-size: 1.35rem; font-weight: 800; margin: 30px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--cp-border); }
-.md-body h3 { font-size: 1.08rem; font-weight: 700; margin: 22px 0 8px; }
-.md-body h4 { font-size: 0.98rem; font-weight: 700; margin: 18px 0 6px; color: var(--cp-accent); }
-.md-body p { margin: 10px 0; color: var(--cp-text); }
-.md-body ul, .md-body ol { margin: 10px 0 10px 22px; }
-.md-body li { margin: 5px 0; }
-.md-body a { color: var(--cp-link); text-decoration: none; }
-.md-body a:hover { text-decoration: underline; }
-.md-body strong { font-weight: 700; }
-.md-body blockquote {
-  border-left: 3px solid var(--cp-accent); background: var(--cp-accent-soft);
-  padding: 10px 16px; border-radius: 8px; margin: 14px 0; color: var(--cp-text-muted); font-size: 0.9rem;
-}
-.md-body code { font-family: Consolas, "Courier New", monospace; background: var(--cp-surface-soft);
-  padding: 1px 6px; border-radius: 5px; font-size: 0.85em; }
-.md-body table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.86rem;
-  border: 1px solid var(--cp-border); border-radius: 10px; overflow: hidden; }
-.md-body th, .md-body td { text-align: left; padding: 10px 13px; border-bottom: 1px solid var(--cp-border); vertical-align: top; }
-.md-body thead th { background: var(--cp-surface-soft); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cp-text-muted); }
-.md-body tbody tr:last-child td { border-bottom: none; }
-.embed-wrap { margin: 26px 0 6px; border: 1px solid var(--cp-border); border-radius: 14px; overflow: hidden; background: var(--cp-surface); }
-.live-embed { width: 100%; height: 640px; border: 0; display: block; }
-.embed-cap { font-size: 0.75rem; color: var(--cp-text-soft); margin: 8px 2px 0; }
-
-.mobile-top { display: none; }
-@media (max-width: 880px) {
-  .layout { grid-template-columns: 1fr; }
-  aside.sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--cp-border); }
-  .content-inner { padding: 28px 20px 60px; }
-}
+.hm{max-width:1080px;margin:0 auto;padding:38px 40px 84px}
+.hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:22px;padding:48px 44px;margin-bottom:14px}
+.hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:18px}
+.hero h1{font-size:2.35rem;font-weight:800;letter-spacing:-.025em;line-height:1.2;margin-bottom:14px;max-width:16ch}
+.hero p{font-size:1.05rem;color:var(--cp-text-muted);max-width:60ch}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.btn{text-decoration:none;font-size:.9rem;font-weight:600;padding:11px 20px;border-radius:10px;border:1px solid var(--cp-border);color:var(--cp-text);background:var(--cp-surface);transition:.15s}
+.btn:hover{border-color:var(--cp-accent)}
+.btn.pri{background:var(--cp-accent);color:var(--cp-accent-fg);border-color:var(--cp-accent)}
+.btn.pri:hover{background:var(--cp-accent-hover)}
+.sec{margin-top:52px}
+.sec>h2{font-size:1.55rem;font-weight:800;letter-spacing:-.01em;margin-bottom:8px}
+.sec>.lead{color:var(--cp-text-muted);font-size:1rem;margin-bottom:22px;max-width:70ch}
+.intro{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;padding:24px 26px;margin-top:26px;box-shadow:0 0 2px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.10)}
+.intro p{color:var(--cp-text);font-size:.98rem}
+.roles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.role{border:1px solid var(--cp-border);border-radius:12px;padding:15px 17px;background:var(--cp-bg-elevated)}
+.role h4{font-size:.92rem;font-weight:800;color:var(--cp-accent);margin-bottom:5px}
+.role p{font-size:.84rem;color:var(--cp-text-muted)}
+.pillar{margin-top:30px}
+.pillar-h{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.pillar-h .pn{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--cp-accent-fg);background:var(--cp-accent);padding:4px 11px;border-radius:6px}
+.pillar-h h3{font-size:1.2rem;font-weight:800}
+.pillar-h .pd{font-size:.86rem;color:var(--cp-text-soft);margin-left:2px}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.fcard{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:14px;padding:18px 20px;box-shadow:0 0 2px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.09)}
+.fcard h4{font-size:.98rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.fcard h4 .dot{width:9px;height:9px;border-radius:3px;background:var(--cp-grad-accent);flex:none}
+.fcard p{font-size:.85rem;color:var(--cp-text-muted)}
+.admin{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+.acard{background:var(--cp-bg-elevated);border:1px solid var(--cp-border);border-radius:12px;padding:16px 16px;text-align:center}
+.acard .ai{width:38px;height:38px;border-radius:9px;background:var(--cp-accent-soft);color:var(--cp-accent);display:grid;place-items:center;margin:0 auto 9px;font-size:1.05rem}
+.acard h4{font-size:.86rem;font-weight:700}
+.e7{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:18px;padding:30px 32px;margin-top:20px}
+.e7 h3{font-size:1.15rem;font-weight:800;margin-bottom:12px}
+.e7 ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:9px 22px}
+.e7 li{position:relative;padding-left:22px;font-size:.9rem;color:var(--cp-text)}
+.e7 li::before{content:"✓";position:absolute;left:0;color:var(--cp-accent);font-weight:800}
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.quote{background:var(--cp-surface);border:1px solid var(--cp-border);border-left:3px solid var(--cp-accent);border-radius:12px;padding:18px 20px;font-size:.86rem;color:var(--cp-text-muted);font-style:italic}
+.reslist{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.res{display:block;text-decoration:none;background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:12px;padding:15px 17px;color:var(--cp-text);transition:.15s}
+.res:hover{border-color:var(--cp-accent);transform:translateY(-1px)}
+.res b{font-size:.92rem}
+.res span{display:block;font-size:.78rem;color:var(--cp-text-soft);margin-top:3px}
+.faq{border:1px solid var(--cp-border);border-radius:14px;overflow:hidden;background:var(--cp-surface)}
+.faq details{border-bottom:1px solid var(--cp-border)}
+.faq details:last-child{border-bottom:none}
+.faq summary{cursor:pointer;padding:16px 20px;font-weight:700;font-size:.95rem;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--cp-accent);font-weight:800;font-size:1.1rem}
+.faq details[open] summary::after{content:"–"}
+.faq .fa{padding:0 20px 18px;font-size:.9rem;color:var(--cp-text-muted)}
+.faq .fa ul{margin:8px 0 0 18px}
+.faq .fa li{margin:4px 0}
+@media (max-width:900px){.hm{padding:26px 18px 60px}.fgrid,.admin,.quotes,.reslist,.roles,.e7 ul{grid-template-columns:1fr}.hero h1{font-size:1.85rem}}
 </style>
 </head>
-<body>
-<div class="layout">
-  <aside class="sidebar">
-    <div class="brand"><div class="logo">A365</div><div class="btxt">Agent 365 가이드북</div></div>
-    <div class="brand-sub">에이전트를 관찰·관리·보호하는 컨트롤 플레인</div>
-
-    <div class="nav-group-label">시작</div>
-    <nav class="side-nav" id="nav">
-      <a href="#home" data-page="home"><span class="ico">🏠</span><span class="lbl">홈<small>Agent 365 개요</small></span></a>
-      <div class="nav-group-label">심화 · 퍼블릭 레포</div>
-      <a href="#taxonomy" data-page="taxonomy"><span class="ico">🗂️</span><span class="lbl">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
-      <a href="#identity" data-page="identity"><span class="ico">🪪</span><span class="lbl">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
-      <a href="#runtime" data-page="runtime"><span class="ico">🛡️</span><span class="lbl">③ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
+<body><div class="gb-layout"><aside class="gb-side">
+    <div class="gb-brand"><div class="gb-logo">A365</div><div class="gb-btxt">Agent 365 가이드북</div></div>
+    <div class="gb-bsub">에이전트를 관찰·관리·보호하는 컨트롤 플레인</div>
+    <div class="gb-glabel">시작</div>
+    <nav class="gb-nav">
+      <a href="index.html" class="on"><span class="ic">🏠</span><span class="lb">홈<small>Agent 365 개요</small></span></a>
+      <div class="gb-glabel">심화 문서</div>
+      <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
+      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
+      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">③ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
     </nav>
-
-    <div class="side-foot">
-      공식 근거: <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365</a><br>
-      <a href="https://github.com/akimcse/agent-365-guidebook" target="_blank" rel="noopener">GitHub 레포</a>
+    <div class="gb-sfoot">공식 근거
+      <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
+      <a href="https://github.com/akimcse/agent-365-guidebook" target="_blank" rel="noopener">GitHub 레포 ↗</a>
     </div>
-  </aside>
-
-  <main class="content">
-    <div class="content-inner">
-
-      <!-- HOME -->
-      <section id="view-home">
-        <div class="hero">
-          <span class="eyebrow">Microsoft Agent 365</span>
-          <h1>에이전트를 위한 컨트롤 플레인</h1>
-          <p>Agent 365로 AI 에이전트를 안심하고 관찰하며, 관리하고, 보호하세요. Microsoft 365 및 Microsoft Security 제어 기능을 확장해 대규모 에이전트형 AI를 효과적으로 관리하세요.</p>
-        </div>
-
-        <div class="tabs" id="home-tabs">
-          <button class="tab-btn active" data-tab="overview">개요</button>
-          <button class="tab-btn" data-tab="observe">관찰</button>
-          <button class="tab-btn" data-tab="govern">거버넌스</button>
-          <button class="tab-btn" data-tab="secure">보안</button>
-          <button class="tab-btn" data-tab="license">라이선스</button>
-        </div>
-
-        <div class="tab-panel active" data-panel="overview">
-          <p>Agent 365는 AI 에이전트를 <strong>관찰(Observe)</strong>하고, <strong>관리·거버넌스(Govern)</strong>하며, <strong>보호(Secure)</strong>하기 위한 컨트롤 플레인입니다. 조직은 용도에 맞게 빌드된 기능으로 기존 인프라를 에이전트로 확장할 수 있습니다. Agent 365는 에이전트 관리를 네 가지 핵심 관리자 역할에 맞춰 최적화합니다.</p>
-          <div class="persona-grid">
-            <div class="persona"><h4>Microsoft Defender 관리자</h4><p>포괄적인 보안 태세와 고급 위협 방지를 에이전트까지 확장합니다.</p></div>
-            <div class="persona"><h4>Microsoft Entra 관리자</h4><p>에이전트 ID를 보호하고 앱·리소스·인터넷·다른 에이전트에 대한 액세스를 안전하게 관리합니다.</p></div>
-            <div class="persona"><h4>Microsoft Purview 관리자</h4><p>조직 전반에서 에이전트가 사용·생성하는 데이터를 관리·보호합니다.</p></div>
-            <div class="persona"><h4>Microsoft 365 관리자</h4><p>모든 에이전트를 종합 파악하고 IT 워크플로로 온보딩하며, 보안 정책 템플릿 적용·실시간 분석을 수행합니다.</p></div>
-          </div>
-          <div class="cta-row">
-            <a class="cta primary" href="https://go.microsoft.com/fwlink/?linkid=2347173" target="_blank" rel="noopener">Agent 365 자세히 보기</a>
-            <a class="cta" href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">공식 페이지</a>
-          </div>
-        </div>
-
-        <div class="tab-panel" data-panel="observe">
-          <p><strong>관찰(Observe)</strong> — Microsoft 365 채널을 통해 게시되고 <strong>Entra 에이전트 ID로 등록된 모든 에이전트는 Agent 365 인벤토리에 자동으로 표시</strong>됩니다. 이러한 환경의 외부에서 빌드된 에이전트에는 추가 단계가 필요합니다.</p>
-          <div class="fact">👉 심화: <a href="#identity">② 에이전트 신원 · 위험</a>에서 어떤 신원으로 인증하고 어떤 로그에 표시되는지 다룹니다.</div>
-        </div>
-
-        <div class="tab-panel" data-panel="govern">
-          <p><strong>거버넌스(Govern)</strong> — Agent 365는 에이전트와, 에이전트를 만들거나 관리하는 사용자 모두에 대해 <strong>검색·수명 주기 관리·IT 정의 가드레일</strong>을 포함한 포괄적인 관리를 제공합니다.</p>
-          <div class="fact">👉 심화: <a href="#taxonomy">① 에이전트 유형 분류</a>에서 실행 위치·역할·제작 방식별 거버넌스 통제 지점을 다룹니다.</div>
-        </div>
-
-        <div class="tab-panel" data-panel="secure">
-          <p><strong>보안(Secure)</strong> — Agent 365는 <strong>최소 권한 액세스</strong>를 적용하고, 리소스에 대한 에이전트 액세스를 보호하며, 중요한 데이터를 보호하고, <strong>고급 위협 방지 및 취약성 관리</strong>를 포함합니다. 이러한 제어는 Microsoft Entra·Purview·Defender 관리 센터에서 보안 전문가가 직접 운영합니다.</p>
-          <div class="fact">👉 심화: <a href="#runtime">③ 런타임 위협 탐지</a>에서 콘텐츠/액션 2-레이어 탐지 아키텍처를 다룹니다.</div>
-        </div>
-
-        <div class="tab-panel" data-panel="license">
-          <p><strong>라이선스</strong> — Agent 365는 <strong>사용자 단위</strong>로 라이선스가 부여됩니다. 관리되는 에이전트와 상호 작용하거나 이를 소유·관리·후원하는 모든 사용자에게 권장됩니다. Agent 365는 <strong>Microsoft 365 E7(The Frontier Suite)</strong>에 기본 포함됩니다.</p>
-          <div class="cta-row">
-            <a class="cta" href="https://go.microsoft.com/fwlink/?linkid=2359230" target="_blank" rel="noopener">라이선스 FAQ</a>
-            <a class="cta" href="https://www.microsoft.com/ko-kr/microsoft-365/enterprise/e7" target="_blank" rel="noopener">Microsoft 365 E7</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- MD-RENDERED PAGES -->
-      <section id="view-md" class="md-body" style="display:none"></section>
-
+  </aside><main class="gb-main"><div class="hm">
+  <section class="hero">
+    <span class="eb">✦ Microsoft Agent 365</span>
+    <h1>에이전트가 일상 업무의 일부가 되어도 완벽한 통제권을 유지하세요.</h1>
+    <p>Agent 365로 AI 에이전트를 안심하고 관찰하며, 관리하고, 보호하세요. Microsoft 365 및 Microsoft Security 제어 기능을 확장해 대규모 에이전트형 AI를 효과적으로 관리하세요.</p>
+    <div class="cta">
+      <a class="btn pri" href="https://go.microsoft.com/fwlink/?linkid=2347173" target="_blank" rel="noopener">Agent 365 시작하기</a>
+      <a class="btn" href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">공식 페이지</a>
     </div>
-  </main>
-</div>
+  </section>
 
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-  const PAGES = {
-    home:     { md: null,                         label: "홈" },
-    taxonomy: { md: "content/taxonomy.md",        label: "① 에이전트 유형 분류" },
-    identity: { md: "content/identity-risk.md",   label: "② 에이전트 신원 · 위험" },
-    runtime:  { md: "content/runtime-security.md", label: "③ 런타임 위협 탐지" }
-  };
-  const viewHome = document.getElementById("view-home");
-  const viewMd = document.getElementById("view-md");
-  const navLinks = [...document.querySelectorAll("#nav a")];
+  <div class="intro">
+    <p>Agent 365는 AI 에이전트를 <strong>관찰(Observe)</strong>하고, <strong>관리·거버넌스(Govern)</strong>하며, <strong>보호(Secure)</strong>하기 위한 컨트롤 플레인으로, 조직은 에이전트 요구 사항에 맞게 맞춤화된 용도로 빌드된 기능을 사용하여 사용자를 위한 기존 인프라를 에이전트로 확장할 수 있습니다. Agent 365는 에이전트 관리를 네 가지 핵심 관리자 역할에 맞춰 최적화합니다.</p>
+    <div class="roles">
+      <div class="role"><h4>Microsoft Defender 관리자</h4><p>포괄적인 보안 태세 및 고급 위협 방지를 에이전트까지 확장합니다.</p></div>
+      <div class="role"><h4>Microsoft Entra 관리자</h4><p>에이전트 ID를 보호하고 앱·리소스·인터넷·다른 에이전트에 대한 액세스를 안전하게 관리합니다.</p></div>
+      <div class="role"><h4>Microsoft Purview 관리자</h4><p>조직 전반에서 에이전트가 사용·생성하는 데이터를 관리·보호·관리합니다.</p></div>
+      <div class="role"><h4>Microsoft 365 관리자</h4><p>모든 에이전트를 종합 파악하고 IT 제어 워크플로로 온보딩하며, 보안 정책 템플릿 적용·실시간 에이전트 분석을 수행합니다.</p></div>
+    </div>
+  </div>
 
-  function setActive(page) {
-    navLinks.forEach(a => a.classList.toggle("active", a.dataset.page === page));
-  }
+  <section class="sec">
+    <h2>핵심 기능</h2>
+    <p class="lead">관찰 가능성 · 거버넌스 · 보안의 세 가지 축으로 에이전트를 완전히 통제합니다.</p>
 
-  async function render(page) {
-    if (!PAGES[page]) page = "home";
-    setActive(page);
-    window.scrollTo({ top: 0 });
-    if (page === "home") {
-      viewHome.style.display = "";
-      viewMd.style.display = "none";
-      return;
-    }
-    viewHome.style.display = "none";
-    viewMd.style.display = "";
-    viewMd.innerHTML = '<p style="color:var(--cp-text-soft)">불러오는 중…</p>';
-    try {
-      const res = await fetch(PAGES[page].md);
-      if (!res.ok) throw new Error(res.status);
-      const text = await res.text();
-      viewMd.innerHTML = marked.parse(text);
-    } catch (e) {
-      viewMd.innerHTML = '<p>콘텐츠를 불러오지 못했습니다. <a href="#home">홈으로</a></p>';
-    }
-  }
+    <div class="pillar">
+      <div class="pillar-h"><span class="pn">관찰 가능성</span><h3>Observability</h3><span class="pd">조직 내 모든 에이전트를 완벽하게 파악</span></div>
+      <div class="fgrid">
+        <div class="fcard"><h4><span class="dot"></span>레지스트리</h4><p>Microsoft AI 플랫폼을 기반으로 구축된 에이전트, 에코시스템 파트너 에이전트, 직접 등록한 에이전트를 포함하여 조직 내 모든 에이전트를 완벽하게 파악할 수 있습니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>에이전트 맵</h4><p>에이전트 활동 및 연결을 시각적으로 매핑하여 상호 작용 관계를 한눈에 파악합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>에이전트 분석</h4><p>에이전트 사용 인사이트를 실시간으로 추적하여 활용 현황을 측정합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>역할별 감독</h4><p>각 관리자 역할에 맞춰 에이전트를 감독하고 책임 범위를 명확히 합니다.</p></div>
+      </div>
+    </div>
 
-  function route() {
-    const page = (location.hash || "#home").slice(1);
-    render(page);
-  }
-  window.addEventListener("hashchange", route);
+    <div class="pillar">
+      <div class="pillar-h"><span class="pn">거버넌스</span><h3>Governance</h3><span class="pd">검색·수명 주기 관리·IT 정의 가드레일</span></div>
+      <div class="fgrid">
+        <div class="fcard"><h4><span class="dot"></span>에이전트 온보딩</h4><p>IT가 제어하는 워크플로를 통해 에이전트를 온보딩하고 보안 정책 템플릿을 적용하여, 모든 에이전트가 안전하고 관리되며 규정을 준수하는 상태로 시작하도록 합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>통합 관리</h4><p>에이전트가 사용할 수 있는 사용자, 데이터, 도구, MCP 서버를 제어하여 최소 권한 액세스를 적용합니다. 필요한 리소스와 다른 에이전트에만 액세스하도록 제한합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>수명 주기 관리</h4><p>규칙 기반 관리를 통해 비활성 에이전트 만료, 소유자 없는 에이전트 표시, 위험한 에이전트 차단 등 수명 주기 정책을 자동 적용합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>감사 및 로깅</h4><p>로그 기록·보고·감사 기능으로 에이전트의 활동과 상호 작용에 대한 가시성과 추적성을 강화합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>데이터 규정 준수</h4><p>비윤리적 에이전트 상호 작용을 감지·보존·조사할 수 있는 콘텐츠 안전 제어를 구축합니다.</p></div>
+      </div>
+    </div>
 
-  // Home tabs
-  document.getElementById("home-tabs").addEventListener("click", (e) => {
-    const btn = e.target.closest(".tab-btn");
-    if (!btn) return;
-    document.querySelectorAll("#home-tabs .tab-btn").forEach(b => b.classList.toggle("active", b === btn));
-    document.querySelectorAll('[data-panel]').forEach(p => p.classList.toggle("active", p.dataset.panel === btn.dataset.tab));
-  });
+    <div class="pillar">
+      <div class="pillar-h"><span class="pn">보안</span><h3>Security</h3><span class="pd">최소 권한 · 데이터 보호 · 고급 위협 방지</span></div>
+      <div class="fgrid">
+        <div class="fcard"><h4><span class="dot"></span>액세스 제어</h4><p>조건부 액세스와 인터넷 트래픽 필터링 정책을 사용자에서 에이전트까지 확장 적용하여 에이전트 ID를 보호하고 보안 침해를 방지합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>데이터 보안</h4><p>AI 관련 데이터 노출 현황을 파악하고, 에이전트가 생성·활용하는 데이터를 과도한 공유·유출·위험한 사용 행위로부터 안전하게 보호합니다.</p></div>
+        <div class="fcard"><h4><span class="dot"></span>위협 방지</h4><p>에이전트를 위협·취약점·적대적 공격으로부터 보호하고, 공격 경로를 명확히 파악하여 인시던트를 신속하게 탐지·조사·대응합니다.</p></div>
+      </div>
+    </div>
+  </section>
 
-  route();
-</script>
-</body>
-</html>
+  <section class="sec">
+    <h2>익숙한 관리 도구로 함께 관리</h2>
+    <p class="lead">이미 익숙한 관리 도구를 사용하여 직원과 에이전트를 함께 관리하세요.</p>
+    <div class="admin">
+      <div class="acard"><div class="ai">🧭</div><h4>Microsoft 365 관리 센터</h4></div>
+      <div class="acard"><div class="ai">🛡️</div><h4>Microsoft Defender</h4></div>
+      <div class="acard"><div class="ai">🪪</div><h4>Microsoft Entra</h4></div>
+      <div class="acard"><div class="ai">🗂️</div><h4>Microsoft Purview</h4></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Microsoft 365 E7으로 기능 극대화</h2>
+    <p class="lead">Frontier 제품군은 Copilot, AI 에이전트, 엔터프라이즈급 보안·거버넌스·관리를 통합합니다. Agent 365는 ME7 내의 컨트롤 플레인입니다.</p>
+    <div class="e7">
+      <h3>Agent 365 — 조직의 AI 에이전트를 대규모로 관리하고 안전하게 보호</h3>
+      <ul>
+        <li>IT 및 보안 리더가 AI 에이전트를 관리할 수 있는 컨트롤 플레인</li>
+        <li>Microsoft 관리 센터에서 에이전트를 관리하는 중앙 집중식 IT 허브</li>
+        <li>에이전트 전체 집합의 종합적인 인벤토리를 위한 통합 에이전트 레지스트리</li>
+        <li>에이전트 활동 및 연결에 대한 사용 인사이트 및 시각적 매핑</li>
+        <li>Microsoft Entra를 통한 에이전트의 액세스 제어 및 ID 보호</li>
+        <li>Microsoft Defender를 통한 에이전트의 보안 태세 및 위협 방지</li>
+        <li>Microsoft Purview를 통한 에이전트의 데이터 보안 및 규정 준수</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>고객과 파트너의 평가</h2>
+    <p class="lead">Microsoft의 신뢰할 수 있는 파트너들이 구축·관리하는 성장하는 에이전트 에코시스템.</p>
+    <div class="quotes">
+      <div class="quote">“Agent 365를 통해 IT 리더는 에이전트가 어떤 도구·프레임워크·모델로 생성되었는지와 관계없이, 에이전트가 거버넌스되고 관찰 가능하며 안전하게 운영되도록 보장하는 통합 컨트롤 플레인을 기반으로 에이전트형 AI 혁신을 자신 있게 도입할 수 있습니다.”</div>
+      <div class="quote">“가장 인상 깊었던 점은 Microsoft가 단순한 플랫폼이 아니라, 기업이 실제로 필요로 하는 신뢰의 기반을 구축했다는 것입니다. 거버넌스·보안·컴플라이언스가 처음부터 기본으로 내장되어 있습니다.”</div>
+      <div class="quote">“KPMG는 Agent 365를 에이전트형 AI를 책임 있게 확장하려는 조직에게 주목할 만한 발전으로 봅니다. 통합된 컨트롤 플레인으로 분산된 파일럿 단계를 넘어 운영 준비가 완료된 방식으로 에이전트를 배포할 수 있습니다.”</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>더 자세히 탐색하기</h2>
+    <div class="reslist">
+      <a class="res" href="https://go.microsoft.com/fwlink/?linkid=2347173" target="_blank" rel="noopener"><b>Agent 365 작동 원리</b><span>현재 일반 공급 중 · 제품 개요</span></a>
+      <a class="res" href="https://www.microsoft.com/ko-kr/microsoft-365/enterprise/e7" target="_blank" rel="noopener"><b>Microsoft 365 E7</b><span>The Frontier Suite 자세히 보기</span></a>
+      <a class="res" href="https://go.microsoft.com/fwlink/?linkid=2359230" target="_blank" rel="noopener"><b>라이선스 FAQ</b><span>Agent 365 라이선스 안내</span></a>
+      <a class="res" href="taxonomy.html"><b>① 에이전트 유형 분류</b><span>실행위치·역할·제작방식 3축</span></a>
+      <a class="res" href="identity-risk.html"><b>② 에이전트 신원 · 위험</b><span>Entra · Risky Agents 흐름</span></a>
+      <a class="res" href="runtime-security.html"><b>③ 런타임 위협 탐지</b><span>Defender · Copilot Studio 아키텍처</span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>FAQ</h2>
+    <div class="faq">
+      <details open><summary>Microsoft Agent 365란?</summary><div class="fa">Agent 365는 AI 에이전트를 관찰·관리·보호하기 위한 컨트롤 플레인입니다. 에이전트 관리를 네 가지 핵심 역할에 맞춰 최적화합니다.
+        <ul>
+          <li><b>Microsoft Defender 관리자</b> — 포괄적인 보안 태세 및 고급 위협 방지를 에이전트까지 확장합니다.</li>
+          <li><b>Microsoft Entra 관리자</b> — 에이전트 ID를 보호하고 앱·리소스·인터넷·다른 에이전트에 대한 액세스를 안전하게 관리합니다.</li>
+          <li><b>Microsoft Purview 관리자</b> — 조직 전반에서 에이전트가 사용·생성하는 데이터를 관리·보호·관리합니다.</li>
+          <li><b>Microsoft 365 관리자</b> — 모든 에이전트를 종합 파악하고 IT 제어 워크플로로 온보딩하며, 보안 정책 템플릿 적용·실시간 분석을 수행합니다.</li>
+        </ul></div></details>
+      <details><summary>Agent 365에서 작동하는 에이전트 유형은 무엇인가요?</summary><div class="fa">Microsoft 365 채널을 통해 게시되고 Entra 에이전트 ID로 등록된 모든 에이전트는 Agent 365 인벤토리에 자동으로 표시됩니다. 이러한 환경의 외부에서 빌드된 에이전트에는 추가 단계가 필요합니다.</div></details>
+      <details><summary>Agent 365는 조직에서 AI 에이전트를 관리하는 데 어떻게 도움이 됩니까?</summary><div class="fa">Agent 365는 에이전트와, 에이전트를 만들거나 관리하는 사용자 모두에 대해 검색·수명 주기 관리·IT 정의 가드레일을 비롯한 포괄적인 에이전트 관리를 제공합니다.</div></details>
+      <details><summary>Agent 365는 에이전트에 대한 보안 및 데이터 보호를 어떻게 제공하나요?</summary><div class="fa">Agent 365는 최소 권한 액세스를 적용하고, 리소스에 대한 에이전트 액세스를 보호하고, 중요한 데이터를 보호하며, 고급 위협 방지 및 취약성 관리를 포함합니다. 이러한 제어는 Microsoft Entra·Purview·Defender 관리 센터에서 보안 전문가가 직접 운영합니다.</div></details>
+      <details><summary>Agent 365는 어떤 방식으로 라이선스가 제공되나요?</summary><div class="fa">Agent 365는 사용자 단위로 라이선스가 부여됩니다. 관리되는 에이전트와 상호 작용하거나 이를 소유·관리·후원하는 모든 사용자에게 권장됩니다. Agent 365는 Microsoft 365 E7에 기본 포함됩니다.</div></details>
+      <details><summary>Agent 365가 Microsoft 365 E7에 포함되어 있나요?</summary><div class="fa">네, Microsoft 365 E7(The Frontier Suite) 라이선스에는 Agent 365가 포함됩니다. Frontier 제품군은 Copilot, AI 에이전트, 엔터프라이즈급 보안·거버넌스·관리를 통합하며, Agent 365는 ME7 내의 컨트롤 플레인으로 중앙 집중식 거버넌스·보안·가시성을 제공합니다.</div></details>
+    </div>
+  </section>
+
+  <p style="margin-top:44px;font-size:.78rem;color:var(--cp-text-soft)">출처: <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener" style="color:var(--cp-link);text-decoration:none">Microsoft Agent 365 (ko-kr)</a> · 본 홈은 공식 개요 페이지 내용을 재구성한 것입니다.</p>
+</div></main></div></body></html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>③ 런타임 위협 탐지 — Agent 365 가이드북</title>
+<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const t=p||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
+<style>
+:root{
+  color-scheme: light;
+  --cp-bg:#faf9fb; --cp-bg-elevated:#ffffff; --cp-surface:#ffffff; --cp-surface-soft:#f3f2f6;
+  --cp-border:#e4e2ea; --cp-border-strong:#a9a7b4;
+  --cp-text:#1b1a21; --cp-text-muted:#4a4858; --cp-text-soft:#6b6980;
+  --cp-accent:#5b5fc7; --cp-accent-hover:#4a4eb5; --cp-accent-soft:rgba(91,95,199,0.10); --cp-accent-fg:#ffffff;
+  --cp-success:#0f7b3f; --cp-danger:#c4314b; --cp-warning:#b8860b; --cp-link:#0f6cbd;
+  --cp-grad:linear-gradient(120deg,#ece9fb 0%,#e8f1fb 52%,#f6fbff 100%);
+  --cp-grad-accent:linear-gradient(120deg,#5b5fc7 0%,#0f6cbd 100%);
+  --cp-shadow:0 18px 48px rgba(38,36,64,0.12);
+}
+html[data-theme="dark"]{
+  color-scheme: dark;
+  --cp-bg:#1c1b22; --cp-bg-elevated:#232230; --cp-surface:#26252f; --cp-surface-soft:#2d2c38;
+  --cp-border:#3a3947; --cp-border-strong:#57556a;
+  --cp-text:#e7e6ee; --cp-text-muted:#a9a7ba; --cp-text-soft:#8f8da3;
+  --cp-accent:#a6a9f2; --cp-accent-hover:#b8bbf6; --cp-accent-soft:rgba(166,169,242,0.14); --cp-accent-fg:#1a1a22;
+  --cp-success:#4ade80; --cp-danger:#f87171; --cp-warning:#fbbf24; --cp-link:#6cb2f0;
+  --cp-grad:linear-gradient(120deg,#2a2740 0%,#22283c 52%,#20232e 100%);
+  --cp-grad-accent:linear-gradient(120deg,#7c80e0 0%,#3f8ed0 100%);
+  --cp-shadow:0 18px 48px rgba(0,0,0,0.36);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.65;-webkit-font-smoothing:antialiased}
+.gb-layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.gb-side{background:var(--cp-bg-elevated);border-right:1px solid var(--cp-border);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.gb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 2px}
+.gb-logo{width:34px;height:34px;border-radius:9px;background:var(--cp-grad-accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem;letter-spacing:-.02em}
+.gb-btxt{font-weight:800;font-size:.98rem;letter-spacing:-.01em}
+.gb-bsub{font-size:.72rem;color:var(--cp-text-soft);padding:2px 8px 18px}
+.gb-glabel{font-size:.64rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--cp-text-soft);padding:0 8px;margin:14px 0 7px}
+.gb-nav a{display:flex;align-items:flex-start;gap:10px;text-decoration:none;color:var(--cp-text);padding:10px 12px;border-radius:10px;font-size:.88rem;transition:background .15s;margin-bottom:3px}
+.gb-nav a .ic{font-size:.95rem;line-height:1.5}
+.gb-nav a .lb{font-weight:600}
+.gb-nav a .lb small{display:block;font-weight:400;font-size:.72rem;color:var(--cp-text-soft);margin-top:1px}
+.gb-nav a:hover{background:var(--cp-surface-soft)}
+.gb-nav a.on{background:var(--cp-accent-soft);color:var(--cp-accent)}
+.gb-nav a.on .lb small{color:var(--cp-accent)}
+.gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
+.gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
+.gb-main{min-width:0}
+@media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--cp-border)}}
+
+
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; background: var(--cp-bg); color: var(--cp-text); line-height: 1.5; padding: 32px 24px 56px; }
+.wrap { max-width: 1220px; margin: 0 auto; }
+code, .mono { font-family: Consolas, "Courier New", Courier, monospace; }
+header.page { margin-bottom: 22px; }
+header.page .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cp-accent); margin-bottom: 6px; }
+header.page h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6px; }
+.section-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cp-text-soft); margin: 30px 0 12px; }
+.card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14); padding: 18px 20px; }
+.src { margin-top: 10px; font-size: 10.5px; color: var(--cp-text-soft); line-height: 1.7; }
+.src b { color: var(--cp-text-muted); font-weight: 700; }
+.src a { color: var(--cp-link); text-decoration: none; word-break: break-all; }
+.src a:hover { text-decoration: underline; }
+.unv { color: var(--cp-warning); font-weight: 600; }
+
+.archcard svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 12px; color: var(--cp-text-muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 16px; height: 4px; border-radius: 2px; display: inline-block; }
+
+/* control plane */
+.cplane { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cpg { border-radius: 14px; padding: 16px 18px; border: 1px solid var(--cp-border); background: var(--cp-surface); }
+.cpg.posture { border-top: 4px solid var(--cp-link); }
+.cpg.rtp { border-top: 4px solid var(--cp-accent); }
+.cpg h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.cpg .desc { font-size: 11px; color: var(--cp-text-soft); margin-bottom: 10px; }
+.cprow { display: grid; grid-template-columns: 116px 86px 1fr; gap: 9px; align-items: start; padding: 9px 0; border-top: 1px dashed var(--cp-border); font-size: 11.5px; }
+.cprow.first { border-top: none; }
+.cprow .nm { font-weight: 700; color: var(--cp-text); }
+.cprow .ds { color: var(--cp-text-muted); }
+.st { display:inline-block; font-size:9.5px; font-weight:700; padding:2px 7px; border-radius:999px; white-space:nowrap; }
+.st.c { background: rgba(22,163,74,0.14); color: var(--cp-success); }
+.st.w { background: rgba(245,158,11,0.16); color: var(--cp-warning); }
+.st.o { background: var(--cp-surface-soft); color: var(--cp-text-soft); border:1px solid var(--cp-border); }
+.st.audit { background: rgba(0,120,212,0.12); color: var(--cp-link); margin-left:3px; }
+.cpout { margin-top: 11px; font-size: 11px; font-weight: 600; color: var(--cp-text); background: var(--cp-surface-soft); border-radius: 8px; padding: 8px 11px; }
+.cpout span { color: var(--cp-accent); }
+.combine { margin-top: 8px; }
+.combine .arrow { text-align:center; color: var(--cp-border-strong); font-size: 16px; margin: 8px 0 4px; }
+.merged { background: var(--cp-highlight); border: 1.5px solid var(--cp-accent); border-radius: 12px; padding: 14px 18px; text-align:center; }
+.merged h4 { font-size: 15px; font-weight: 700; }
+.merged p { font-size: 11.5px; color: var(--cp-text-muted); margin-top: 4px; }
+.linchpin { margin-top: 14px; background: rgba(245,158,11,0.08); border: 1px solid var(--cp-warning); border-radius: 10px; padding: 11px 14px; font-size: 12px; color: var(--cp-text-muted); }
+.linchpin b { color: var(--cp-text); }
+
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.role-card { border-top: 4px solid var(--cp-border-strong); }
+.role-card.posture { border-top-color: var(--cp-link); }
+.role-card.rtp { border-top-color: var(--cp-accent); }
+.role-card .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
+.role-card.posture .tag { background: rgba(0,120,212,0.12); color: var(--cp-link); }
+.role-card.rtp .tag { background: var(--cp-accent-soft); color: var(--cp-accent); }
+.role-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.role-card ul { list-style: none; font-size: 13px; }
+.role-card li { padding: 3px 0 3px 16px; position: relative; }
+.role-card li::before { content: "›"; position: absolute; left: 2px; color: var(--cp-accent); font-weight: 700; }
+
+.flow2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 16px; }
+.pipeline { display: flex; flex-direction: column; }
+.stage { position: relative; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); border-radius: 12px; padding: 12px 14px 12px 46px; }
+.stage + .stage { margin-top: 26px; }
+.stage::after { content: "▼"; position: absolute; left: 50%; bottom: -22px; transform: translateX(-50%); color: var(--cp-border-strong); font-size: 13px; }
+.stage:last-child::after { display: none; }
+.stage .num { position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; border-radius: 50%; background: var(--cp-accent); color: var(--cp-accent-fg); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.stage h4 { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+.stage p { font-size: 12px; color: var(--cp-text-muted); }
+.stage.intercept { background: var(--cp-accent-soft); border-color: var(--cp-accent); }
+.stage.decision { background: var(--cp-highlight); border-color: var(--cp-accent); }
+.spec h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.spec .endpoint { font-family: Consolas, monospace; font-size: 11.5px; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); border-radius: 8px; padding: 8px 10px; color: var(--cp-text); margin-bottom: 12px; word-break: break-all; }
+.spec .endpoint b { color: var(--cp-accent); }
+.spec dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 12px; }
+.spec dt { font-weight: 700; color: var(--cp-text-soft); white-space: nowrap; }
+.spec dd { color: var(--cp-text-muted); }
+.spec .pk { display: inline-block; font-family: Consolas, monospace; font-size: 11px; background: var(--cp-accent-soft); color: var(--cp-accent); padding: 2px 7px; border-radius: 6px; margin: 3px 4px 0 0; }
+
+.notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.note { background: var(--cp-surface); border: 1px solid var(--cp-border); border-left: 4px solid var(--cp-warning); border-radius: 12px; padding: 13px 15px; font-size: 12.5px; }
+.note b { display: block; margin-bottom: 4px; color: var(--cp-text); font-size: 13px; }
+.note span { color: var(--cp-text-muted); }
+
+footer.page { margin-top: 28px; font-size: 11.5px; color: var(--cp-text-soft); line-height: 1.7; }
+footer.page a { color: var(--cp-link); text-decoration: none; }
+@media (max-width: 900px) { .cplane, .role-grid, .flow2, .notes { grid-template-columns: 1fr; } .cprow { grid-template-columns: 100px 80px 1fr; } }
+</style>
+</head>
+<body><div class="gb-layout"><aside class="gb-side">
+    <div class="gb-brand"><div class="gb-logo">A365</div><div class="gb-btxt">Agent 365 가이드북</div></div>
+    <div class="gb-bsub">에이전트를 관찰·관리·보호하는 컨트롤 플레인</div>
+    <div class="gb-glabel">시작</div>
+    <nav class="gb-nav">
+      <a href="index.html" class=""><span class="ic">🏠</span><span class="lb">홈<small>Agent 365 개요</small></span></a>
+      <div class="gb-glabel">심화 문서</div>
+      <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
+      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
+      <a href="runtime-security.html" class="on"><span class="ic">🛡️</span><span class="lb">③ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
+    </nav>
+    <div class="gb-sfoot">공식 근거
+      <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
+      <a href="https://github.com/akimcse/agent-365-guidebook" target="_blank" rel="noopener">GitHub 레포 ↗</a>
+    </div>
+  </aside><main class="gb-main">
+<div class="wrap">
+  <header class="page">
+    <div class="eyebrow">Microsoft Defender · Copilot Studio · Agent 365 · Security for AI</div>
+    <h1>AI 에이전트 위협 탐지 아키텍처 + Defender 설정 컨트롤 플레인</h1>
+    <p class="sub">콘텐츠 레이어(모델 입출력) vs 액션 레이어(tool 호출) · Defender "Security for AI" 설정의 커넥터들이 어떻게 엮여 합쳐지는지 · 모든 항목 공식 문서(Microsoft Learn) 출처 명시 · 2026-06</p>
+  </header>
+
+  <!-- ① 2-layer architecture -->
+  <div class="section-label">① 핵심 아키텍처 — 2개 레이어 × (엔진 → 포털)</div>
+  <div class="card archcard">
+    <svg viewBox="0 0 1180 640" role="img" aria-label="콘텐츠 레이어와 액션 레이어의 탐지 엔진과 표출 포털">
+      <defs>
+        <marker id="aGray" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="var(--cp-border-strong)"/></marker>
+        <marker id="aWarn" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="var(--cp-warning)"/></marker>
+        <marker id="aAccent" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="var(--cp-accent)"/></marker>
+      </defs>
+      <text x="24" y="24" fill="var(--cp-text-soft)" font-size="12" font-weight="700">에이전트 런타임 파이프라인</text>
+      <rect x="40" y="34" width="225" height="46" rx="9" fill="var(--cp-surface-soft)" stroke="var(--cp-border)"/>
+      <text x="152" y="55" text-anchor="middle" fill="var(--cp-text)" font-size="11.5" font-weight="600">입력 프롬프트</text>
+      <text x="152" y="70" text-anchor="middle" fill="var(--cp-text-muted)" font-size="9.5">+ knowledge</text>
+      <rect x="295" y="34" width="225" height="46" rx="9" fill="var(--cp-surface-soft)" stroke="var(--cp-border)"/>
+      <text x="407" y="55" text-anchor="middle" fill="var(--cp-text)" font-size="11.5" font-weight="600">모델 생성 · 응답</text>
+      <text x="407" y="70" text-anchor="middle" fill="var(--cp-text-muted)" font-size="9.5">LLM</text>
+      <rect x="640" y="34" width="225" height="46" rx="9" fill="var(--cp-surface-soft)" stroke="var(--cp-border)"/>
+      <text x="752" y="55" text-anchor="middle" fill="var(--cp-text)" font-size="11.5" font-weight="600">툴 선택</text>
+      <text x="752" y="70" text-anchor="middle" fill="var(--cp-text-muted)" font-size="9.5">orchestrator</text>
+      <rect x="895" y="34" width="225" height="46" rx="9" fill="var(--cp-surface-soft)" stroke="var(--cp-border)"/>
+      <text x="1007" y="55" text-anchor="middle" fill="var(--cp-text)" font-size="11.5" font-weight="600">툴 실행</text>
+      <text x="1007" y="70" text-anchor="middle" fill="var(--cp-text-muted)" font-size="9.5">action</text>
+      <line x1="265" y1="57" x2="293" y2="57" stroke="var(--cp-border-strong)" stroke-width="2" marker-end="url(#aGray)"/>
+      <line x1="520" y1="57" x2="638" y2="57" stroke="var(--cp-border-strong)" stroke-width="2" marker-end="url(#aGray)"/>
+      <line x1="865" y1="57" x2="893" y2="57" stroke="var(--cp-border-strong)" stroke-width="2" marker-end="url(#aGray)"/>
+
+      <rect x="40" y="92" width="480" height="22" rx="6" fill="rgba(245,158,11,0.12)"/>
+      <text x="280" y="107" text-anchor="middle" fill="var(--cp-warning)" font-size="11.5" font-weight="700">레이어 A · 콘텐츠 (입력·응답) — prompt injection·jailbreak·유해콘텐츠</text>
+      <rect x="640" y="92" width="480" height="22" rx="6" fill="var(--cp-accent-soft)"/>
+      <text x="880" y="107" text-anchor="middle" fill="var(--cp-accent)" font-size="11.5" font-weight="700">레이어 B · 액션 (tool 호출) — 데이터탈취·tool 오용·악성 라우팅</text>
+
+      <text x="24" y="146" fill="var(--cp-text-soft)" font-size="12" font-weight="700">탐지 (엔진 · 솔루션)</text>
+      <line x1="160" y1="114" x2="160" y2="158" stroke="var(--cp-warning)" stroke-width="2" marker-end="url(#aWarn)"/>
+      <rect x="40" y="160" width="230" height="104" rx="11" fill="rgba(245,158,11,0.10)" stroke="var(--cp-warning)"/>
+      <text x="155" y="181" text-anchor="middle" fill="var(--cp-text)" font-size="12" font-weight="700">Copilot Studio 네이티브</text>
+      <text x="155" y="198" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">솔루션: 기본 내장 (설정 불필요)</text>
+      <text x="155" y="214" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">UPIA·XPIA 인라인 차단</text>
+      <text x="155" y="231" text-anchor="middle" fill="var(--cp-warning)" font-size="9.5" font-style="italic">엔진: 공식 문서 미명시</text>
+      <text x="155" y="246" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9">("classifiers / content filters")</text>
+
+      <line x1="407" y1="114" x2="407" y2="158" stroke="var(--cp-accent)" stroke-width="2" marker-end="url(#aAccent)"/>
+      <rect x="290" y="160" width="230" height="104" rx="11" fill="var(--cp-accent-soft)" stroke="var(--cp-accent)"/>
+      <text x="405" y="181" text-anchor="middle" fill="var(--cp-text)" font-size="12" font-weight="700">Defender for AI Services</text>
+      <text x="405" y="198" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">솔루션: Defender for Cloud 플랜</text>
+      <text x="405" y="214" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">대상: Azure OpenAI · Foundry</text>
+      <text x="405" y="231" text-anchor="middle" fill="var(--cp-accent)" font-size="9.5" font-weight="700">엔진: Prompt Shields + Threat Intel</text>
+      <text x="405" y="246" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9">(문서에 명시됨)</text>
+
+      <line x1="752" y1="114" x2="752" y2="158" stroke="var(--cp-accent)" stroke-width="2" marker-end="url(#aAccent)"/>
+      <rect x="640" y="160" width="230" height="104" rx="11" fill="var(--cp-accent-soft)" stroke="var(--cp-accent)"/>
+      <text x="755" y="181" text-anchor="middle" fill="var(--cp-text)" font-size="12" font-weight="700">외부 위협 탐지 (opt-in)</text>
+      <text x="755" y="198" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">솔루션: Defender for Cloud Apps</text>
+      <text x="755" y="214" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">Entra App + FIC · endpoint 평가</text>
+      <text x="755" y="231" text-anchor="middle" fill="var(--cp-accent)" font-size="9.5" font-weight="700">tool invocation allow/block</text>
+      <text x="755" y="246" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9">(엔진 내부 알고리즘 미명시)</text>
+
+      <line x1="1007" y1="114" x2="1007" y2="158" stroke="var(--cp-border-strong)" stroke-width="2" marker-end="url(#aGray)"/>
+      <rect x="890" y="160" width="230" height="104" rx="11" fill="var(--cp-surface)" stroke="var(--cp-border-strong)" stroke-dasharray="4 4"/>
+      <text x="1005" y="181" text-anchor="middle" fill="var(--cp-text)" font-size="12" font-weight="700">Agent 365 · Work IQ MCP</text>
+      <text x="1005" y="198" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">솔루션: Microsoft Agent 365</text>
+      <text x="1005" y="214" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10">Tooling Gateway 통합</text>
+      <text x="1005" y="231" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9.5">2026.7.1 라이선스 이관</text>
+      <text x="1005" y="246" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9">(기존 MDA 경로는 당분간 유지)</text>
+
+      <!-- 커넥터 오버레이 (파랑 = Defender 'Security for AI' 설정) -->
+      <text x="24" y="284" fill="var(--cp-link)" font-size="11" font-weight="700">커넥터(설정)</text>
+      <rect x="52" y="270" width="206" height="22" rx="11" fill="var(--cp-surface-soft)" stroke="var(--cp-border)"/>
+      <text x="155" y="285" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9.5" font-weight="600">커넥터 불필요 · 기본 내장</text>
+      <rect x="300" y="270" width="210" height="22" rx="11" fill="rgba(0,120,212,0.10)" stroke="var(--cp-link)"/>
+      <text x="405" y="285" text-anchor="middle" fill="var(--cp-link)" font-size="9.5" font-weight="700">Defender for Cloud 플랜 (Foundry)</text>
+      <rect x="650" y="270" width="210" height="22" rx="11" fill="rgba(0,120,212,0.10)" stroke="var(--cp-link)"/>
+      <text x="755" y="285" text-anchor="middle" fill="var(--cp-link)" font-size="9.5" font-weight="700">Copilot Studio RTP 커넥터 ✓</text>
+      <rect x="900" y="270" width="210" height="22" rx="11" fill="rgba(0,120,212,0.10)" stroke="var(--cp-link)"/>
+      <text x="1005" y="285" text-anchor="middle" fill="var(--cp-link)" font-size="9.5" font-weight="700">Agent 365 RTP 커넥터 ✓</text>
+
+      <text x="24" y="348" fill="var(--cp-link)" font-size="10.5" font-weight="700">커넥터 게이트</text>
+      <text x="24" y="384" fill="var(--cp-text-soft)" font-size="12" font-weight="700">표출 포털</text>
+
+      <!-- arrows from detectors (through connector pills) -->
+      <line x1="155" y1="294" x2="155" y2="390" stroke="var(--cp-warning)" stroke-width="2.2" marker-end="url(#aWarn)"/>
+      <text x="163" y="346" fill="var(--cp-warning)" font-size="9.5" font-weight="700">차단 카운트</text>
+      <text x="163" y="358" fill="var(--cp-text-soft)" font-size="8" font-style="italic">(게이트 무관)</text>
+      <polyline points="405,294 405,312 700,312 700,326" fill="none" stroke="var(--cp-accent)" stroke-width="2.2" marker-end="url(#aAccent)"/>
+      <text x="540" y="307" fill="var(--cp-accent)" font-size="9.5" font-weight="700">alert</text>
+      <polyline points="755,294 755,326" fill="none" stroke="var(--cp-accent)" stroke-width="2.2" marker-end="url(#aAccent)"/>
+      <polyline points="1005,294 1005,326" fill="none" stroke="var(--cp-border-strong)" stroke-width="2" marker-end="url(#aGray)"/>
+
+      <!-- M365 App Connector 게이트 -->
+      <rect x="600" y="326" width="520" height="36" rx="10" fill="rgba(0,120,212,0.10)" stroke="var(--cp-link)" stroke-width="1.6"/>
+      <text x="860" y="343" text-anchor="middle" fill="var(--cp-link)" font-size="11.5" font-weight="700">🔑 Microsoft 365 App Connector — Connected</text>
+      <text x="860" y="356" text-anchor="middle" fill="var(--cp-text-muted)" font-size="9">이 게이트를 지나야 alert·조사·Advanced Hunting 표출 (MDA ingestion·threat detection 포함)</text>
+      <line x1="860" y1="362" x2="860" y2="390" stroke="var(--cp-accent)" stroke-width="2.2" marker-end="url(#aAccent)"/>
+
+      <rect x="40" y="392" width="320" height="86" rx="12" fill="rgba(245,158,11,0.10)" stroke="var(--cp-warning)" stroke-width="1.4"/>
+      <text x="200" y="416" text-anchor="middle" fill="var(--cp-text)" font-size="13" font-weight="700">Copilot Studio — Security analytics</text>
+      <text x="200" y="434" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10.5">메이커(개발자) 대시보드</text>
+      <text x="200" y="451" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10.5">"N개 잠재 위협 차단됨" · 7/14/30일 추이</text>
+      <text x="200" y="468" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9.5">커넥터 없이 동작 (네이티브)</text>
+
+      <rect x="600" y="392" width="520" height="86" rx="12" fill="var(--cp-highlight)" stroke="var(--cp-accent)" stroke-width="1.6"/>
+      <text x="860" y="416" text-anchor="middle" fill="var(--cp-text)" font-size="14" font-weight="700">Microsoft Defender 포털 (XDR)</text>
+      <text x="860" y="434" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10.5">보안팀(SOC) · Incidents &amp; Alerts · AlertInfo</text>
+      <text x="860" y="451" text-anchor="middle" fill="var(--cp-text-muted)" font-size="10.5">조사 · Advanced Hunting · Sentinel 연동</text>
+      <text x="860" y="468" text-anchor="middle" fill="var(--cp-link)" font-size="9.5" font-weight="600">↑ M365 커넥터 게이트 통과 시 표출</text>
+
+      <line x1="480" y1="394" x2="480" y2="558" stroke="var(--cp-border)" stroke-width="1" stroke-dasharray="4 5"/>
+      <text x="480" y="522" text-anchor="middle" fill="var(--cp-text-soft)" font-size="10" font-style="italic">두 포털은 별개 표면 (공식 문서상 별개 기록 경로)</text>
+      <text x="480" y="538" text-anchor="middle" fill="var(--cp-text-soft)" font-size="9.5">네이티브 차단 카운트가 Defender로 전달된다는 공식 언급 없음</text>
+    </svg>
+    <div class="legend">
+      <span><i style="background:var(--cp-warning)"></i> Copilot Studio 네이티브 → CS Security analytics</span>
+      <span><i style="background:var(--cp-accent)"></i> Defender 탐지 → Defender XDR</span>
+      <span><i style="background:var(--cp-link)"></i> Security for AI 커넥터 · M365 게이트</span>
+      <span><i style="background:var(--cp-border-strong)"></i> Agent 365 이관(미래)</span>
+    </div>
+    <div class="src"><b>출처:</b>
+      네이티브 — <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/security-agent-runtime-view">security-agent-runtime-view</a>,
+      <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/faqs-generative-orchestration">faqs-generative-orchestration</a> ·
+      Defender for AI Services — <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-threat-protection">ai-threat-protection</a> ·
+      외부탐지 — <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider">external-security-provider</a>,
+      <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime">real-time-agent-protection-during-runtime</a> ·
+      Agent 365 — <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">ai-agent-detection-protection</a>
+    </div>
+  </div>
+
+  <!-- ② Defender Settings control plane -->
+  <div class="section-label">② Defender 포털 — "Security for AI" 설정의 커넥터가 어떻게 엮여 합쳐지나</div>
+  <div class="card">
+    <p style="font-size:12.5px;color:var(--cp-text-muted);margin-bottom:14px;">Defender 포털 <b>System › Settings › Security for AI</b> 화면은 두 그룹으로 나뉘며, 각 그룹에 에이전트 유형별 커넥터가 있습니다. 이 커넥터들이 위 ① 아키텍처의 <b>posture(①의 미래/조사)</b>와 <b>real-time protection(레이어 A·B)</b>을 각각 켜고, 마지막 <b>M365 커넥터</b>가 조사·Advanced Hunting을 묶어 모두 Defender 포털에서 합쳐집니다.</p>
+    <div class="cplane">
+      <!-- Group 1: posture -->
+      <div class="cpg posture">
+        <h4>AI security posture</h4>
+        <div class="desc">가시성 · 보안 상태 · 인벤토리 · exposure hunting (사전/Proactive)</div>
+        <div class="cprow first">
+          <span class="nm">Agent 365</span>
+          <span><span class="st c">Connected</span></span>
+          <span class="ds">Agent 365 에이전트 가시성·posture · advanced hunting exposure · agents inventory</span>
+        </div>
+        <div class="cprow">
+          <span class="nm">Copilot Studio</span>
+          <span><span class="st w">권한 필요</span></span>
+          <span class="ds">CS 에이전트 가시성·posture. <b>Power Platform admin center</b>에서 권한 설정 필요 · Connected까지 최대 1시간</span>
+        </div>
+        <div class="cprow">
+          <span class="nm">Microsoft Foundry</span>
+          <span><span class="st o">연결 필요</span></span>
+          <span class="ds">Foundry AI workload posture · 보안 권고 · <b>attack path</b> · agents inventory</span>
+        </div>
+        <div class="cpout">→ 산출: <span>AI-SPM</span> — inventory · attack path · exposure hunting (Advanced Hunting)</div>
+        <div class="src"><b>출처:</b>
+          <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/ai-agent-inventory">ai-agent-inventory</a> ·
+          <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime">real-time-agent-protection-during-runtime</a></div>
+      </div>
+      <!-- Group 2: RTP & investigation -->
+      <div class="cpg rtp">
+        <h4>AI real-time protection &amp; investigation</h4>
+        <div class="desc">런타임 탐지·차단 · 알림 · 조사 (실시간/Reactive)</div>
+        <div class="cprow first">
+          <span class="nm">Agent 365</span>
+          <span><span class="st c">Connected</span><span class="st audit">Audit</span></span>
+          <span class="ds">런타임 action request 모니터 → 탐지·차단 (예: 의심 행위·cross-prompt injection) → Defender Incidents &amp; Alerts</span>
+        </div>
+        <div class="cprow">
+          <span class="nm">Copilot Studio</span>
+          <span><span class="st c">Connected</span></span>
+          <span class="ds">CS 에이전트 action request 모니터 → 탐지·차단 → Defender Incidents &amp; Alerts</span>
+        </div>
+        <div class="cprow">
+          <span class="nm">Microsoft Foundry</span>
+          <span><span class="st o">연결 필요</span></span>
+          <span class="ds">Foundry action request 모니터 → data leakage·poisoning·jailbreak·credential theft alert</span>
+        </div>
+        <div class="cprow">
+          <span class="nm">Microsoft 365 커넥터</span>
+          <span><span class="st c">Connected</span></span>
+          <span class="ds"><b>조사 + Advanced Hunting</b> 활성화. 설정 시: <b>Entra ID Management events · Microsoft 365 activities</b> 선택. <b>MDA ingestion·threat detection 포함</b></span>
+        </div>
+        <div class="cpout">→ 산출: <span>Defender XDR</span> — Incidents &amp; Alerts · 조사 · Advanced Hunting</div>
+        <div class="src"><b>출처:</b>
+          <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/protect-office-365">defender-cloud-apps/protect-office-365</a> ·
+          <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">ai-agent-detection-protection</a></div>
+      </div>
+    </div>
+
+    <div class="combine">
+      <div class="arrow">↓ &nbsp; 두 그룹이 합쳐지는 곳 &nbsp; ↓</div>
+      <div class="merged">
+        <h4>Microsoft Defender 포털 (XDR)</h4>
+        <p>posture(인벤토리·attack path·exposure) + real-time protection(Incidents &amp; Alerts) + M365 커넥터(조사·Advanced Hunting)가 한 포털로 수렴</p>
+      </div>
+    </div>
+
+    <div class="linchpin">
+      🔑 <b>M365 커넥터 = linchpin.</b> 이게 연결돼야 RTP 탐지·차단의 <b>alert·조사·Advanced Hunting</b>이 Defender 포털에 모입니다. 커넥터를 켜면 <b>Defender for Cloud Apps(MDA)의 ingestion·threat detection이 포함</b>됩니다. 끊기면 ① 아키텍처대로 <b>차단은 작동하지만 alert·조사는 포털에 미표출</b>됩니다.
+      <div class="src"><b>출처:</b>
+        <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/protect-office-365">protect-office-365</a> ·
+        <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime">real-time-agent-protection-during-runtime</a></div>
+    </div>
+  </div>
+
+  <!-- ③ Layer B: external threat detection contract + onboarding -->
+  <div class="section-label">③ 레이어 B — Defender 외부 위협 탐지 (tool invocation, opt-in) · 온보딩 + API contract</div>
+  <div class="flow2">
+    <div class="card">
+      <div class="pipeline">
+        <div class="stage"><span class="num">1</span><h4>Generative Orchestrator</h4><p>매 tool invocation 직전 인터셉트. (classic 미적용)</p></div>
+        <div class="stage intercept"><span class="num">2</span><h4>REST 호출 (동기)</h4><p><code>POST /analyze-tool-execution</code> · <b>Entra App + FIC</b> (secret-less).</p></div>
+        <div class="stage"><span class="num">3</span><h4>Defender for Cloud Apps 평가</h4><p>제안 tool·이전 출력·인자값 분석 → <b>데이터탈취·tool오용·악성 라우팅</b> 판단 → <code>blockAction</code>.</p></div>
+        <div class="stage decision"><span class="num">4</span><h4>allow / block</h4><p>orchestrator가 응답대로 차단/실행 + (block 시) XDR alert. (≤1000ms)</p></div>
+      </div>
+    </div>
+    <div class="card spec">
+      <h4>🔧 온보딩 (Defender endpoint → PPAC)</h4>
+      <dl>
+        <dt>STEP 1</dt><dd>Defender 포털 System › Settings › Security for AI → <b>endpoint URL 발급</b> + M365 커넥터 연결</dd>
+        <dt>STEP 2</dt><dd>PPAC Security › Threat Detection(환경별)에 <b>endpoint + App ID</b> 입력 · Entra App + <b>FIC</b> 구성</dd>
+        <dt>STEP 3</dt><dd>App ID 회신 → Defender 포털 입력 → Save → <b>Connected</b></dd>
+      </dl>
+      <div class="endpoint" style="margin-top:12px;"><b>POST</b> /analyze-tool-execution?api-version=2025-05-01 · ≤1000ms · 기본 fail-open</div>
+      <span class="pk">plannerContext</span><span class="pk">previousToolOutputs[]</span><span class="pk">toolDefinition</span><span class="pk">inputValues</span>
+      <div class="src"><b>출처:</b>
+        <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider">external-security-provider</a> ·
+        <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-webhooks-interface-developers">external-security-webhooks-interface-developers</a> ·
+        <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime">real-time-agent-protection-during-runtime</a></div>
+    </div>
+  </div>
+
+  <footer class="page">
+    전체 출처(Microsoft Learn, 2026-06 확인):
+    copilot-studio/security-agent-runtime-view · external-security-provider · external-security-webhooks-interface-developers · faqs-generative-orchestration ·
+    defender-cloud-apps/real-time-agent-protection-during-runtime · protect-office-365 · ai-agent-inventory · defender-xdr/security-for-ai/ai-agent-detection-protection ·
+    azure/defender-for-cloud/ai-threat-protection · ai-security-posture · concept-attack-path.
+  </footer>
+</div>
+</main></div></body></html>

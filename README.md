@@ -1,27 +1,29 @@
-# Microsoft Agent 365 가이드북
+﻿# Microsoft Agent 365 가이드북
 
-Agent 365(에이전트를 관찰·관리·보호하는 컨트롤 플레인)를 소개하는 홈과, 세 개의 퍼블릭 레포를 심화 서브페이지로 묶은 단일 GitHub Pages 가이드북입니다.
+Agent 365(에이전트를 관찰·관리·보호하는 컨트롤 플레인)를 소개하는 홈과, 세 개의 심화 문서를 서브페이지로 재구현한 단일 GitHub Pages 사이트입니다. 전체 테마는 Agent 365 공식 리소스 톤에 맞췄습니다.
 
-**🔗 라이브: https://akimcse.github.io/agent-365-guidebook/**
+**라이브: https://akimcse.github.io/agent-365-guidebook/**
 
 ## 구성
 
-- **홈** — [Microsoft Agent 365 공식 페이지](https://www.microsoft.com/ko-kr/microsoft-agent-365)의 탭 구성(개요·관찰·거버넌스·보안·라이선스)과 내용을 반영.
-- **① 에이전트 유형 분류** — 실행 위치(SaaS/Endpoint/Cloud)·역할(Productivity/Action/Automation)·제작 방식(Pro-code/Low-code) 3축. → [agent-type-taxonomy](https://github.com/akimcse/agent-type-taxonomy)
-- **② 에이전트 신원 · 위험** — Copilot Studio 에이전트 신원·Sign-in 로그·Risky Agents 흐름. → [agent-identity-risk](https://github.com/akimcse/agent-identity-risk)
-- **③ 런타임 위협 탐지** — Copilot Studio/Foundry 런타임 위협 탐지 아키텍처. → [agent-runtime-security](https://github.com/akimcse/agent-runtime-security)
+- **홈 (`index.html`)** — [Microsoft Agent 365 공식 개요 페이지](https://www.microsoft.com/ko-kr/microsoft-agent-365)의 전체 내용(개요 · 관찰가능성/거버넌스/보안 3필라 및 12개 기능 · 관리 도구 4종 · M365 E7 · 고객 평가 · FAQ)을 재구성.
+- **① 에이전트 유형 분류 (`taxonomy.html`)** — 실행위치(SaaS/Endpoint/Cloud)·역할(Productivity/Action/Automation)·제작방식(Pro-code/Low-code) 3축.
+- **② 에이전트 신원 · 위험 (`identity-risk.html`)** — Copilot Studio 에이전트 신원·Sign-in 로그·Risky Agents 흐름.
+- **③ 런타임 위협 탐지 (`runtime-security.html`)** — Copilot Studio/Foundry 런타임 위협 탐지 아키텍처.
 
-## 구조
+세 서브페이지는 원본 인터랙티브 문서를 그대로 재구현하여 사이트에 내장했으며(별도 레포/임베드 아님), 공통 사이드바와 통일된 테마를 공유합니다.
+
+## 텍스트본
+
+`content/` 폴더에 홈과 각 서브페이지 내용을 마크다운 텍스트로 정리했습니다.
 
 ```
-index.html            앱 셸 (사이드바 + 탭형 홈 + 마크다운 라우터)
-content/home.md       홈 텍스트본
-content/taxonomy.md   ① 서브페이지
-content/identity-risk.md  ② 서브페이지
-content/runtime-security.md ③ 서브페이지
+index.html               홈 (공식 개요 전체)
+taxonomy.html            ① 에이전트 유형 분류
+identity-risk.html       ② 에이전트 신원 · 위험
+runtime-security.html    ③ 런타임 위협 탐지
+content/*.md             각 페이지 텍스트본
 ```
-
-각 서브페이지는 마크다운 요약 + 원본 인터랙티브 문서 임베드(iframe)로 구성됩니다.
 
 ## 근거
 
