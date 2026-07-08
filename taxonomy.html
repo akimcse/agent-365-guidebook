@@ -2,7 +2,7 @@
 <html lang="ko"><head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>① 에이전트 유형 분류 — Agent 365 가이드북</title>
-<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const t=p||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
+<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const s=localStorage.getItem("gbTheme");const t=p||s||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
 :root{
   color-scheme: light;
@@ -45,6 +45,14 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .gb-nav a.on .lb small{color:var(--cp-accent)}
 .gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
 .gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
+.gb-themetoggle{display:flex;align-items:center;gap:9px;width:100%;margin-top:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--cp-border);background:var(--cp-surface);color:var(--cp-text);font-family:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:.15s}
+.gb-themetoggle:hover{border-color:var(--cp-accent);color:var(--cp-accent)}
+.gb-themetoggle .ti{font-size:1rem}
+/* section-label → AXIS-style header (subpages 2·3) */
+.axis-head2{display:flex;align-items:baseline;gap:13px;flex-wrap:wrap;margin:38px 0 14px;text-transform:none;letter-spacing:normal;color:var(--cp-text)}
+.axis-head2 .axis-num2{font-size:.74rem;font-weight:800;letter-spacing:.09em;color:var(--cp-accent-fg);background:var(--cp-accent);padding:4px 11px;border-radius:6px;text-transform:uppercase;flex:none}
+.axis-head2 .axis-t2{font-size:1.5rem;font-weight:800;letter-spacing:-.01em}
+.axis-head2 .axis-t2 .axis-extra{display:block;font-size:.82rem;font-weight:500;color:var(--cp-text-soft);margin-top:3px}
 .gb-main{min-width:0}
 .sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
 .sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
@@ -217,6 +225,9 @@ footer.page-foot { margin-top: 48px; padding-top: 24px; border-top: 1px solid va
       <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
       <a href="https://github.com/akimcse/agent-365-guidebook" target="_blank" rel="noopener">GitHub 레포 ↗</a>
     </div>
+    <button class="gb-themetoggle" id="themeToggle" type="button" aria-label="테마 전환">
+      <span class="ti" id="themeIcon">🌙</span><span id="themeLabel">다크 모드</span>
+    </button>
   </aside><main class="gb-main">
 <div class="wrap">
 
@@ -490,4 +501,18 @@ footer.page-foot { margin-top: 48px; padding-top: 24px; border-top: 1px solid va
   </footer>
 
 </div>
-</main></div></body></html>
+</main></div><script>
+(()=>{
+  const btn=document.getElementById("themeToggle");
+  if(!btn) return;
+  const icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");
+  function sync(){const dark=document.documentElement.getAttribute("data-theme")==="dark";
+    icon.textContent=dark?"☀️":"🌙";label.textContent=dark?"라이트 모드":"다크 모드";}
+  sync();
+  btn.addEventListener("click",()=>{
+    const next=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+    document.documentElement.setAttribute("data-theme",next);
+    localStorage.setItem("gbTheme",next);sync();
+  });
+})();
+</script></body></html>

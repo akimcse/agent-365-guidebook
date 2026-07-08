@@ -2,7 +2,7 @@
 <html lang="ko"><head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>③ 런타임 위협 탐지 — Agent 365 가이드북</title>
-<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const t=p||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
+<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const s=localStorage.getItem("gbTheme");const t=p||s||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
 :root{
   color-scheme: light;
@@ -45,6 +45,14 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .gb-nav a.on .lb small{color:var(--cp-accent)}
 .gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
 .gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
+.gb-themetoggle{display:flex;align-items:center;gap:9px;width:100%;margin-top:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--cp-border);background:var(--cp-surface);color:var(--cp-text);font-family:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:.15s}
+.gb-themetoggle:hover{border-color:var(--cp-accent);color:var(--cp-accent)}
+.gb-themetoggle .ti{font-size:1rem}
+/* section-label → AXIS-style header (subpages 2·3) */
+.axis-head2{display:flex;align-items:baseline;gap:13px;flex-wrap:wrap;margin:38px 0 14px;text-transform:none;letter-spacing:normal;color:var(--cp-text)}
+.axis-head2 .axis-num2{font-size:.74rem;font-weight:800;letter-spacing:.09em;color:var(--cp-accent-fg);background:var(--cp-accent);padding:4px 11px;border-radius:6px;text-transform:uppercase;flex:none}
+.axis-head2 .axis-t2{font-size:1.5rem;font-weight:800;letter-spacing:-.01em}
+.axis-head2 .axis-t2 .axis-extra{display:block;font-size:.82rem;font-weight:500;color:var(--cp-text-soft);margin-top:3px}
 .gb-main{min-width:0}
 .sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
 .sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
@@ -158,12 +166,15 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
       <a href="https://github.com/akimcse/agent-365-guidebook" target="_blank" rel="noopener">GitHub 레포 ↗</a>
     </div>
+    <button class="gb-themetoggle" id="themeToggle" type="button" aria-label="테마 전환">
+      <span class="ti" id="themeIcon">🌙</span><span id="themeLabel">다크 모드</span>
+    </button>
   </aside><main class="gb-main">
 <div class="wrap">
   <div class="sub-hero"><span class="eb">✦ 심화 문서 ③</span><h1>런타임 위협 탐지</h1><p>Copilot Studio / Azure AI Foundry 에이전트의 런타임 위협 탐지·차단 메커니즘을 콘텐츠·액션 2-레이어 아키텍처로 정리합니다.</p></div>
 
   <!-- ① 2-layer architecture -->
-  <div class="section-label">① 핵심 아키텍처 — 2개 레이어 × (엔진 → 포털)</div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">핵심 아키텍처<span class="axis-extra">2개 레이어 × (엔진 → 포털)</span></h2></div>
   <div class="card archcard">
     <svg viewBox="0 0 1180 640" role="img" aria-label="콘텐츠 레이어와 액션 레이어의 탐지 엔진과 표출 포털">
       <defs>
@@ -288,7 +299,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
   </div>
 
   <!-- ② Defender Settings control plane -->
-  <div class="section-label">② Defender 포털 — "Security for AI" 설정의 커넥터가 어떻게 엮여 합쳐지나</div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">Defender 포털<span class="axis-extra">"Security for AI" 설정의 커넥터가 어떻게 엮여 합쳐지나</span></h2></div>
   <div class="card">
     <p style="font-size:12.5px;color:var(--cp-text-muted);margin-bottom:14px;">Defender 포털 <b>System › Settings › Security for AI</b> 화면은 두 그룹으로 나뉘며, 각 그룹에 에이전트 유형별 커넥터가 있습니다. 이 커넥터들이 위 ① 아키텍처의 <b>posture(①의 미래/조사)</b>와 <b>real-time protection(레이어 A·B)</b>을 각각 켜고, 마지막 <b>M365 커넥터</b>가 조사·Advanced Hunting을 묶어 모두 Defender 포털에서 합쳐집니다.</p>
     <div class="cplane">
@@ -364,7 +375,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
   </div>
 
   <!-- ③ Layer B: external threat detection contract + onboarding -->
-  <div class="section-label">③ 레이어 B — Defender 외부 위협 탐지 (tool invocation, opt-in) · 온보딩 + API contract</div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">레이어 B<span class="axis-extra">Defender 외부 위협 탐지 (tool invocation, opt-in) · 온보딩 + API contract</span></h2></div>
   <div class="flow2">
     <div class="card">
       <div class="pipeline">
@@ -397,4 +408,18 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     azure/defender-for-cloud/ai-threat-protection · ai-security-posture · concept-attack-path.
   </footer>
 </div>
-</main></div></body></html>
+</main></div><script>
+(()=>{
+  const btn=document.getElementById("themeToggle");
+  if(!btn) return;
+  const icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");
+  function sync(){const dark=document.documentElement.getAttribute("data-theme")==="dark";
+    icon.textContent=dark?"☀️":"🌙";label.textContent=dark?"라이트 모드":"다크 모드";}
+  sync();
+  btn.addEventListener("click",()=>{
+    const next=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+    document.documentElement.setAttribute("data-theme",next);
+    localStorage.setItem("gbTheme",next);sync();
+  });
+})();
+</script></body></html>
