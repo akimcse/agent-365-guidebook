@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko"><head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <title>③ 런타임 위협 탐지 — Agent 365 가이드북</title>
 <script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const s=localStorage.getItem("gbTheme");const t=p||s||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
@@ -53,6 +56,16 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .axis-head2 .axis-num2{font-size:.74rem;font-weight:800;letter-spacing:.09em;color:var(--cp-accent-fg);background:var(--cp-accent);padding:4px 11px;border-radius:6px;text-transform:uppercase;flex:none}
 .axis-head2 .axis-t2{font-size:1.5rem;font-weight:800;letter-spacing:-.01em}
 .axis-head2 .axis-t2 .axis-extra{display:block;font-size:.82rem;font-weight:500;color:var(--cp-text-soft);margin-top:3px}
+/* embedded original-doc safety: keep wide content inside the constrained column */
+.gb-main .wrap{max-width:1060px;margin:0 auto;padding:36px 40px 80px}
+.gb-main svg{max-width:100%;height:auto;display:block}
+.gb-main img{max-width:100%;height:auto}
+.gb-main table{max-width:100%;table-layout:auto}
+.gb-main .sub-hero{margin-left:0;margin-right:0}
+@media (max-width:1160px){
+  .gb-main .id-grid,.gb-main .find-grid,.gb-main .det-wrap,.gb-main .cplane,.gb-main .role-grid,.gb-main .flow2,.gb-main .notes{grid-template-columns:1fr !important}
+}
+@media (max-width:900px){.gb-main .wrap{padding:22px 18px 60px}}
 .gb-main{min-width:0}
 .sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
 .sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
