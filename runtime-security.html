@@ -46,6 +46,11 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
 .gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
 .gb-main{min-width:0}
+.sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
+.sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
+.sub-hero h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
+.sub-hero p{font-size:1rem;color:var(--cp-text-muted);max-width:64ch}
+@media (max-width:900px){.sub-hero{padding:24px 20px}.sub-hero h1{font-size:1.6rem}}
 @media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--cp-border)}}
 
 
@@ -155,11 +160,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     </div>
   </aside><main class="gb-main">
 <div class="wrap">
-  <header class="page">
-    <div class="eyebrow">Microsoft Defender · Copilot Studio · Agent 365 · Security for AI</div>
-    <h1>AI 에이전트 위협 탐지 아키텍처 + Defender 설정 컨트롤 플레인</h1>
-    <p class="sub">콘텐츠 레이어(모델 입출력) vs 액션 레이어(tool 호출) · Defender "Security for AI" 설정의 커넥터들이 어떻게 엮여 합쳐지는지 · 모든 항목 공식 문서(Microsoft Learn) 출처 명시 · 2026-06</p>
-  </header>
+  <div class="sub-hero"><span class="eb">✦ 심화 문서 ③</span><h1>런타임 위협 탐지</h1><p>Copilot Studio / Azure AI Foundry 에이전트의 런타임 위협 탐지·차단 메커니즘을 콘텐츠·액션 2-레이어 아키텍처로 정리합니다.</p></div>
 
   <!-- ① 2-layer architecture -->
   <div class="section-label">① 핵심 아키텍처 — 2개 레이어 × (엔진 → 포털)</div>

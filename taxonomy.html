@@ -46,6 +46,11 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
 .gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
 .gb-main{min-width:0}
+.sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
+.sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
+.sub-hero h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
+.sub-hero p{font-size:1rem;color:var(--cp-text-muted);max-width:64ch}
+@media (max-width:900px){.sub-hero{padding:24px 20px}.sub-hero h1{font-size:1.6rem}}
 @media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--cp-border)}}
 
 
@@ -215,18 +220,7 @@ footer.page-foot { margin-top: 48px; padding-top: 24px; border-top: 1px solid va
   </aside><main class="gb-main">
 <div class="wrap">
 
-  <header class="page-head">
-    <span class="eyebrow">AI Agent Governance</span>
-    <h1 class="page-title">AI 에이전트 유형 분류</h1>
-    <p class="page-sub">엔터프라이즈 AI 에이전트를 <strong>세 개의 독립적인 축</strong>으로 나눕니다 — ① 실행 위치, ② 역할, ③ 제작 방식. 각 축은 서로 다른 통제 지점(control surface)과 거버넌스 책임을 드러냅니다. 모든 정의·구분은 Microsoft Learn 공식 문서를 근거로 재정리했으며, 각 인용 각주는 원본 문서로 바로 연결됩니다.</p>
-    <div class="badge-src">📚 근거: Microsoft Learn · Cloud Adoption Framework(AI agents) · Microsoft Defender · Microsoft Security Blog</div>
-    <nav class="toc">
-      <a href="#axis-usage">① 실행 위치 · SaaS / Endpoint / Cloud</a>
-      <a href="#axis-role">② 역할 · Productivity / Action / Automation</a>
-      <a href="#axis-build">③ 제작 방식 · Pro-code / Low-code</a>
-      <a href="#refs">참고 문서</a>
-    </nav>
-  </header>
+  <div class="sub-hero"><span class="eb">✦ 심화 문서 ①</span><h1>에이전트 유형 분류</h1><p>실행 위치(SaaS/Endpoint/Cloud)·역할(Productivity/Action/Automation)·제작 방식(Pro-code/Low-code)의 3축으로 AI 에이전트를 분류합니다. 모든 정의는 Microsoft Learn 공식 문서 기반입니다.</p></div>
 
   <!-- ============ AXIS 1 ============ -->
   <section class="axis" id="axis-usage">
