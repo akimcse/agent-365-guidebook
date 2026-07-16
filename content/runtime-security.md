@@ -2,43 +2,35 @@
 
 원본 인터랙티브 문서: `runtime-security.html` (레포 내 서브페이지) · 대응 역할: Microsoft Defender 관리자
 
-Copilot Studio / Azure AI Foundry 에이전트의 런타임 위협 탐지·차단은 **서로 다른 3개 계층**에서 일어납니다.
+Copilot Studio / Azure AI Foundry 에이전트의 런타임 위협 탐지·차단은 **서로 다른 3개 계층**에서 일어납니다. 계층마다 탐지 엔진 · 커넥터 · 시그널 흐름 · 표출 포털 · 라이선스가 다릅니다.
 
-## 3계층 탐지 모델
+## SECTION 01 — 3계층 탐지 아키텍처 (시그널 소스 → 탐지 엔진 → 커넥터 게이트 → 표출 포털)
 
-| 계층 | 무엇을 탐지 | 엔진 | 표출 포털 | Azure 구독 | 라이선스 |
-|---|---|---|---|---|---|
-| ① Copilot Studio 네이티브 | UPIA·XPIA 인라인 차단(secure by default) | CS 내장 콘텐츠 보호 | CS Security analytics | 불필요 | Copilot Studio 테넌트+User |
-| ② Defender for AI Services (MDC) | Jailbreak·Prompt Injection·ASCII Smuggling (모델 레벨) | Prompt Shields + Threat Intel | Defender for Cloud → XDR | **필수** | Azure 구독 + DfC 플랜 |
-| ③ Agent 365 · Defender XDR | jailbreak·XPIA·시크릿 유출·tool 오용 (에이전트 런타임) | Agent 365 observability + Defender | Defender XDR | 불필요 | Microsoft Agent 365 (전제 M365 E5) |
+- **시그널 소스**: 에이전트 런타임 파이프라인 (입력 프롬프트 → 모델 생성·응답 → 툴 선택 → 툴 실행) · 콘텐츠 축 / 액션 축.
+- **Layer 1 콘텐츠(CS 네이티브)** → 커넥터 불필요 → CS Security analytics.
+- **Layer 2 모델(Prompt Shields → Defender for AI)** → Defender for Cloud 플랜(Azure) → Defender XDR.
+- **Layer 3 액션(Agent 365 · XDR)** → Copilot Studio RTP 커넥터(PPAC) / Agent 365·M365 App 커넥터 → Defender XDR.
+- **M365 App Connector = linchpin**: 이 게이트를 통과해야 alert·조사·Advanced Hunting 표출 (Agent 365 observability 로그 수집).
 
-**🎯 핵심:** "Agent 365로 jailbreak 탐지"는 Azure 구독 없이 ①+③으로 가능. 모델 수준(②)까지 원하면 Azure 구독 + MDC 플랜 필요.
+## SECTION 02 — 계층별 상세
 
-## 무엇을 검사하나 — 콘텐츠·액션 2-레이어
-- **콘텐츠 레이어** — 모델 입출력(프롬프트/응답)에 대한 탐지.
-- **액션 레이어** — tool 호출(API contract)에 대한 탐지.
-- 각 탐지의 엔진 / 활성 솔루션 / 표출 포털을 매핑.
+| 계층 | 탐지·엔진 | 표출 포털 | Azure 구독 | 라이선스 |
+|---|---|---|---|---|
+| 1. Copilot Studio 네이티브 | UPIA·XPIA 인라인 차단(secure by default) · **엔진 공식 미명시**(Prompt Shields 여부 미확인) | CS Security analytics | 불필요 | Copilot Studio 테넌트+User |
+| 2. Prompt Shields → Defender for AI (모델 레벨, MDC) | **탐지·차단: Azure AI Content Safety Prompt Shields**(UPIA·XPIA·ASCII Smuggling) → **알림: Defender for AI**가 "blocked/detected by Prompt Shields" alert 표출 | Defender for Cloud → XDR | **필수** + DfC 플랜·토큰과금 | Azure 구독 + Owner/Contributor |
+| 3. Agent 365 · Defender XDR (에이전트 런타임) | Agent 365 observability 기반 Defender 분석 · jailbreak·XPIA·시크릿 유출·tool 오용 · 실시간 차단 | Defender XDR (Incidents·Advanced Hunting) | 불필요 (M365 커넥터 기반) | Microsoft Agent 365 (전제 M365 E5) |
 
-## Security for AI 설정 컨트롤 플레인
-- Defender 포털 "Security for AI" 설정 커넥터(posture · real-time protection · M365 게이트)가 어떻게 엮이는지 정리.
-- Copilot Studio 네이티브 인라인 차단(→ CS Security analytics) vs Defender 외부 탐지(→ Defender XDR) 구분.
+**핵심:** "Agent 365로 jailbreak 탐지"는 Azure 구독 없이 1+3으로 가능. 모델 수준(2)까지 원하면 Azure 구독 + MDC 플랜 필요. **중요:** Layer 2에서 실제 탐지·차단은 **Prompt Shields(Azure AI Content Safety)** 가 하고, **Defender for AI**는 그 결과를 alert로 표출하는 **별개 서비스**입니다 — 하나로 합쳐 이해하면 안 됩니다. (BLOCKED/DETECTED 알림 분리가 그 증거)
 
-> ⚠️ 다수 기능이 Preview 상태 — 프로덕션 적용 전 최신 문서 재확인. 문서 근거 없는 항목은 "미명시/추론". (최종 확인: 2026-06)
+**2026.7.1 이관(검증됨):** 에이전트 레벨(Copilot Studio·Foundry 에이전트) 탐지·실시간 보호는 Defender for Cloud Apps/Defender for Cloud → **Agent 365 라이선스로 이관**. 단 **모델 레벨(Azure OpenAI 등 Foundry Models) jailbreak 탐지는 Defender for AI Services(Azure 구독)에 잔류**. 이관일에 기존 Block 규칙 중단 → 새 real-time protection 정책으로 재정의 필요.
 
-## Jailbreak · Prompt Injection 탐지 — 계층별 라이선스 전제
+출처: [external-security-provider](https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider) · [ai-threat-protection](https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-threat-protection) · [alerts-ai-workloads](https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-ai-workloads) · [content-safety/jailbreak-detection](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection) · [ai-agent-detection-protection](https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection) · [transition-agent-security-to-agent-365](https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/transition-agent-security-to-agent-365) · [agent-365/overview](https://learn.microsoft.com/en-us/microsoft-agent-365/overview) · [licensing/faqs/122](https://www.microsoft.com/licensing/faqs/122)
 
-"어느 계층에서 탐지하느냐"에 따라 Azure 구독(MDC) 필요 여부가 갈립니다.
+## SECTION 03 — Defender "Security for AI" 설정 커넥터
 
-| 계층 | 무엇이 탐지 | Azure 구독(MDC) 필요? | 필요 라이선스 |
-|---|---|---|---|
-| ① Copilot Studio 네이티브 (UPIA·XPIA 인라인 차단) | Copilot Studio 기본 내장("secure by default"), Security analytics 표출 | **아니오** | Copilot Studio 테넌트+User 라이선스 |
-| ② Defender for AI Services (MDC, 모델 레벨) | Azure AI Content Safety Prompt Shields + Threat Intel (Azure OpenAI·Foundry 모델) | **예 — 필수** | Azure 구독 + Defender for Cloud 플랜 + Owner/Contributor · 토큰당 과금 |
-| ③ Agent 365 / Defender XDR (에이전트 런타임) | Agent 365 observability 기반 Defender XDR, jailbreak·XPIA 등 탐지·실시간 차단 | **아니오** | Microsoft Agent 365 라이선스(사용자당 $15/mo 또는 M365 E7) · 전제 M365 E5 |
+- Defender 포털 System > Settings > Security for AI: posture 그룹 + real-time protection 그룹, 각 그룹에 에이전트 유형별 커넥터.
+- **M365 App 커넥터 = linchpin** — Agent 365 observability 로그(CS·Foundry 에이전트 신호)를 수집해 alert·조사·Advanced Hunting을 Defender 포털로 통합.
 
-**⚠️ 2026.7.1 이관:** Copilot Studio·Foundry의 "에이전트 레벨" 탐지·실시간 보호는 Defender for Cloud Apps/Defender for Cloud에서 빠져 **Agent 365 라이선스로 이관**. 단 **모델 레벨(Azure OpenAI) jailbreak 탐지는 Defender for AI Services(Azure 구독)에 잔류**. 이관일에 기존 Block 규칙이 중단되므로 새 real-time protection 정책으로 재정의 필요.
+> Preview 상태 기능 다수 — 프로덕션 적용 전 최신 문서 재확인. (최종 확인: 2026-07)
 
-**🎯 요약:** "Agent 365로 jailbreak 탐지"는 Azure 구독 없이 ①+③으로 가능. 모델 수준(②)까지 원하면 Azure 구독 + MDC 플랜 필요. MDC가 반드시 있어야 탐지되는 것은 아니며 "어느 레이어까지 커버하느냐"가 핵심.
-
-라이선스 출처: [external-security-provider](https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider) · [ai-threat-protection](https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-threat-protection) · [ai-agent-detection-protection](https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection) · [transition-agent-security-to-agent-365](https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/transition-agent-security-to-agent-365) · [agent-365/overview](https://learn.microsoft.com/en-us/microsoft-agent-365/overview) · [licensing/faqs/122](https://www.microsoft.com/licensing/faqs/122)
-
-주요 출처: [Copilot Studio — security-agent-runtime-view](https://learn.microsoft.com/en-us/microsoft-copilot-studio/security-agent-runtime-view) · [Defender for Cloud Apps — real-time agent protection](https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime) · [Defender XDR — ai-agent-detection-protection](https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection)
+주요 출처: [security-agent-runtime-view](https://learn.microsoft.com/en-us/microsoft-copilot-studio/security-agent-runtime-view) · [real-time-agent-protection-during-runtime](https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime) · [ai-agent-detection-protection](https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection)
