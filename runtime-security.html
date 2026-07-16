@@ -308,52 +308,8 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/transition-agent-security-to-agent-365">transition-agent-security-to-agent-365</a> · (2026-07 확인)</div>
   </div>
 
-  <!-- SECTION 04: real-time vs detection -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">실시간 보호 vs 탐지·조사<span class="axis-extra">Security for AI의 두 국면 — 막는다(prevent) vs 찾아내고 조사한다(detect)</span></h2></div>
-  <div class="card">
-    <table style="width:100%;border-collapse:collapse;font-size:12px;">
-      <thead>
-        <tr style="text-align:left;border-bottom:2px solid var(--cp-border);">
-          <th style="padding:8px 10px;"></th>
-          <th style="padding:8px 10px;">실시간 보호 (real-time protection)</th>
-          <th style="padding:8px 10px;">탐지·조사 (detection &amp; investigation)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
-          <td style="padding:8px 10px;font-weight:700;">역할</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);">tool 실행 <b>직전</b> 위험 액션을 <b>차단</b>(prevent)</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);">위협 발생 후 near-real-time <b>알림</b> 생성·조사(detect)</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
-          <td style="padding:8px 10px;font-weight:700;">동작</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);"><b>Default 규칙</b>(전 에이전트 audit, 차단 안 함) / <b>Custom 규칙</b>(고신뢰 위협 block + 스코프 지정)</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);">알림 → 인시던트 상관 → Advanced Hunting(KQL)</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
-          <td style="padding:8px 10px;font-weight:700;">저장 테이블</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>BehaviorInfo</code> (audit/block 이벤트) · <code>BehaviorEntities</code></td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>AlertInfo</code> · <code>CloudAppEvents</code>(Agent 365 observability) · <code>AlertEvidence</code> · <code>AgentsInfo</code></td>
-        </tr>
-        <tr style="vertical-align:top;">
-          <td style="padding:8px 10px;font-weight:700;">에이전트별 커버</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);">Agent 365 tool(Work IQ MCP) · <b>Copilot Studio(tool invocation, MCP 비의존)</b> · Local(MDE)</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);">모든 Agent 365 관리 에이전트 (observability 로그 기반)</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="note" style="margin-top:14px;">
-      <b>⚠️ Copilot Studio는 Prompt Shields를 거치지 않음 (공식 명시)</b>
-      <span>실시간 보호에서 <b>Copilot Studio 에이전트는 "tool invocation 평가"로 커버</b>됩니다(모델 콘텐츠를 Prompt Shields로 검사하지 않음). 공식 문서: <i>"Block events from Microsoft Prompt Shields for Foundry and Microsoft 365 Copilot Agent Builder are also recorded as behaviors. <b>This isn't yet supported for agents built with Microsoft Copilot Studio.</b>"</i> — 즉 Prompt Shields 블록 이벤트는 <b>Foundry·M365 Copilot Agent Builder</b>만 해당. Copilot Studio의 콘텐츠(UPIA/XPIA) 차단은 별개인 <b>CS 자체 내장 보호(SECTION 02 Layer ①)</b>가 담당합니다.</span>
-    </div>
-    <div class="src"><b>출처:</b>
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-real-time-protection">defender-xdr/ai-agent-real-time-protection</a> ·
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">defender-xdr/ai-agent-detection-protection</a> ·
-      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview">agent-365/tooling-servers-overview (Work IQ MCP)</a> · (2026-07 확인)</div>
-  </div>
-
   <!-- SECTION 02: 3-layer detail cards -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">계층별 상세 — 엔진 · 포털 · 라이선스<span class="axis-extra">"어느 계층에서 탐지하느냐"가 엔진·Azure 구독·라이선스를 가른다</span></h2></div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">계층별 상세 — 엔진 · 포털 · 라이선스<span class="axis-extra">"어느 계층에서 탐지하느냐"가 엔진·Azure 구독·라이선스를 가른다</span></h2></div>
   <div class="l3grid">
     <div class="l3 n1">
       <span class="lnum">Layer ①</span>
@@ -409,6 +365,50 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/transition-agent-security-to-agent-365">transition-agent-security-to-agent-365</a> ·
     <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview">microsoft-agent-365/overview</a> ·
     <a href="https://www.microsoft.com/licensing/faqs/122">licensing/faqs/122</a> · (2026-07 확인)</div>
+
+  <!-- SECTION 04: real-time vs detection -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">실시간 보호 vs 탐지·조사<span class="axis-extra">Security for AI의 두 국면 — 막는다(prevent) vs 찾아내고 조사한다(detect)</span></h2></div>
+  <div class="card">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="text-align:left;border-bottom:2px solid var(--cp-border);">
+          <th style="padding:8px 10px;"></th>
+          <th style="padding:8px 10px;">실시간 보호 (real-time protection)</th>
+          <th style="padding:8px 10px;">탐지·조사 (detection &amp; investigation)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
+          <td style="padding:8px 10px;font-weight:700;">역할</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);">tool 실행 <b>직전</b> 위험 액션을 <b>차단</b>(prevent)</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);">위협 발생 후 near-real-time <b>알림</b> 생성·조사(detect)</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
+          <td style="padding:8px 10px;font-weight:700;">동작</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><b>Default 규칙</b>(전 에이전트 audit, 차단 안 함) / <b>Custom 규칙</b>(고신뢰 위협 block + 스코프 지정)</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);">알림 → 인시던트 상관 → Advanced Hunting(KQL)</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
+          <td style="padding:8px 10px;font-weight:700;">저장 테이블</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>BehaviorInfo</code> (audit/block 이벤트) · <code>BehaviorEntities</code></td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>AlertInfo</code> · <code>CloudAppEvents</code>(Agent 365 observability) · <code>AlertEvidence</code> · <code>AgentsInfo</code></td>
+        </tr>
+        <tr style="vertical-align:top;">
+          <td style="padding:8px 10px;font-weight:700;">에이전트별 커버</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);">Agent 365 tool(Work IQ MCP) · <b>Copilot Studio(tool invocation, MCP 비의존)</b> · Local(MDE)</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);">모든 Agent 365 관리 에이전트 (observability 로그 기반)</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:14px;">
+      <b>⚠️ Copilot Studio는 Prompt Shields를 거치지 않음 (공식 명시)</b>
+      <span>실시간 보호에서 <b>Copilot Studio 에이전트는 "tool invocation 평가"로 커버</b>됩니다(모델 콘텐츠를 Prompt Shields로 검사하지 않음). 공식 문서: <i>"Block events from Microsoft Prompt Shields for Foundry and Microsoft 365 Copilot Agent Builder are also recorded as behaviors. <b>This isn't yet supported for agents built with Microsoft Copilot Studio.</b>"</i> — 즉 Prompt Shields 블록 이벤트는 <b>Foundry·M365 Copilot Agent Builder</b>만 해당. Copilot Studio의 콘텐츠(UPIA/XPIA) 차단은 별개인 <b>CS 자체 내장 보호(SECTION 02 Layer ①)</b>가 담당합니다.</span>
+    </div>
+    <div class="src"><b>출처:</b>
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-real-time-protection">defender-xdr/ai-agent-real-time-protection</a> ·
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">defender-xdr/ai-agent-detection-protection</a> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview">agent-365/tooling-servers-overview (Work IQ MCP)</a> · (2026-07 확인)</div>
+  </div>
 
   <!-- SECTION 03: Security for AI Get started (data sources) -->
   <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">Security for AI 설정 — 데이터 소스 연결<span class="axis-extra">Settings › Security for AI › Get started · 3개 데이터 소스 온보딩</span></h2></div>
