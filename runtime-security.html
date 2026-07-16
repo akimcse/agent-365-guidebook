@@ -276,7 +276,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
 
   <rect x="420" y="348" width="340" height="52" rx="12" fill="rgba(15,108,189,0.08)" stroke="var(--cp-link)"/>
   <text x="590" y="372" text-anchor="middle" fill="var(--cp-link)" font-size="11" font-weight="700">Defender for Cloud 플랜 (Azure)</text>
-  <text x="590" y="390" text-anchor="middle" fill="var(--cp-text-muted)" font-size="9.5">MDC → XDR 통합</text>
+  <text x="590" y="390" text-anchor="middle" fill="var(--cp-text-muted)" font-size="9.5">MDC → XDR 자동 통합 · 커넥터 무관</text>
 
   <rect x="800" y="348" width="340" height="52" rx="12" fill="rgba(15,108,189,0.08)" stroke="var(--cp-link)"/>
   <text x="970" y="372" text-anchor="middle" fill="var(--cp-link)" font-size="11" font-weight="700">M365 App 커넥터 (linchpin)</text>
@@ -350,19 +350,17 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     </div>
   </div>
   <div class="note" style="margin-top:14px;border-left-color:var(--cp-accent);">
-    <b>🎯 핵심</b>
-    <span>"Agent 365로 jailbreak 탐지" 자체는 <b>Azure 구독 없이</b> Layer ① + ③으로 가능합니다. <b>모델 수준(Azure OpenAI/Foundry)의 Defender for AI 탐지(Layer ②)까지 원하면 Azure 구독 + MDC 플랜이 필요</b>합니다. 중요: Layer ②에서 실제 탐지·차단은 <b>Prompt Shields(Azure AI Content Safety)</b>가 하고, <b>Defender for AI</b>는 그 결과를 alert로 표출하는 <b>별개 서비스</b>입니다 — 하나로 합쳐 이해하면 안 됩니다.</span>
+    <b>🎯 종합 — 에이전트 Prompt Injection·Jailbreak는 어떻게 탐지·차단되나</b>
+    <span>에이전트의 Prompt Injection(UPIA/XPIA)·Jailbreak는 <b>콘텐츠(모델 입출력)</b>에서는 <b>Azure AI Content Safety Prompt Shields</b>(및 Copilot Studio 내장 보호)가, <b>액션(tool 호출)</b>에서는 <b>Agent 365 observability 기반 Defender(Security for AI)</b>가 탐지·차단하며, 그 결과는 모두 <b>Microsoft Defender 포털(XDR)</b>에 알림으로 수렴합니다(로컬 에이전트는 Defender for Endpoint 런타임). Prompt Shields는 탐지·차단 엔진이고 Defender는 이를 알림으로 표출·조사하는 계층으로, 둘은 별개 서비스입니다.</span>
   </div>
-  <div class="note" style="margin-top:10px;">
-    <b>⚠️ 2026.7.1 라이선스 이관 (검증됨)</b>
-    <span>에이전트 레벨(Copilot Studio·Foundry 에이전트) 탐지·실시간 보호는 Defender for Cloud Apps/Defender for Cloud → <b>Agent 365 라이선스로 이관</b>(해당 라이선스 없으면 접근 상실). 단 <b>모델 레벨(Azure OpenAI 등 Foundry Models) jailbreak 탐지는 Defender for AI Services(Azure 구독)에 잔류</b>. 이관일에 기존 Block 규칙이 중단되므로 새 real-time protection 정책으로 재정의 필요.</span>
-  </div>
+
   <div class="src"><b>출처:</b>
     <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider">copilot-studio/external-security-provider</a> ·
     <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-threat-protection">defender-for-cloud/ai-threat-protection</a> ·
     <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-ai-workloads">alerts-ai-workloads</a> ·
     <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">defender-xdr/ai-agent-detection-protection</a> ·
     <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/transition-agent-security-to-agent-365">transition-agent-security-to-agent-365</a> ·
+    <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-integration-365">defender-for-cloud/concept-integration-365 (MDC→XDR 자동 통합)</a> ·
     <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview">microsoft-agent-365/overview</a> ·
     <a href="https://www.microsoft.com/licensing/faqs/122">licensing/faqs/122</a> · (2026-07 확인)</div>
 
@@ -436,7 +434,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     </div>
 
     <div class="linchpin" style="margin-top:14px;">
-      🔑 <b>M365 커넥터 = linchpin.</b> Copilot Studio 에이전트의 경우 <b>M365 커넥터가 연결 안 돼 있어도 실시간 보호(런타임 차단)는 계속 작동</b>하지만, <b>그 액션 관련 alert·incident는 Defender 포털에 표시되지 않습니다</b>(공식 문서 명시). 즉 "차단"과 "표출"이 분리됩니다.
+      🔑 <b>M365 커넥터 = linchpin.</b> Copilot Studio 에이전트의 경우 <b>M365 커넥터가 연결 안 돼 있어도 실시간 보호(런타임 차단)는 계속 작동</b>하지만, <b>그 액션 관련 alert·incident는 Defender 포털에 표시되지 않습니다</b>(공식 문서 명시). 즉 "차단"과 "표출"이 분리됩니다. <span style="display:block;margin-top:6px;color:var(--cp-text-soft);font-size:11px;">단, 이 게이트는 <b>Copilot Studio(Agent 365 observability) 경로에만</b> 적용됩니다. <b>Foundry/Prompt Shields 알림(MDC 발)은 MDC→Defender XDR 자동 통합으로 흐르므로 M365 커넥터 없이도</b> Defender 포털에 표출됩니다(전제: Azure 구독 + Defender for Cloud 플랜 On).</span>
     </div>
     <div class="note" style="margin-top:12px;">
       <b>ℹ️ Copilot Studio 실시간 보호 온보딩 (Power Platform 협업 필요)</b>
@@ -445,6 +443,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     <div class="src"><b>출처:</b>
       <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/get-started-defender-security-for-ai">get-started-defender-security-for-ai</a> ·
       <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">ai-agent-detection-protection</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-integration-365">defender-for-cloud/concept-integration-365 (MDC→XDR 자동 통합)</a> ·
       <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider">copilot-studio/external-security-provider</a> · (2026-07 확인)</div>
   </div>
 
