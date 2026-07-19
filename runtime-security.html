@@ -341,7 +341,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <h3>Security for AI (Agent 365)</h3>
       <div class="lsub">에이전트 런타임 · <b>tool invocation 평가</b> (CS는 Prompt Shields 미경유)</div>
       <dl>
-        <dt>탐지</dt><dd>jailbreak·XPIA·악성 콘텐츠 전파·시크릿 유출·tool 오용 (Agent 365 observability 로그 → Defender 행위분석)</dd>
+        <dt>탐지</dt><dd>jailbreak·XPIA·악성 콘텐츠 전파·시크릿 유출·tool 오용 <span class="unv">(콘텐츠 차단이 아니라 tool 호출·실행 패턴 기반 행위분석)</span></dd>
         <dt>대상</dt><dd>Copilot Studio 에이전트(tool invocation) · Agent 365 tool(Work IQ MCP) · Foundry/M365 Copilot Agent Builder(Prompt Shields 블록 이벤트)</dd>
         <dt>포털</dt><dd>Defender XDR · <b>Detection/Service source = "Microsoft Security for AI"</b></dd>
         <dt>Azure</dt><dd><span class="azure no">불필요</span> (M365 App 커넥터 기반)</dd>
@@ -438,6 +438,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
         </div>
       </div>
       <p style="margin-top:12px;font-size:12px;color:var(--cp-text-muted);">→ CS jailbreak는 CS 내장 모더레이션이 차단 + Purview에 기록되지만, MDC·Agent 365·차단규칙 세 경로 모두 비켜가 Defender 알림엔 안 뜨는 게 현재 사양입니다.</p>
+      <p style="margin-top:6px;font-size:11px;color:var(--cp-text-soft);">※ 단, 여기서 '안 뜸'은 <b>콘텐츠 레벨 jailbreak 차단(ContentFiltered)</b> 얘기입니다. <b>tool 호출로 이어지는 행위 기반 위협</b>은 Layer ③(Security for AI)이 별도로 탐지·표출합니다.</p>
     </div>
     <div class="src"><b>출처:</b>
       <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/transition-agent-security-to-agent-365">transition-agent-security-to-agent-365 (CS=MDCA · Foundry=MDC)</a> ·
