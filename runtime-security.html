@@ -349,10 +349,6 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       </dl>
     </div>
   </div>
-  <div class="note" style="margin-top:14px;border-left-color:var(--cp-accent);">
-    <b>🎯 종합 — 에이전트 Prompt Injection·Jailbreak는 어떻게 탐지·차단되나</b>
-    <span>에이전트의 Prompt Injection(UPIA/XPIA)·Jailbreak는 <b>콘텐츠(모델 입출력)</b>에서는 <b>Azure AI Content Safety Prompt Shields</b>(및 Copilot Studio 내장 보호)가, <b>액션(tool 호출)</b>에서는 <b>Agent 365 observability 기반 Defender(Security for AI)</b>가 탐지·차단하며, 그 결과는 모두 <b>Microsoft Defender 포털(XDR)</b>에 알림으로 수렴합니다(로컬 에이전트는 Defender for Endpoint 런타임). Prompt Shields는 탐지·차단 엔진이고 Defender는 이를 알림으로 표출·조사하는 계층으로, 둘은 별개 서비스입니다.</span>
-  </div>
 
   <div class="src"><b>출처:</b>
     <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider">copilot-studio/external-security-provider</a> ·
@@ -383,108 +379,103 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
         </tr>
         <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
           <td style="padding:8px 10px;font-weight:700;">동작</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);"><b>Default 규칙</b>(전 에이전트 audit, 차단 안 함) / <b>Custom 규칙</b>(고신뢰 위협 block + 스코프 지정)</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><b>Default 규칙</b>(전 에이전트 audit) / <b>Custom 규칙</b>(고신뢰 위협 block + 스코프)</td>
           <td style="padding:8px 10px;color:var(--cp-text-muted);">알림 → 인시던트 상관 → Advanced Hunting(KQL)</td>
         </tr>
         <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
+          <td style="padding:8px 10px;font-weight:700;">지원 위협 유형</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><b>차단 규칙 4종(완결)</b>: Secret exfiltration · Malicious content propagation · Evasion techniques · Unsafe email domain <span style="color:var(--cp-text-soft);">(jailbreak·XPIA는 탐지만, 차단 규칙 타입 아님)</span></td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><b>에이전트 단(Agent 365, 비완결)</b>: jailbreak·XPIA·malicious content·secret leak·evasion·suspicious access + "and more" · <b>모델 단(MDC)</b>: 17~18종(아래 접기)</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;">
           <td style="padding:8px 10px;font-weight:700;">저장 테이블</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>BehaviorInfo</code> (audit/block 이벤트) · <code>BehaviorEntities</code></td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>AlertInfo</code> · <code>CloudAppEvents</code>(Agent 365 observability) · <code>AlertEvidence</code> · <code>AgentsInfo</code></td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>BehaviorInfo</code> · <code>BehaviorEntities</code></td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);"><code>AlertInfo</code> · <code>CloudAppEvents</code> · <code>AlertEvidence</code> · <code>AgentsInfo</code></td>
         </tr>
         <tr style="vertical-align:top;">
           <td style="padding:8px 10px;font-weight:700;">에이전트별 커버</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);">Agent 365 tool(Work IQ MCP) · <b>Copilot Studio(tool invocation, MCP 비의존)</b> · Local(MDE)</td>
-          <td style="padding:8px 10px;color:var(--cp-text-muted);">모든 Agent 365 관리 에이전트 (observability 로그 기반)</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);">Agent 365 tool(Work IQ MCP) · <b>Copilot Studio(tool invocation)</b> · Local(MDE)</td>
+          <td style="padding:8px 10px;color:var(--cp-text-muted);">모든 Agent 365 관리 에이전트 (observability 로그)</td>
         </tr>
       </tbody>
     </table>
-    <div class="note" style="margin-top:14px;">
-      <b>⚠️ Copilot Studio는 Prompt Shields를 거치지 않음 (공식 명시)</b>
-      <span>실시간 보호에서 <b>Copilot Studio 에이전트는 "tool invocation 평가"로 커버</b>됩니다(모델 콘텐츠를 Prompt Shields로 검사하지 않음). 공식 문서: <i>"Block events from Microsoft Prompt Shields for Foundry and Microsoft 365 Copilot Agent Builder are also recorded as behaviors. <b>This isn't yet supported for agents built with Microsoft Copilot Studio.</b>"</i> — 즉 Prompt Shields 블록 이벤트는 <b>Foundry·M365 Copilot Agent Builder</b>만 해당. Copilot Studio의 콘텐츠(UPIA/XPIA) 차단은 별개인 <b>CS 자체 내장 보호(SECTION 02 Layer ①)</b>가 담당합니다.</span>
+
+    <details style="margin-top:12px;">
+      <summary style="cursor:pointer;font-size:12px;font-weight:700;color:var(--cp-link);">▸ 모델 단(MDC · Foundry/Azure OpenAI) 알림 카탈로그 17~18종 펼치기</summary>
+      <table style="width:100%;border-collapse:collapse;font-size:11.5px;margin-top:10px;">
+        <thead><tr style="text-align:left;border-bottom:2px solid var(--cp-border);"><th style="padding:7px 9px;">범주</th><th style="padding:7px 9px;">Alert ID (AI.Azure_*)</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">Jailbreak (Prompt Shields)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>Jailbreak.ContentFiltering.BlockedAttempt</code> · <code>DetectedAttempt</code></td></tr>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">간접 인젝션 (ASCII Smuggling)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>ASCIISmuggling</code></td></tr>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">악성 URL (3종)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>MaliciousUrl.UserPrompt · ModelResponse · UnknownSource</code></td></tr>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">자격증명 탈취</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>CredentialTheftAttempt</code></td></tr>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">Denial of Wallet (2종)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>DOWDuplicateRequests · DOWVolumeAnomaly</code></td></tr>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">의심 접근 (IP·Tor·UA·이상)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>AccessFromSuspiciousIP · AccessFromAnonymizedIP · AccessFromSuspiciousUserAgent · AccessAnomaly</code></td></tr>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">이상 tool 호출 · SP 초기접근</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>AnomalousToolInvocation · AnomalousOperation.InitialAccess</code></td></tr>
+          <tr style="vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">Preview</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>LLMReconnaissance · AIModelScan_MalwareDetected</code> · 노출 K8s 서비스</td></tr>
+        </tbody>
+      </table>
+    </details>
+
+    <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--cp-border);">
+      <h4 style="font-size:13.5px;font-weight:800;margin-bottom:4px;">왜 Copilot Studio jailbreak는 Defender XDR 알림에 안 뜨나</h4>
+      <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 12px;">CS 에이전트의 jailbreak가 <b>실제로 차단(ContentFiltered)되고 Purview DSPM엔 기록</b>되어도 Defender XDR 알림엔 안 뜰 수 있습니다 — 아래 세 경로가 모두 CS를 비켜가기 때문입니다. <span style="color:var(--cp-text-soft);">(반면 Foundry/Azure OpenAI 모델은 MDC 경로로 정상 표출)</span></p>
+      <div class="cplane" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="cpg" style="border-top:4px solid var(--cp-danger);">
+          <h4>① MDC 경로 ✗</h4>
+          <div class="desc">모델 소유권</div>
+          <span class="ds" style="font-size:11px;color:var(--cp-text-muted);">CS는 <b>Microsoft 관리 모델</b>(GPT·Claude 등, 고객 Azure 리소스 아님)을 사용. Defender for AI Services(MDC)는 <b>고객 구독 내 Azure OpenAI/Foundry 리소스만</b> 모니터링하므로 CS 모델은 감시 대상 밖 → <code>AI.Azure_Jailbreak.*</code> 경로를 애초에 안 탐.</span>
+        </div>
+        <div class="cpg" style="border-top:4px solid var(--cp-warning);">
+          <h4>② Agent 365 경로 ✗</h4>
+          <div class="desc">Prompt Shields behavior 미지원</div>
+          <span class="ds" style="font-size:11px;color:var(--cp-text-muted);">Prompt Shields 블록 이벤트는 <b>Foundry·M365 Copilot Agent Builder만</b> <code>BehaviorInfo</code>에 기록되고 <b>Copilot Studio는 아직 미지원</b>. (CS는 콘텐츠가 아니라 tool invocation 평가로만 커버)</span>
+        </div>
+        <div class="cpg" style="border-top:4px solid var(--cp-accent);">
+          <h4>③ 차단규칙 억제</h4>
+          <div class="desc">alert 대신 behavior</div>
+          <span class="ds" style="font-size:11px;color:var(--cp-text-muted);"><b>차단 규칙이 커버하는 에이전트</b>는 near-real-time alert가 생성되지 않고 <code>BehaviorInfo</code> behavior로만 기록됩니다.</span>
+        </div>
+      </div>
+      <p style="margin-top:12px;font-size:12px;color:var(--cp-text-muted);">→ CS jailbreak는 CS 내장 모더레이션이 차단 + Purview에 기록되지만, MDC·Agent 365·차단규칙 세 경로 모두 비켜가 Defender 알림엔 안 뜨는 게 현재 사양입니다.</p>
     </div>
     <div class="src"><b>출처:</b>
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-real-time-protection">defender-xdr/ai-agent-real-time-protection</a> ·
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">defender-xdr/ai-agent-detection-protection</a> ·
-      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/tooling-servers-overview">agent-365/tooling-servers-overview (Work IQ MCP)</a> · (2026-07 확인)</div>
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/transition-agent-security-to-agent-365">transition-agent-security-to-agent-365 (CS=MDCA · Foundry=MDC)</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-onboarding">defender-for-cloud/ai-onboarding (Foundry 워크로드/Azure 구독 범위)</a> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/faqs-generative-answers">copilot-studio/faqs-generative-answers (CS 내장 모더레이션)</a> ·
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">ai-agent-detection-protection</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-ai-workloads">alerts-ai-workloads</a> · (2026-07 확인)</div>
   </div>
 
   <!-- SECTION 03: Security for AI Get started (data sources) -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">Security for AI 설정 — 데이터 소스 연결<span class="axis-extra">Settings › Security for AI › Get started · 3개 데이터 소스 온보딩</span></h2></div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">Security for AI 설정 — 온보딩 · 규칙 · 증거<span class="axis-extra">Settings › Security for AI · 데이터 소스 3종 + 실시간 보호 규칙 + 프롬프트 증거</span></h2></div>
   <div class="card">
-    <p style="font-size:12.5px;color:var(--cp-text-muted);margin-bottom:14px;">Microsoft Defender가 테넌트의 AI 에이전트를 <b>표출·조사·보호</b>하는 데 사용하는 데이터 소스를 구성하는 화면입니다. Agent 365에 온보딩하면 security for AI가 자동 활성화(<b>Enable</b> 토글 기본 On)되고, <b>AI 에이전트 검색 · 보안 태세 평가 · 위협 탐지</b>가 켜집니다. 체크리스트가 <b>필수/선택</b> 데이터 소스 상태를 보여줍니다.</p>
+    <h4 style="font-size:13.5px;font-weight:800;margin-bottom:4px;">① 데이터 소스 연결 (Get started)</h4>
+    <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 10px;">Agent 365 온보딩 시 security for AI 자동 활성화. 체크리스트 3종을 연결하면 검색·태세·탐지가 켜집니다.</p>
     <div class="cplane" style="grid-template-columns:1fr;">
       <div class="cpg" style="border-top:4px solid var(--cp-success);">
-        <div class="cprow first">
-          <span class="nm">Agent 365</span>
-          <span><span class="st c">Done</span><span class="st audit">Required</span></span>
-          <span class="ds">AI 에이전트 <b>통합 가시성</b> · AI 기반 위협 조기 탐지 · AI 리스크 노출 감소. Agent 365 온보딩 시 <b>자동 완료</b>.</span>
-        </div>
-        <div class="cprow">
-          <span class="nm">Microsoft 365 커넥터</span>
-          <span><span class="st c">Connected</span><span class="st audit">Required</span></span>
-          <span class="ds"><b>조사 + Advanced Hunting</b> 활성화(AI 에이전트 활동). 설정 시 최소 2개 구성요소 선택: <b>Microsoft Entra ID Management events</b> · <b>Microsoft 365 activities</b> (Entra Users/groups는 기본 필수). <b>이게 연결돼야 alert·incident가 Defender 포털에 표출</b>.</span>
-        </div>
-        <div class="cprow">
-          <span class="nm">Copilot Studio</span>
-          <span><span class="st c">Connected</span><span class="st audit">Required</span></span>
-          <span class="ds">Copilot Studio 에이전트의 런타임 <b>action request(tool invocation)를 모니터해 탐지·차단</b>(의심 행위·cross-prompt injection). 실시간 보호 토글 On + <b>Power Platform 관리자</b> 협업(App ID 교환)으로 온보딩.</span>
-        </div>
-        <div class="cpout">→ 산출: <span>Defender XDR</span> — AI 에이전트 검색 · 보안 태세 · Incidents &amp; Alerts · 조사 · Advanced Hunting</div>
+        <div class="cprow first"><span class="nm">Agent 365</span><span><span class="st c">Required</span></span><span class="ds">AI 에이전트 통합 가시성 · 온보딩 시 자동 완료</span></div>
+        <div class="cprow"><span class="nm">M365 커넥터</span><span><span class="st c">Required</span></span><span class="ds">조사 + Advanced Hunting 활성화(Entra ID Mgmt events · M365 activities). <b>연결돼야 alert·incident가 Defender 포털에 표출</b></span></div>
+        <div class="cprow"><span class="nm">Copilot Studio</span><span><span class="st c">Required</span></span><span class="ds">CS 에이전트 tool invocation 모니터·탐지·차단. 실시간 보호 토글 On + Power Platform 관리자 협업(App ID 교환)</span></div>
       </div>
     </div>
+    <p style="margin-top:10px;font-size:11.5px;color:var(--cp-text-muted);">🔑 <b>M365 커넥터 = linchpin</b>(CS 경로 한정): 미연결 시 CS 차단은 작동하나 alert·incident 미표출. <b>Foundry/Prompt Shields(MDC) 알림은 커넥터 없이도 MDC→XDR 자동 통합으로 표출</b>(전제: Azure 구독 + DfC 플랜).</p>
 
-    <div class="linchpin" style="margin-top:14px;">
-      🔑 <b>M365 커넥터 = linchpin.</b> Copilot Studio 에이전트의 경우 <b>M365 커넥터가 연결 안 돼 있어도 실시간 보호(런타임 차단)는 계속 작동</b>하지만, <b>그 액션 관련 alert·incident는 Defender 포털에 표시되지 않습니다</b>(공식 문서 명시). 즉 "차단"과 "표출"이 분리됩니다. <span style="display:block;margin-top:6px;color:var(--cp-text-soft);font-size:11px;">단, 이 게이트는 <b>Copilot Studio(Agent 365 observability) 경로에만</b> 적용됩니다. <b>Foundry/Prompt Shields 알림(MDC 발)은 MDC→Defender XDR 자동 통합으로 흐르므로 M365 커넥터 없이도</b> Defender 포털에 표출됩니다(전제: Azure 구독 + Defender for Cloud 플랜 On).</span>
-    </div>
-    <div class="note" style="margin-top:12px;">
-      <b>ℹ️ Copilot Studio 실시간 보호 온보딩 (Power Platform 협업 필요)</b>
-      <span>Defender 포털에서 실시간 보호 토글 On → <b>Enable Power Platform Integration</b>의 URL을 Power Platform 관리자에게 공유 → 관리자가 PPAC에서 온보딩(Entra App + FIC 구성, 동일 App ID 사용) → App ID를 Defender 포털 <b>App ID</b> 필드에 붙여넣고 Save → <b>Connected</b>. (App ID 변경 시 전파에 최대 1분)</span>
-    </div>
+    <h4 style="font-size:13.5px;font-weight:800;margin:18px 0 4px;border-top:1px solid var(--cp-border);padding-top:14px;">② 실시간 보호 규칙 (Policies &amp; rules)</h4>
+    <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 10px;">온보딩은 탐지·감사까지. <b>실행 전 차단</b>하려면 규칙 정의 필요(<code>Create rule</code> → Scope/Exclude/Detection types → Review).</p>
+    <ul style="font-size:12px;color:var(--cp-text-muted);margin:0 0 0 18px;padding:0;">
+      <li><b>Default 규칙 (audit)</b>: 전 에이전트 대상, 차단 없이 <code>BehaviorInfo</code>에 기록만 → 차단 전 가시성 확보. audit 모드에선 alert 표출.</li>
+      <li><b>Custom 규칙 (block)</b>: 매칭 액션 실행 전 차단 + behavior 기록, 에이전트 scope. 차단 규칙 커버 시 near-real-time alert 미생성(차단 우선).</li>
+    </ul>
+
+    <h4 style="font-size:13.5px;font-weight:800;margin:18px 0 4px;border-top:1px solid var(--cp-border);padding-top:14px;">③ Prompt evidence collection (기본 On)</h4>
+    <p style="font-size:12px;color:var(--cp-text-muted);margin:0;">각 알림에 <b>탐지 유발 프롬프트 스니펫</b>을 증거로 포함해 triage·근본원인 분석을 가속. <b>의심·보안 관련 부분만 포함, 민감정보·시크릿은 redact</b>. 대화가 민감할 수 있어 정책에 따라 Off 가능.</p>
+
     <div class="src"><b>출처:</b>
       <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/get-started-defender-security-for-ai">get-started-defender-security-for-ai</a> ·
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">ai-agent-detection-protection</a> ·
-      <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-integration-365">defender-for-cloud/concept-integration-365 (MDC→XDR 자동 통합)</a> ·
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-real-time-protection">ai-agent-real-time-protection (규칙·prompt evidence)</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-integration-365">concept-integration-365 (MDC→XDR)</a> ·
       <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/external-security-provider">copilot-studio/external-security-provider</a> · (2026-07 확인)</div>
-  </div>
-
-  <div class="card" style="margin-top:16px;">
-    <h4 style="font-size:14px;font-weight:800;margin-bottom:6px;">Policies &amp; rules › Real-time protection — 규칙 만들기</h4>
-    <p style="font-size:12.5px;color:var(--cp-text-muted);margin-bottom:12px;">온보딩(데이터 소스 연결)만으로는 <b>탐지·감사</b>까지입니다. 실제로 위험 액션을 <b>실행 전 차단</b>하려면 real-time protection <b>규칙</b>을 정의해야 합니다. 규칙은 tool 실행 직전 에이전트 활동을 검사해 매칭 시 동작합니다.</p>
-    <div class="cplane" style="grid-template-columns:1fr 1fr;">
-      <div class="cpg" style="border-top:4px solid var(--cp-link);">
-        <h4>Default 규칙 (audit)</h4>
-        <div class="desc">전 에이전트 대상 · 기본 제공</div>
-        <span class="ds" style="font-size:11.5px;color:var(--cp-text-muted);">매칭 활동을 <b>차단하지 않고</b> behavior로만 기록(<code>BehaviorInfo</code>). <b>차단을 강제하기 전 가시성 확보</b>가 목적. near-real-time 탐지는 audit 모드에서 alert로 표출.</span>
-      </div>
-      <div class="cpg" style="border-top:4px solid var(--cp-accent);">
-        <h4>Custom 규칙 (block)</h4>
-        <div class="desc">고신뢰 위협용 · 스코프 지정</div>
-        <span class="ds" style="font-size:11.5px;color:var(--cp-text-muted);">매칭 액션을 <b>실행 전 차단</b> + behavior 기록. 특정 에이전트로 scope. <b>차단 규칙이 커버하는 에이전트는 near-real-time alert가 생성되지 않음</b>(차단이 우선).</span>
-      </div>
-    </div>
-    <div class="note" style="margin-top:12px;">
-      <b>🔧 규칙 생성 흐름</b>
-      <span><b>Settings › Security for AI › Policies &amp; rules › Real-time protection › Create rule</b> → ① Rule details(Status·이름·설명) → ② <b>Scope</b>(All 또는 특정 에이전트) · <b>Exclude</b>(Entra agent ID 보유 에이전트 제외) · <b>Detection types</b> 선택(예: Secret exfiltration · Malicious content propagation · Evasion techniques · Unsafe email domain) → ③ Review &amp; Create.</span>
-    </div>
-    <div class="src"><b>출처:</b>
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-real-time-protection">defender-xdr/ai-agent-real-time-protection</a> · (2026-07 확인)</div>
-  </div>
-
-  <div class="card" style="margin-top:16px;">
-    <h4 style="font-size:14px;font-weight:800;margin-bottom:6px;">Prompt evidence collection — 프롬프트 스니펫 토글</h4>
-    <p style="font-size:12.5px;color:var(--cp-text-muted);margin-bottom:10px;"><b>Settings › Security for AI › Prompt evidence collection</b> (기본 <b>Enabled</b>). 켜면 각 알림에 <b>탐지를 유발한 user↔agent 프롬프트 스니펫</b>을 증거로 포함해, SOC가 조사 시 맥락을 바로 파악할 수 있습니다.</p>
-    <div class="cplane" style="grid-template-columns:1fr 1fr;">
-      <div class="cpg" style="border-top:4px solid var(--cp-success);">
-        <h4>역할 · 필요성</h4>
-        <span class="ds" style="font-size:11.5px;color:var(--cp-text-muted);">알림만으로는 "무엇이 왜 위험했는지" 판단이 어려움. 스니펫이 있으면 <b>triage·근본원인 분석</b>이 빨라짐. Defender 포털의 각 알림 증거로 노출.</span>
-      </div>
-      <div class="cpg" style="border-top:4px solid var(--cp-warning);">
-        <h4>작동 · 주의</h4>
-        <span class="ds" style="font-size:11.5px;color:var(--cp-text-muted);"><b>의심스럽고 보안 분류에 관련된 부분만</b> 포함, <b>민감정보·시크릿은 redact</b>. 단 고객 대화가 본질적으로 민감할 수 있어, 조직 정책에 따라 Off 가능.</span>
-      </div>
-    </div>
-    <div class="src"><b>출처:</b>
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-real-time-protection#control-prompt-evidence-in-alerts">ai-agent-real-time-protection#control-prompt-evidence-in-alerts</a> · (2026-07 확인)</div>
   </div>
 
   <footer class="page">
