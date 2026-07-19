@@ -38,4 +38,5 @@ content/*.md             각 페이지 텍스트본
 | v1 | 2026-07-08 | 최초 공개본: 공식 Agent 365 개요를 반영한 탭형 홈(3필라·12기능·FAQ) + 3개 심화 서브페이지(에이전트 유형 분류 · 신원/위험 · 런타임 위협 탐지) 네이티브 재구현 · A365 공식 톤 테마 통일 · 사이드바 네비게이션 · 다크모드 토글 · 전 항목 공식 출처 명시 | — |
 | v2 | 2026-07-16 | 문서③ 런타임 위협 탐지를 3계층 탐지 모델(Copilot Studio 네이티브 · Defender for AI Services/MDC · Agent 365·Defender XDR)로 재구성 + 계층별 라이선스·Azure 구독·2026.7.1 이관 표 추가 | — |
 | v3 | 2026-07-19 | 문서③ SECTION 03·04 정리: 실시간보호vs탐지 표에 위협 유형(차단 4종/탐지 2갈래) 통합 + MDC 알림 카탈로그 접이식 + "왜 CS jailbreak가 Defender 알림에 안 뜨나"(모델 소유권·Prompt Shields 미지원·차단규칙 억제) 3원인 카드 · SECTION 04를 온보딩/규칙/prompt evidence 단일 카드로 압축 · 종합 노트 정리 | — |
+| v4 | 2026-07-20 | 문서3 SECTION 04에 '차단↔알림 설계가 층마다 다름' 콜아웃 추가: 모델-콘텐츠 층(MDC/Prompt Shields)은 차단해도 알림(Blocked/Detected 분리), 에이전트 행위 층(Agent 365 실시간 규칙)은 차단 시 알림 대신 BehaviorInfo 기록·알림은 audit 모드에서만 — 공식문서 재검증 | — |
 

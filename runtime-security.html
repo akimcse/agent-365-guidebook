@@ -468,6 +468,10 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <li><b>Default 규칙 (audit)</b>: 전 에이전트 대상, 차단 없이 <code>BehaviorInfo</code>에 기록만 → 차단 전 가시성 확보. audit 모드에선 alert 표출.</li>
       <li><b>Custom 규칙 (block)</b>: 매칭 액션 실행 전 차단 + behavior 기록, 에이전트 scope. 차단 규칙 커버 시 near-real-time alert 미생성(차단 우선).</li>
     </ul>
+    <div style="margin-top:12px;padding:11px 13px;background:var(--cp-surface-2);border:1px solid var(--cp-border);border-radius:8px;">
+      <p style="font-size:12px;color:var(--cp-text);margin:0 0 6px;font-weight:800;">⚠️ "차단하면 알림도 뜬다"는 층마다 다릅니다</p>
+      <p style="font-size:12px;color:var(--cp-text-muted);margin:0;"><b>모델-콘텐츠 층(MDC · Prompt Shields)</b>에서는 <b>차단해도 알림이 뜹니다</b> — 알림 이름 자체가 <code>Jailbreak…BlockedAttempt</code>(차단됨)와 <code>DetectedAttempt</code>(미차단)로 분리돼 있음. 반면 <b>에이전트 행위 층(Agent 365 실시간 차단 규칙)</b>은 <b>정반대 설계</b>로, <b>차단하면 알림 대신 <code>BehaviorInfo</code>에 행위로만 기록</b>되고, <b>near-real-time 알림은 audit(비차단) 모드일 때만</b> 표출됩니다("<i>alerts only in audit mode; when a blocking rule covers an agent, near-real-time alerts aren't generated</i>"). <b>→ 행위 층에서 알림을 보고 싶으면 해당 에이전트를 audit(Default) 모드로 두고 관찰</b>하고, 차단 이벤트는 Advanced Hunting의 <code>BehaviorInfo</code>로 조회하세요.</p>
+    </div>
 
     <h4 style="font-size:13.5px;font-weight:800;margin:18px 0 4px;border-top:1px solid var(--cp-border);padding-top:14px;">③ Prompt evidence collection (기본 On)</h4>
     <p style="font-size:12px;color:var(--cp-text-muted);margin:0;">각 알림에 <b>탐지 유발 프롬프트 스니펫</b>을 증거로 포함해 triage·근본원인 분석을 가속. <b>의심·보안 관련 부분만 포함, 민감정보·시크릿은 redact</b>. 대화가 민감할 수 있어 정책에 따라 Off 가능.</p>
