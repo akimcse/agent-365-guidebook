@@ -156,6 +156,14 @@ header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6p
 .finding .h .n { width:20px; height:20px; border-radius:6px; background: var(--cp-accent-soft); color: var(--cp-accent); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; }
 .finding p { font-size: 11.5px; color: var(--cp-text-muted); line-height: 1.55; }
 .finding .tag2 { display:inline-block; font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:999px; margin-left:4px; }
+.findlist { display:flex; flex-direction:column; }
+.findlist .row { display:flex; gap:13px; padding:14px 4px; border-bottom:1px solid var(--cp-border); }
+.findlist .row:last-child { border-bottom:none; }
+.findlist .row .n { width:22px; height:22px; border-radius:7px; background:var(--cp-accent-soft); color:var(--cp-accent); font-size:11.5px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:none; margin-top:1px; }
+.findlist .row .body { min-width:0; }
+.findlist .row .t { font-size:13px; font-weight:700; margin-bottom:3px; display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+.findlist .row .t .tag2 { display:inline-block; font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:999px; }
+.findlist .row p { font-size:12px; color:var(--cp-text-muted); line-height:1.55; }
 .tag2.emp { background: rgba(15,157,140,0.14); color: var(--dw); }
 .tag2.doc { background: rgba(0,120,212,0.12); color: var(--cp-link); }
 
@@ -201,130 +209,8 @@ header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6p
 <div class="wrap">
   <div class="sub-hero"><span class="eb">✦ 심화 문서 ②</span><h1>에이전트 신원 · 위험</h1><p>Copilot Studio 에이전트가 어떤 신원으로 인증하고, 그 sign-in이 어떤 로그에 찍히며, 어떤 위험 리포트(Risky Users vs Risky Agents)로 라우팅되는지 정리합니다.</p></div>
 
-  <!-- ================= SECTION 1 : 3-axis identity ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">신원 3축<span class="axis-extra">누구로 인증하나가 탐지 루트를 결정</span></h2></div>
-
-  <div class="axis-banner">
-    <b>축 A · 신원 모델</b> (탐지 루트 결정) &nbsp;|&nbsp; <b>축 B · 실행 방식</b> (신원과 <u>독립적으로</u> 겹쳐 적용):
-    <span class="pill conv">대화형</span> · <span class="pill auto">오토노머스</span>
-    &nbsp;— 오토노머스(트리거·Recurrence)라고 자동으로 "자체 신원"이 아님. <b>표준 커넥터는 오토노머스여도 여전히 User로 인증됨.</b>
-  </div>
-
-  <div class="id-grid">
-    <!-- USER / OBO -->
-    <div class="id-card user">
-      <div class="top"></div>
-      <div class="inner">
-        <div class="ico">👤</div>
-        <h3>사용자를 대신하여</h3>
-        <div class="sub2">OBO · 위임 (Delegated)</div>
-        <div class="badges"><span class="pill conv">대화형</span><span class="pill auto">오토노머스</span></div>
-        <div class="fld">토큰 주체 (Sign-in subject)</div>
-        <div class="val">사용자 (User)</div>
-        <div class="fld">Entra 객체 타입</div>
-        <div class="val mono">user</div>
-        <div class="note-red">표준 PP 커넥터(SharePoint·Teams 툴)는 <b>항상 사용자(위임)로 인증</b>. 툴 호출을 에이전트 자체 신원으로 하는 일은 원천적으로 없음.</div>
-      </div>
-      <div class="logbox">Users ▸ Sign-in logs<span class="sm">에이전트=client app 컨텍스트로 태깅</span></div>
-      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ru">Risky users</span></div>
-    </div>
-
-    <!-- AGENT / app-only -->
-    <div class="id-card agent">
-      <div class="top"></div>
-      <div class="inner">
-        <div class="ico">🤖</div>
-        <h3>자체 신원으로</h3>
-        <div class="sub2">App-only · Service principal</div>
-        <div class="badges"><span class="pill auto">오토노머스</span> <span class="pill conv">대화형(Teams채널)</span></div>
-        <div class="fld">토큰 주체 (Sign-in subject)</div>
-        <div class="val">에이전트 ID (Entra Agent ID)</div>
-        <div class="fld">Entra 객체 타입</div>
-        <div class="val mono">servicePrincipal</div>
-        <div class="note-red">★ 현재 <b>Teams 채널</b>만 Entra Agent ID 토큰으로 E2E 인증하는 유일한 표면. M365 Copilot 등 다른 표면은 아직 커넥터 인증. <span style="color:var(--cp-text-soft)">(실측 진행 중)</span></div>
-      </div>
-      <div class="logbox">Agents ▸ Service principal sign-ins<span class="sm">데모 실측: Contoso Helper SP 로그 확인됨 ✓</span></div>
-      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ra">Risky agents</span> <span class="chip agent">riskyAgentIdentity</span></div>
-    </div>
-
-    <!-- DIGITAL WORKER -->
-    <div class="id-card dw">
-      <div class="top"></div>
-      <div class="inner">
-        <div class="ico">🪪</div>
-        <h3>사용자로서</h3>
-        <div class="sub2">Digital Worker · AI teammate</div>
-        <div class="badges"><span class="pill auto">오토노머스</span></div>
-        <div class="fld">토큰 주체 (Sign-in subject)</div>
-        <div class="val">에이전트 전용 사용자 계정</div>
-        <div class="fld">Entra 객체 타입</div>
-        <div class="val mono">agentUser <span style="color:var(--cp-text-soft);font-weight:500">(user 하위타입)</span></div>
-        <div class="note-red">OBO 아님 → 뒤에 사람 없음. 그 계정이 곧 에이전트. agent identity와 <b>1:1</b>로 짝(둘 다 존재). <span style="color:var(--cp-danger)">일반 user 계정을 쓰면 Risky <u>users</u>로 새고 ML 저하 — 반드시 agentUser 타입.</span></div>
-      </div>
-      <div class="logbox">Agents ▸ User sign-ins<span class="sm">interactive · non-interactive (agentType=agentIDuser)</span></div>
-      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ra">Risky agents</span> <span class="chip dw">riskyAgentUser</span></div>
-    </div>
-  </div>
-  <div class="card src" style="margin-top:12px">
-    <b>출처</b>
-    <a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/agent-id">conditional-access/agent-id</a> (3 access patterns · "digital worker") ·
-    <a href="https://learn.microsoft.com/en-us/entra/agent-id/concept-agent-id-design-patterns">concept-agent-id-design-patterns</a> ·
-    <a href="https://learn.microsoft.com/en-us/entra/agent-id/agent-users">agent-users</a> ·
-    <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-certificates-configuration-values">requirements-certificates-configuration-values</a> (Teams-only E2E)
-  </div>
-
-  <!-- ================= SECTION 2 : 4 tabs → risk routing ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">Agents ▸ Sign-in logs 4개 탭 → 위험 라우팅 (라우팅 기준 = 탭 위치 ✗, Entra 객체 타입 ✓)</h2></div>
-  <div class="card tabmap">
-    <table>
-      <thead>
-        <tr><th>Sign-in 로그 탭</th><th>찍히는 신원</th><th>객체 타입</th><th>Risky Agents?</th><th>가는 곳 / Graph</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="tab-nm">User sign-ins (interactive)</td>
-          <td><span class="chip user">사용자 (위임)</span></td>
-          <td class="mono">user</td>
-          <td><span class="chip no">✗ 아님</span></td>
-          <td>Risky <b>users</b> · <span class="mono">riskyUsers</span></td>
-        </tr>
-        <tr>
-          <td class="tab-nm">User sign-ins (non-interactive)</td>
-          <td><span class="chip user">사용자/작성자 (OBO)</span> <span class="chip dw">agentUser</span></td>
-          <td class="mono">user / agentUser</td>
-          <td><span class="chip no">✗ (OBO)</span> <span class="chip yes">✓ (agentUser)</span></td>
-          <td>OBO→riskyUsers · <b>agentUser→riskyAgents</b></td>
-        </tr>
-        <tr>
-          <td class="tab-nm">Service principal sign-ins</td>
-          <td><span class="chip agent">에이전트 신원 (app-only)</span></td>
-          <td class="mono">servicePrincipal</td>
-          <td><span class="chip yes">✓ 여기!</span></td>
-          <td>Risky <b>agents</b> · <span class="mono">riskyAgentIdentity</span></td>
-        </tr>
-        <tr>
-          <td class="tab-nm">Managed identity sign-ins</td>
-          <td><span class="chip no">관리 ID (MI)</span></td>
-          <td class="mono">managedIdentity</td>
-          <td><span class="chip out">범위 밖</span></td>
-          <td>ID Protection workload risk 제외</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="linchpin" style="margin-top:14px">
-      🔑 <b>핵심:</b> "Agents 블레이드 User 탭에 뜬다"가 자동으로 Risky Agents를 뜻하지 않음. 위험 파이프라인은 <b>객체 타입</b>으로 갈림 — <span class="mono">agentUser</span>는 riskyAgents로, 일반 <span class="mono">user</span>는 <span class="mono">Is Agent=Yes</span> 태그가 있어도 riskyUsers로 라우팅됨.
-    </div>
-    <div class="src">
-      <b>출처</b>
-      <a href="https://learn.microsoft.com/en-us/entra/agent-id/identity-professional/sign-in-audit-logs-agents">sign-in-audit-logs-agents</a> (4탭·agentIDuser) ·
-      <a href="https://learn.microsoft.com/en-us/graph/api/resources/riskyagent">graph/riskyagent</a> (identityType: agentIdentity·agentUser·blueprint) ·
-      <a href="https://learn.microsoft.com/en-us/graph/api/resources/riskyagentuser">graph/riskyagentuser</a> ·
-      <a href="https://learn.microsoft.com/en-us/entra/id-protection/concept-risky-agents">concept-risky-agents</a> (OBO→user)
-    </div>
-  </div>
-
   <!-- ================= SECTION 3 : end-to-end flow SVG ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">전체 흐름<span class="axis-extra">표면(채널) → 인증 신원 → Sign-in 탭 → 위험 리포트</span></h2></div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">전체 흐름<span class="axis-extra">표면(채널) → 인증 신원 → Sign-in 탭 → 위험 리포트</span></h2></div>
   <div class="card flowcard">
     <svg viewBox="0 0 1160 430" role="img" aria-label="에이전트 인증 흐름도">
       <defs>
@@ -413,42 +299,134 @@ header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6p
         <path d="M810,320 C880,320 880,250 938,235" stroke="#b11f4b" marker-end="url(#arwR)"/>
       </g>
 
-      <!-- spike callout -->
-      <text x="720" y="112" text-anchor="middle" font-size="10.5" fill="#b11f4b" font-weight="700">★ signInSpike 연료 = 이 탭 건수 급증</text>
     </svg>
     <div class="legend">
       <span><i style="background:var(--user)"></i> 사용자 / OBO → Risky users</span>
       <span><i style="background:var(--agent)"></i> Agent ID(SP) → Risky agents</span>
       <span><i style="background:var(--dw)"></i> Digital Worker(agentUser) → Risky agents</span>
     </div>
+    <div class="src">
+      <b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/identity-professional/sign-in-audit-logs-agents">sign-in-audit-logs-agents</a> (Sign-in 로그 4탭) ·
+      <a href="https://learn.microsoft.com/en-us/entra/id-protection/concept-risky-agents">concept-risky-agents</a> (위험 라우팅) ·
+      <a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/agent-id">conditional-access/agent-id</a> (표면·인증 신원 3패턴) ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-certificates-configuration-values">requirements-certificates-configuration-values</a> (Teams-only E2E)
+    </div>
+  </div>
+
+  <!-- ================= SECTION 1 : 3-axis identity ================= -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">신원 3축<span class="axis-extra">누구로 인증하나가 탐지 루트를 결정</span></h2></div>
+
+  <div class="axis-banner">
+    <b>축 A · 신원 모델</b> (탐지 루트 결정) &nbsp;|&nbsp; <b>축 B · 실행 방식</b> (신원과 <u>독립적으로</u> 겹쳐 적용):
+    <span class="pill conv">대화형</span> · <span class="pill auto">오토노머스</span>
+    &nbsp;— 오토노머스(트리거·Recurrence)라고 자동으로 "자체 신원"이 아님. <b>표준 커넥터는 오토노머스여도 여전히 User로 인증됨.</b>
+  </div>
+
+  <div class="id-grid">
+    <!-- USER / OBO -->
+    <div class="id-card user">
+      <div class="top"></div>
+      <div class="inner">
+        <div class="ico">👤</div>
+        <h3>사용자를 대신하여</h3>
+        <div class="sub2">OBO · 위임 (Delegated)</div>
+        <div class="badges"><span class="pill conv">대화형</span><span class="pill auto">오토노머스</span></div>
+        <div class="fld">토큰 주체 (Sign-in subject)</div>
+        <div class="val">사용자 (User)</div>
+        <div class="fld">Entra 객체 타입</div>
+        <div class="val mono">user</div>
+        <div class="note-red">표준 PP 커넥터(SharePoint·Teams 툴)는 <b>항상 사용자(위임)로 인증</b>. 툴 호출을 에이전트 자체 신원으로 하는 일은 원천적으로 없음.</div>
+      </div>
+      <div class="logbox">Users ▸ Sign-in logs<span class="sm">에이전트=client app 컨텍스트로 태깅</span></div>
+      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ru">Risky users</span></div>
+    </div>
+
+    <!-- AGENT / app-only -->
+    <div class="id-card agent">
+      <div class="top"></div>
+      <div class="inner">
+        <div class="ico">🤖</div>
+        <h3>자체 신원으로</h3>
+        <div class="sub2">App-only · Service principal</div>
+        <div class="badges"><span class="pill auto">오토노머스</span> <span class="pill conv">대화형(Teams채널)</span></div>
+        <div class="fld">토큰 주체 (Sign-in subject)</div>
+        <div class="val">에이전트 ID (Entra Agent ID)</div>
+        <div class="fld">Entra 객체 타입</div>
+        <div class="val mono">servicePrincipal</div>
+        <div class="note-red">★ 현재 <b>Teams 채널</b>만 Entra Agent ID 토큰으로 E2E 인증하는 유일한 표면. M365 Copilot 등 다른 표면은 아직 커넥터 인증.</div>
+      </div>
+      <div class="logbox">Agents ▸ Service principal sign-ins<span class="sm">Teams 채널 호출 시 SP sign-in 기록</span></div>
+      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ra">Risky agents</span> <span class="chip agent">riskyAgentIdentity</span></div>
+    </div>
+
+    <!-- DIGITAL WORKER -->
+    <div class="id-card dw">
+      <div class="top"></div>
+      <div class="inner">
+        <div class="ico">🪪</div>
+        <h3>사용자로서</h3>
+        <div class="sub2">Digital Worker · AI teammate</div>
+        <div class="badges"><span class="pill auto">오토노머스</span></div>
+        <div class="fld">토큰 주체 (Sign-in subject)</div>
+        <div class="val">에이전트 전용 사용자 계정</div>
+        <div class="fld">Entra 객체 타입</div>
+        <div class="val mono">agentUser <span style="color:var(--cp-text-soft);font-weight:500">(user 하위타입)</span></div>
+        <div class="note-red">OBO 아님 → 뒤에 사람 없음. 그 계정이 곧 에이전트. agent identity와 <b>1:1</b>로 짝(둘 다 존재). <span style="color:var(--cp-danger)">일반 user 계정을 쓰면 Risky <u>users</u>로 새고 ML 저하 — 반드시 agentUser 타입.</span></div>
+      </div>
+      <div class="logbox">Agents ▸ User sign-ins<span class="sm">interactive · non-interactive (agentType=agentIDuser)</span></div>
+      <div class="riskrow"><span class="lbl">위험 →</span><span class="rv ra">Risky agents</span> <span class="chip dw">riskyAgentUser</span></div>
+    </div>
+  </div>
+  <div class="card src" style="margin-top:12px">
+    <b>출처</b>
+    <a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/agent-id">conditional-access/agent-id</a> (3 access patterns · "digital worker") ·
+    <a href="https://learn.microsoft.com/en-us/entra/agent-id/concept-agent-id-design-patterns">concept-agent-id-design-patterns</a> ·
+    <a href="https://learn.microsoft.com/en-us/entra/agent-id/agent-users">agent-users</a> ·
+    <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-certificates-configuration-values">requirements-certificates-configuration-values</a> (Teams-only E2E)
   </div>
 
   <!-- ================= SECTION 4 : empirical + doc findings ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">실측 + 문서로 확정된 사실 <span style="font-weight:500;text-transform:none;letter-spacing:0"> (<span class="tag2 emp">실측</span> 데모 테넌트 · <span class="tag2 doc">문서</span> Microsoft Learn)</span></h2></div>
-  <div class="find-grid">
-    <div class="finding">
-      <div class="h"><span class="n">1</span> 커넥터 툴 = 항상 User <span class="tag2 emp">실측</span><span class="tag2 doc">문서</span></div>
-      <p>SharePoint·Teams 툴 호출은 End-user든 Maker든 <b>전부 User sign-in에 찍힘</b>. 데모에서 "전부 User로 찍힘" 확인. 에이전트 신원 sign-in 없음.</p>
+  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">핵심 원리 — 문서로 확정된 사실<span class="axis-extra">인증 신원과 위험 라우팅을 결정하는 규칙</span></h2></div>
+  <div class="card">
+    <div class="findlist">
+      <div class="row">
+        <span class="n">1</span>
+        <div class="body">
+          <div class="t">커넥터 툴 = 항상 User <span class="tag2 doc">문서</span></div>
+          <p>SharePoint·Teams 등 표준 커넥터 툴 호출은 End-user든 Maker든 <b>전부 User sign-in에 찍힘</b>. 에이전트 자체 신원 sign-in은 생성되지 않음.</p>
+        </div>
+      </div>
+      <div class="row">
+        <span class="n">2</span>
+        <div class="body">
+          <div class="t">Teams 채널 대화 = 에이전트 신원 <span class="tag2 doc">문서</span></div>
+          <p>에이전트를 <b>Teams 채널</b>로 호출하면 <b>Service principal 탭에 SP sign-in</b>이 기록됨. 현재 채널만이 Entra Agent ID로 E2E 인증하는 표면.</p>
+        </div>
+      </div>
+      <div class="row">
+        <span class="n">3</span>
+        <div class="body">
+          <div class="t">Digital Worker = Risky Agents <span class="tag2 doc">문서</span></div>
+          <p>OBO 아님. <span class="mono">agentUser</span>는 <span class="mono">riskyAgents</span>의 하위타입 <span class="mono">riskyAgentUser</span>로 라우팅. CA도 "Agent risk" 조건 사용. <b>User가 아니라 Agent 위험.</b></p>
+        </div>
+      </div>
     </div>
-    <div class="finding">
-      <div class="h"><span class="n">2</span> Teams 채널 대화 = 에이전트 신원 <span class="tag2 emp">실측</span><span class="tag2 doc">문서</span></div>
-      <p>Contoso Helper에 Teams로 말 걸자 <b>Service principal 탭에 SP sign-in 실제로 찍힘</b> (SP ID e10678ab…). 채널만이 Entra Agent ID로 E2E 인증.</p>
-    </div>
-    <div class="finding">
-      <div class="h"><span class="n">3</span> 메시지 수 ≠ sign-in 수 <span class="tag2 emp">실측</span></div>
-      <p>같은 세션에서 연속 메시지 보내도 <b>토큰 캐싱(~60–90분)으로 로그 안 늘어남</b>. 간격 두고 새 상호작용하면 새 sign-in 발생. → <b>연료는 "새 세션/토큰 발급"</b>.</p>
-    </div>
-    <div class="finding">
-      <div class="h"><span class="n">4</span> Digital Worker = Risky Agents <span class="tag2 doc">문서</span></div>
-      <p>OBO 아님. <span class="mono">agentUser</span>는 <span class="mono">riskyAgents</span>의 하위타입 <span class="mono">riskyAgentUser</span>로 라우팅. CA도 "Agent risk" 조건 사용. <b>User가 아니라 Agent 위험.</b></p>
+    <div class="src" style="margin-top:12px">
+      <b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/entra/id-protection/concept-risky-agents">concept-risky-agents</a> (커넥터 툴 OBO→user · agentUser→riskyAgents) ·
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/concept-agent-id-design-patterns">concept-agent-id-design-patterns</a> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/requirements-certificates-configuration-values">requirements-certificates-configuration-values</a> (Teams-only E2E) ·
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/identity-professional/sign-in-audit-logs-agents">sign-in-audit-logs-agents</a> (Service principal 탭) ·
+      <a href="https://learn.microsoft.com/en-us/graph/api/resources/riskyagentuser">graph/riskyagentuser</a>
     </div>
   </div>
 
   <!-- ================= SECTION 5 : detections ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 05</span><h2 class="axis-t2">Risky Agents 탐지 목록<span class="axis-extra">모두 "에이전트 자체 신원 활동"(SP / agentUser) 기반</span></h2></div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">Risky Agents 탐지 목록<span class="axis-extra">모두 "에이전트 자체 신원 활동"(SP / agentUser) 기반</span></h2></div>
   <div class="card">
     <div class="det-wrap">
-      <div class="det"><code>signInSpike</code><span class="d2">에이전트 sign-in 볼륨 비정상 급증 <b style="color:var(--cp-accent)">← 우리 표적</b></span></div>
+      <div class="det"><code>signInSpike</code><span class="d2">에이전트 sign-in 볼륨 비정상 급증</span></div>
       <div class="det"><code>unfamiliarResourceAccess</code><span class="d2">평소 안 쓰던 리소스 접근</span></div>
       <div class="det"><code>entraDirectoryReconnaissance</code><span class="d2">디렉터리 정찰성 조작</span></div>
       <div class="det"><code>failedAccessAttempt</code><span class="d2">무권한 리소스 접근 실패</span></div>
@@ -458,14 +436,14 @@ header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6p
       <div class="det"><code>riskyAgentIdentityBlueprintPrincipal</code><span class="d2">블루프린트 주체 위험</span></div>
     </div>
     <div class="linchpin">
-      🔑 <b>signInSpike 유발 공식:</b> 표면 = <b>Teams</b>(유일하게 Agent ID 인증) · 연료 = <b>새 세션/토큰 발급</b>(메시지 수 아님) · 방법 = 다수 사용자 × 새 대화 또는 DirectLine API로 conversation 대량 생성 · 관측 = <b>Service principal 탭</b> · 검증 = Risky agents (ML 배치, 최대 24h 지연).
+      🔑 <b>공통 원리:</b> 위 탐지는 모두 <b>에이전트 자체 신원 활동</b>(Service principal / agentUser)을 대상으로 하며, ML 기반 배치로 평가되어 <b>Risky agents</b>에 위험으로 게시됩니다(리포팅 지연 발생 가능). 사용자(위임·OBO) 활동은 이 경로가 아니라 Risky users로 라우팅됩니다.
     </div>
     <div class="gapbox">
       <b>⚠️ 문서가 침묵하는 갭 (확정 전 주의)</b>
       <ol>
         <li>개별 탐지(signInSpike 등)가 <span class="mono">agentUser</span>에도 모두 적용되는지는 타입별로 명시 없음 (같이 적용될 가능성 높으나 미확정).</li>
         <li><span class="mono">riskyAgentUser</span> 위험이 riskyUsers에도 동시 게시되는지 명시 없음 (CA 설계상 riskyAgents 전용이 강하게 시사됨).</li>
-        <li>M365 Copilot 표면이 SP sign-in을 생성하는지는 <b>격리 실측 미완</b> — "for Web" 로그가 반례일 수 있어 확정 문구는 실측 후.</li>
+        <li>M365 Copilot 표면이 SP sign-in을 생성하는지는 문서상 명시 없음 — "for Web" 로그가 반례일 수 있어 확정 문구는 유보.</li>
         <li>관련 Graph API 대부분 <span class="mono">/beta</span> (agentUser는 v1.0).</li>
       </ol>
     </div>
@@ -478,8 +456,58 @@ header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6p
     </div>
   </div>
 
+  <!-- ================= SECTION 2 : 4 tabs → risk routing ================= -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 05</span><h2 class="axis-t2">포털에서 확인 — Sign-in 로그 4개 탭과 위험 라우팅<span class="axis-extra">Entra 관리센터 ▸ Agents ▸ Sign-in logs · 라우팅 기준 = 탭 위치가 아니라 Entra 객체 타입</span></h2></div>
+  <div class="card tabmap">
+    <table>
+      <thead>
+        <tr><th>Sign-in 로그 탭</th><th>찍히는 신원</th><th>객체 타입</th><th>Risky Agents?</th><th>가는 곳 / Graph</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tab-nm">User sign-ins (interactive)</td>
+          <td><span class="chip user">사용자 (위임)</span></td>
+          <td class="mono">user</td>
+          <td><span class="chip no">✗ 아님</span></td>
+          <td>Risky <b>users</b> · <span class="mono">riskyUsers</span></td>
+        </tr>
+        <tr>
+          <td class="tab-nm">User sign-ins (non-interactive)</td>
+          <td><span class="chip user">사용자/작성자 (OBO)</span> <span class="chip dw">agentUser</span></td>
+          <td class="mono">user / agentUser</td>
+          <td><span class="chip no">✗ (OBO)</span> <span class="chip yes">✓ (agentUser)</span></td>
+          <td>OBO→riskyUsers · <b>agentUser→riskyAgents</b></td>
+        </tr>
+        <tr>
+          <td class="tab-nm">Service principal sign-ins</td>
+          <td><span class="chip agent">에이전트 신원 (app-only)</span></td>
+          <td class="mono">servicePrincipal</td>
+          <td><span class="chip yes">✓ 여기!</span></td>
+          <td>Risky <b>agents</b> · <span class="mono">riskyAgentIdentity</span></td>
+        </tr>
+        <tr>
+          <td class="tab-nm">Managed identity sign-ins</td>
+          <td><span class="chip no">관리 ID (MI)</span></td>
+          <td class="mono">managedIdentity</td>
+          <td><span class="chip out">범위 밖</span></td>
+          <td>ID Protection workload risk 제외</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="linchpin" style="margin-top:14px">
+      🔑 <b>핵심:</b> "Agents 블레이드 User 탭에 뜬다"가 자동으로 Risky Agents를 뜻하지 않음. 위험 파이프라인은 <b>객체 타입</b>으로 갈림 — <span class="mono">agentUser</span>는 riskyAgents로, 일반 <span class="mono">user</span>는 <span class="mono">Is Agent=Yes</span> 태그가 있어도 riskyUsers로 라우팅됨.
+    </div>
+    <div class="src">
+      <b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/identity-professional/sign-in-audit-logs-agents">sign-in-audit-logs-agents</a> (4탭·agentIDuser) ·
+      <a href="https://learn.microsoft.com/en-us/graph/api/resources/riskyagent">graph/riskyagent</a> (identityType: agentIdentity·agentUser·blueprint) ·
+      <a href="https://learn.microsoft.com/en-us/graph/api/resources/riskyagentuser">graph/riskyagentuser</a> ·
+      <a href="https://learn.microsoft.com/en-us/entra/id-protection/concept-risky-agents">concept-risky-agents</a> (OBO→user)
+    </div>
+  </div>
+
   <div class="card src" style="margin-top:18px; text-align:center; font-size:11px;">
-    출처: Microsoft Learn — Entra Agent ID · ID Protection (Risky Agents) · Copilot Studio · Conditional Access for Agents · Microsoft Graph (beta) &nbsp;|&nbsp; 실측: 데모 테넌트 M365CPI66527359 (Contoso Helper) &nbsp;|&nbsp; 2026-07-01
+    출처: Microsoft Learn — Entra Agent ID · ID Protection (Risky Agents) · Copilot Studio · Conditional Access for Agents · Microsoft Graph (beta) &nbsp;|&nbsp; 2026-07
   </div>
 </div>
 </main></div><script>
