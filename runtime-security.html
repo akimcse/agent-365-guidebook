@@ -73,7 +73,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
 .sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
 .sub-hero h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
-.sub-hero p{font-size:1rem;color:var(--cp-text-muted);max-width:64ch}
+.sub-hero p{font-size:1rem;color:var(--cp-text-muted)}
 @media (max-width:900px){.sub-hero{padding:24px 20px}.sub-hero h1{font-size:1.6rem}}
 @media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{border-right:none;border-bottom:1px solid var(--cp-border)}.gb-side-inner{position:static;max-height:none;overflow:visible}}
 
@@ -188,6 +188,8 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
       <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
       <a href="runtime-security.html" class="on"><span class="ic">🛡️</span><span class="lb">③ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
+      <div class="gb-glabel">부록</div>
+      <a href="demo-scenarios.html" class=""><span class="ic">🧪</span><span class="lb">데모 시나리오<small>계층별 탐지 검증</small></span></a>
     </nav>
     <div class="gb-sfoot">공식 근거
       <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
@@ -236,7 +238,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
 
   <rect x="420" y="92" width="340" height="86" rx="12" fill="var(--cp-surface)" stroke="var(--cp-danger)" stroke-width="1.6"/>
   <text x="440" y="116" fill="var(--cp-text)" font-size="12.5" font-weight="700">Azure AI Content Safety</text>
-  <text x="440" y="136" fill="var(--cp-text-muted)" font-size="10.5">Prompt Shields (탐지·차단)</text>
+  <text x="440" y="136" fill="var(--cp-text-muted)" font-size="10.5">└ Prompt Shields (탐지·차단 기능)</text>
   <text x="440" y="154" fill="var(--cp-text-muted)" font-size="10.5">→ Defender for AI (알림)</text>
   <text x="440" y="170" fill="var(--cp-text-muted)" font-size="9.5">UPIA·XPIA·ASCII Smuggling 분류</text>
 
@@ -329,8 +331,8 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <h3>Prompt Shields → Defender for AI</h3>
       <div class="lsub">모델 레벨 · MDC (Azure OpenAI · Foundry Models)</div>
       <dl>
-        <dt>탐지·차단</dt><dd>Azure AI Content Safety <b>Prompt Shields</b> — UPIA·XPIA·ASCII Smuggling 분류(blocked/detected)</dd>
-        <dt>알림</dt><dd><b>Defender for AI</b>가 "blocked/detected by Prompt Shields" alert를 SOC에 표출 (직접 차단 X · 별개 서비스)</dd>
+        <dt>탐지·차단</dt><dd><b>Azure AI Content Safety</b>(콘텐츠 안전 제품)의 하위 기능 <b>Prompt Shields</b> — UPIA·XPIA·ASCII Smuggling 분류(blocked/detected). Content Safety는 유해 콘텐츠 필터·groundedness 등도 포함하며, 그중 프롬프트 공격 탐지가 Prompt Shields.</dd>
+        <dt>알림</dt><dd><b>Defender for AI</b>가 "blocked/detected by Prompt Shields" alert를 SOC에 표출 (직접 차단 X · Content Safety와 별개 서비스)</dd>
         <dt>포털</dt><dd>Defender for Cloud → Defender XDR 연동</dd>
         <dt>Azure</dt><dd><span class="azure yes">필수</span> 구독 + DfC 플랜 · 토큰 과금</dd>
         <dt>라이선스</dt><dd>Azure 구독 + Owner/Contributor</dd>
@@ -405,7 +407,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <table style="width:100%;border-collapse:collapse;font-size:11.5px;margin-top:10px;">
         <thead><tr style="text-align:left;border-bottom:2px solid var(--cp-border);"><th style="padding:7px 9px;">범주</th><th style="padding:7px 9px;">Alert ID (AI.Azure_*)</th></tr></thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">Jailbreak (Prompt Shields)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>Jailbreak.ContentFiltering.BlockedAttempt</code> · <code>DetectedAttempt</code></td></tr>
+          <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">Jailbreak (Content Safety · Prompt Shields)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>Jailbreak.ContentFiltering.BlockedAttempt</code> · <code>DetectedAttempt</code></td></tr>
           <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">간접 인젝션 (ASCII Smuggling)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>ASCIISmuggling</code></td></tr>
           <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">악성 URL (3종)</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>MaliciousUrl.UserPrompt · ModelResponse · UnknownSource</code></td></tr>
           <tr style="border-bottom:1px solid var(--cp-border);vertical-align:top;"><td style="padding:7px 9px;font-weight:700;">자격증명 탈취</td><td style="padding:7px 9px;color:var(--cp-text-muted);"><code>CredentialTheftAttempt</code></td></tr>
