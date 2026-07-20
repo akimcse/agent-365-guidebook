@@ -4,7 +4,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-<title>③ 런타임 위협 탐지 — Agent 365 가이드북</title>
+<title>④ 런타임 위협 탐지 — Agent 365 가이드북</title>
 <script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const s=localStorage.getItem("gbTheme");const t=p||s||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
 :root{
@@ -187,7 +187,8 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <div class="gb-glabel">심화 문서</div>
       <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
       <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
-      <a href="runtime-security.html" class="on"><span class="ic">🛡️</span><span class="lb">③ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
+      <a href="data-security.html" class=""><span class="ic">🗄️</span><span class="lb">③ 데이터 보안 · Purview<small>DSPM · 라벨 · DLP</small></span></a>
+      <a href="runtime-security.html" class="on"><span class="ic">🛡️</span><span class="lb">④ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
       <div class="gb-glabel">부록</div>
       <a href="demo-scenarios.html" class=""><span class="ic">🧪</span><span class="lb">데모 시나리오<small>계층별 탐지 검증</small></span></a>
     </nav>
@@ -200,7 +201,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     </button>
   </div></aside><main class="gb-main">
 <div class="wrap">
-  <div class="sub-hero"><span class="eb">✦ 심화 문서 ③</span><h1>런타임 위협 탐지</h1><p>Copilot Studio / Azure AI Foundry 에이전트의 런타임 위협 탐지·차단은 <strong>서로 다른 3개 계층</strong>에서 일어납니다 — ① Copilot Studio 네이티브, ② Prompt Shields → Defender for AI(모델 레벨), ③ Agent 365 · Defender XDR(에이전트 런타임). 계층마다 <strong>탐지 엔진 · 커넥터 · 시그널 흐름 · 표출 포털 · 라이선스</strong>가 다릅니다.</p></div>
+  <div class="sub-hero"><span class="eb">✦ 심화 문서 ④</span><h1>런타임 위협 탐지</h1><p>Copilot Studio / Azure AI Foundry 에이전트의 런타임 위협 탐지·차단은 <strong>서로 다른 3개 계층</strong>에서 일어납니다 — ① Copilot Studio 네이티브, ② Prompt Shields → Defender for AI(모델 레벨), ③ Agent 365 · Defender XDR(에이전트 런타임). 계층마다 <strong>탐지 엔진 · 커넥터 · 시그널 흐름 · 표출 포털 · 라이선스</strong>가 다릅니다.</p></div>
 
   <!-- SECTION 01: architecture -->
   <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">3계층 탐지 아키텍처<span class="axis-extra">시그널 소스 → 탐지 엔진 → 커넥터 게이트 → 표출 포털</span></h2></div>
