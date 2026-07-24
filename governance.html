@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>⑤ 거버넌스 프레임워크 — Agent 365 가이드북</title>
+<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const s=localStorage.getItem("gbTheme");const t=p||s||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
+<style>
+:root{
+  color-scheme: light;
+  --cp-bg:#faf9fb; --cp-bg-elevated:#ffffff; --cp-surface:#ffffff; --cp-surface-soft:#f3f2f6;
+  --cp-border:#e4e2ea; --cp-border-strong:#a9a7b4;
+  --cp-text:#1b1a21; --cp-text-muted:#4a4858; --cp-text-soft:#6b6980;
+  --cp-accent:#5b5fc7; --cp-accent-hover:#4a4eb5; --cp-accent-soft:rgba(91,95,199,0.10); --cp-accent-fg:#ffffff;
+  --cp-success:#0f7b3f; --cp-danger:#c4314b; --cp-warning:#b8860b; --cp-link:#0f6cbd;
+  --cp-highlight:rgba(91,95,199,0.12);
+  --cp-grad:linear-gradient(120deg,#ece9fb 0%,#e8f1fb 52%,#f6fbff 100%);
+  --cp-grad-accent:linear-gradient(120deg,#5b5fc7 0%,#0f6cbd 100%);
+  --cp-shadow:0 18px 48px rgba(38,36,64,0.12);
+}
+html[data-theme="dark"]{
+  color-scheme: dark;
+  --cp-bg:#1c1b22; --cp-bg-elevated:#232230; --cp-surface:#26252f; --cp-surface-soft:#2d2c38;
+  --cp-border:#3a3947; --cp-border-strong:#57556a;
+  --cp-text:#e7e6ee; --cp-text-muted:#a9a7ba; --cp-text-soft:#8f8da3;
+  --cp-accent:#a6a9f2; --cp-accent-hover:#b8bbf6; --cp-accent-soft:rgba(166,169,242,0.14); --cp-accent-fg:#1a1a22;
+  --cp-success:#4ade80; --cp-danger:#f87171; --cp-warning:#fbbf24; --cp-link:#6cb2f0;
+  --cp-highlight:rgba(166,169,242,0.16);
+  --cp-grad:linear-gradient(120deg,#2a2740 0%,#22283c 52%,#20232e 100%);
+  --cp-grad-accent:linear-gradient(120deg,#7c80e0 0%,#3f8ed0 100%);
+  --cp-shadow:0 18px 48px rgba(0,0,0,0.36);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.65;-webkit-font-smoothing:antialiased}
+.gb-layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.gb-side{background:var(--cp-bg-elevated);border-right:1px solid var(--cp-border)}
+.gb-side-inner{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:24px 16px}
+.gb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 2px}
+.gb-logo{width:34px;height:34px;border-radius:9px;background:var(--cp-grad-accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem;letter-spacing:-.02em}
+.gb-btxt{font-weight:800;font-size:.98rem;letter-spacing:-.01em}
+.gb-bsub{font-size:.72rem;color:var(--cp-text-soft);padding:2px 8px 18px}
+.gb-glabel{font-size:.64rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--cp-text-soft);padding:0 8px;margin:14px 0 7px}
+.gb-nav a{display:flex;align-items:flex-start;gap:10px;text-decoration:none;color:var(--cp-text);padding:10px 12px;border-radius:10px;font-size:.88rem;transition:background .15s;margin-bottom:3px}
+.gb-nav a .ic{font-size:.95rem;line-height:1.5}
+.gb-nav a .lb{font-weight:600}
+.gb-nav a .lb small{display:block;font-weight:400;font-size:.72rem;color:var(--cp-text-soft);margin-top:1px}
+.gb-nav a:hover{background:var(--cp-surface-soft)}
+.gb-nav a.on{background:var(--cp-accent-soft);color:var(--cp-accent)}
+.gb-nav a.on .lb small{color:var(--cp-accent)}
+.gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
+.gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
+.gb-themetoggle{display:flex;align-items:center;gap:9px;width:100%;margin-top:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--cp-border);background:var(--cp-surface);color:var(--cp-text);font-family:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:.15s}
+.gb-themetoggle:hover{border-color:var(--cp-accent);color:var(--cp-accent)}
+.gb-themetoggle .ti{font-size:1rem}
+/* section-label → AXIS-style header (subpages 2·3) */
+.axis-head2{display:flex;align-items:baseline;gap:13px;flex-wrap:wrap;margin:38px 0 14px;text-transform:none;letter-spacing:normal;color:var(--cp-text)}
+.axis-head2 .axis-num2{font-size:.74rem;font-weight:800;letter-spacing:.09em;color:var(--cp-accent-fg);background:var(--cp-accent);padding:4px 11px;border-radius:6px;text-transform:uppercase;flex:none}
+.axis-head2 .axis-t2{font-size:1.5rem;font-weight:800;letter-spacing:-.01em}
+.axis-head2 .axis-t2 .axis-extra{display:block;font-size:.82rem;font-weight:500;color:var(--cp-text-soft);margin-top:3px}
+/* embedded original-doc safety: keep wide content inside the constrained column */
+.gb-main .wrap{max-width:1060px;margin:0 auto;padding:36px 40px 80px}
+.gb-main svg{max-width:100%;height:auto;display:block}
+.gb-main img{max-width:100%;height:auto}
+.gb-main table{max-width:100%;table-layout:auto}
+.gb-main .sub-hero{margin-left:0;margin-right:0}
+@media (max-width:1160px){
+  .gb-main .id-grid,.gb-main .find-grid,.gb-main .det-wrap,.gb-main .cplane,.gb-main .role-grid,.gb-main .flow2,.gb-main .notes,.gb-main .l3grid{grid-template-columns:1fr !important}
+}
+@media (max-width:900px){.gb-main .wrap{padding:22px 18px 60px}}
+.gb-main{min-width:0}
+.sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
+.sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
+.sub-hero h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
+.sub-hero p{font-size:1rem;color:var(--cp-text-muted)}
+@media (max-width:900px){.sub-hero{padding:24px 20px}.sub-hero h1{font-size:1.6rem}}
+@media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{border-right:none;border-bottom:1px solid var(--cp-border)}.gb-side-inner{position:static;max-height:none;overflow:visible}}
+
+.wrap { max-width: 1220px; margin: 0 auto; }
+code, .mono { font-family: Consolas, "Courier New", Courier, monospace; }
+header.page { margin-bottom: 22px; }
+header.page .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cp-accent); margin-bottom: 6px; }
+header.page h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+header.page p.sub { color: var(--cp-text-muted); font-size: 14px; margin-top: 6px; }
+.section-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cp-text-soft); margin: 30px 0 12px; }
+.card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14); padding: 18px 20px; }
+.src { margin-top: 10px; font-size: 10.5px; color: var(--cp-text-soft); line-height: 1.7; }
+.src b { color: var(--cp-text-muted); font-weight: 700; }
+.src a { color: var(--cp-link); text-decoration: none; word-break: break-all; }
+.src a:hover { text-decoration: underline; }
+.unv { color: var(--cp-warning); font-weight: 600; }
+
+.archcard svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 12px; color: var(--cp-text-muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 16px; height: 4px; border-radius: 2px; display: inline-block; }
+
+/* control plane */
+.cplane { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cpg { border-radius: 14px; padding: 16px 18px; border: 1px solid var(--cp-border); background: var(--cp-surface); }
+.cpg.posture { border-top: 4px solid var(--cp-link); }
+.cpg.rtp { border-top: 4px solid var(--cp-accent); }
+.cpg h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.cpg .desc { font-size: 11px; color: var(--cp-text-soft); margin-bottom: 10px; }
+.cprow { display: grid; grid-template-columns: 116px 86px 1fr; gap: 9px; align-items: start; padding: 9px 0; border-top: 1px dashed var(--cp-border); font-size: 11.5px; }
+.cprow.first { border-top: none; }
+.cprow .nm { font-weight: 700; color: var(--cp-text); }
+.cprow .ds { color: var(--cp-text-muted); }
+.st { display:inline-block; font-size:9.5px; font-weight:700; padding:2px 7px; border-radius:999px; white-space:nowrap; }
+.st.c { background: rgba(22,163,74,0.14); color: var(--cp-success); }
+.st.w { background: rgba(245,158,11,0.16); color: var(--cp-warning); }
+.st.o { background: var(--cp-surface-soft); color: var(--cp-text-soft); border:1px solid var(--cp-border); }
+.st.audit { background: rgba(0,120,212,0.12); color: var(--cp-link); margin-left:3px; }
+.cpout { margin-top: 11px; font-size: 11px; font-weight: 600; color: var(--cp-text); background: var(--cp-surface-soft); border-radius: 8px; padding: 8px 11px; }
+.cpout span { color: var(--cp-accent); }
+.combine { margin-top: 8px; }
+.combine .arrow { text-align:center; color: var(--cp-border-strong); font-size: 16px; margin: 8px 0 4px; }
+.merged { background: var(--cp-highlight); border: 1.5px solid var(--cp-accent); border-radius: 12px; padding: 14px 18px; text-align:center; }
+.merged h4 { font-size: 15px; font-weight: 700; }
+.merged p { font-size: 11.5px; color: var(--cp-text-muted); margin-top: 4px; }
+.linchpin { margin-top: 14px; background: rgba(245,158,11,0.08); border: 1px solid var(--cp-warning); border-radius: 10px; padding: 11px 14px; font-size: 12px; color: var(--cp-text-muted); }
+.linchpin b { color: var(--cp-text); }
+
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.role-card { border-top: 4px solid var(--cp-border-strong); }
+.role-card.posture { border-top-color: var(--cp-link); }
+.role-card.rtp { border-top-color: var(--cp-accent); }
+.role-card .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
+.role-card.posture .tag { background: rgba(0,120,212,0.12); color: var(--cp-link); }
+.role-card.rtp .tag { background: var(--cp-accent-soft); color: var(--cp-accent); }
+.role-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.role-card ul { list-style: none; font-size: 13px; }
+.role-card li { padding: 3px 0 3px 16px; position: relative; }
+.role-card li::before { content: "›"; position: absolute; left: 2px; color: var(--cp-accent); font-weight: 700; }
+
+.flow2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 16px; }
+.pipeline { display: flex; flex-direction: column; }
+.stage { position: relative; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); border-radius: 12px; padding: 12px 14px 12px 46px; }
+.stage + .stage { margin-top: 26px; }
+.stage::after { content: "▼"; position: absolute; left: 50%; bottom: -22px; transform: translateX(-50%); color: var(--cp-border-strong); font-size: 13px; }
+.stage:last-child::after { display: none; }
+.stage .num { position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; border-radius: 50%; background: var(--cp-accent); color: var(--cp-accent-fg); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.stage h4 { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+.stage p { font-size: 12px; color: var(--cp-text-muted); }
+.stage.intercept { background: var(--cp-accent-soft); border-color: var(--cp-accent); }
+.stage.decision { background: var(--cp-highlight); border-color: var(--cp-accent); }
+.spec h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.spec .endpoint { font-family: Consolas, monospace; font-size: 11.5px; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); border-radius: 8px; padding: 8px 10px; color: var(--cp-text); margin-bottom: 12px; word-break: break-all; }
+.spec .endpoint b { color: var(--cp-accent); }
+.spec dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 12px; }
+.spec dt { font-weight: 700; color: var(--cp-text-soft); white-space: nowrap; }
+.spec dd { color: var(--cp-text-muted); }
+.spec .pk { display: inline-block; font-family: Consolas, monospace; font-size: 11px; background: var(--cp-accent-soft); color: var(--cp-accent); padding: 2px 7px; border-radius: 6px; margin: 3px 4px 0 0; }
+
+.notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.note { background: var(--cp-surface); border: 1px solid var(--cp-border); border-left: 4px solid var(--cp-warning); border-radius: 12px; padding: 13px 15px; font-size: 12.5px; }
+.note > b { display: block; margin-bottom: 4px; color: var(--cp-text); font-size: 13px; }
+.note span { color: var(--cp-text-muted); }
+/* 3-layer overview */
+.l3grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.l3 { border-radius: 14px; border: 1px solid var(--cp-border); background: var(--cp-surface); padding: 16px 17px; display:flex; flex-direction:column; box-shadow: 0 0 2px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.10); }
+.l3.n1 { border-top: 4px solid var(--cp-success); }
+.l3.n2 { border-top: 4px solid var(--cp-danger); }
+.l3.n3 { border-top: 4px solid var(--cp-accent); }
+.l3 .lnum { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--cp-text-soft); }
+.l3 h3 { font-size: 15.5px; font-weight: 800; margin: 4px 0 2px; }
+.l3 .lsub { font-size: 11px; color: var(--cp-text-soft); margin-bottom: 12px; min-height: 2.6em; }
+.l3 dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 10px; font-size: 11.5px; }
+.l3 dt { font-weight: 700; color: var(--cp-text-soft); white-space: nowrap; }
+.l3 dd { color: var(--cp-text-muted); }
+.l3 .azure { display:inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+.l3 .azure.no { background: rgba(22,163,74,0.14); color: var(--cp-success); }
+.l3 .azure.yes { background: rgba(220,38,38,0.12); color: var(--cp-danger); }
+
+footer.page { margin-top: 28px; font-size: 11.5px; color: var(--cp-text-soft); line-height: 1.7; }
+footer.page a { color: var(--cp-link); text-decoration: none; }
+@media (max-width: 900px) { .cplane, .role-grid, .flow2, .notes { grid-template-columns: 1fr; } .cprow { grid-template-columns: 100px 80px 1fr; } }
+
+/* data-security helpers */
+.ptag { display:inline-block; font-size:10px; font-weight:800; padding:2px 9px; border-radius:999px; white-space:nowrap; letter-spacing:.02em; }
+.ptag.engine { background:rgba(15,108,189,0.13); color:var(--cp-link); }
+.ptag.label  { background:rgba(15,123,63,0.13); color:var(--cp-success); }
+.ptag.policy { background:rgba(184,134,11,0.16); color:var(--cp-warning); }
+.ptag.plane  { background:var(--cp-accent-soft); color:var(--cp-accent); }
+.dtbl { width:100%; border-collapse:collapse; font-size:12px; }
+.dtbl th { text-align:left; font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--cp-text-soft); padding:8px 10px; border-bottom:2px solid var(--cp-border); }
+.dtbl td { padding:9px 10px; border-bottom:1px solid var(--cp-border); vertical-align:top; color:var(--cp-text-muted); }
+.dtbl tr:last-child td { border-bottom:none; }
+.dtbl td.k { font-weight:700; color:var(--cp-text); white-space:nowrap; }
+.pth { font-family:Consolas,"Courier New",monospace; font-size:11px; background:var(--cp-surface-soft); padding:1px 6px; border-radius:5px; color:var(--cp-text-muted); }
+.own { display:inline-block; font-size:9.5px; font-weight:800; padding:1px 7px; border-radius:999px; }
+.own.pv { background:rgba(91,95,199,0.12); color:var(--cp-accent); }
+.own.a365 { background:rgba(220,38,38,0.10); color:var(--cp-danger); }
+.own.payg { background:rgba(184,134,11,0.16); color:var(--cp-warning); }
+.boundary { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:4px; }
+@media (max-width:900px){ .boundary{ grid-template-columns:1fr; } }
+.bcard { border-radius:12px; border:1px solid var(--cp-border); padding:14px 16px; background:var(--cp-surface); }
+.bcard h4 { font-size:13px; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.bcard ul { margin:0 0 0 16px; padding:0; font-size:11.5px; color:var(--cp-text-muted); line-height:1.6; }
+/* governance helpers */
+.gstack { display:flex; flex-direction:column; gap:10px; }
+.grow { border-radius:12px; border:1px solid var(--cp-border); padding:12px 15px; background:var(--cp-surface); }
+.grow .gh { font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--cp-text-soft); margin-bottom:6px; }
+.grow.plat { border-top:3px solid var(--cp-text-soft); }
+.grow.tools { border-top:3px solid var(--cp-link); }
+.grow.plane { border-top:3px solid var(--cp-accent); }
+.grow.obs { border-top:3px solid var(--cp-success); }
+.chips { display:flex; flex-wrap:wrap; gap:6px; }
+.chip2 { display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:999px; background:var(--cp-surface-soft); border:1px solid var(--cp-border); color:var(--cp-text-muted); }
+.ftag { display:inline-block; font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; white-space:nowrap; }
+.ftag.owasp { background:rgba(196,49,75,0.13); color:var(--cp-danger); }
+.ftag.atlas { background:rgba(184,134,11,0.16); color:var(--cp-warning); }
+.ftag.nist { background:rgba(15,108,189,0.13); color:var(--cp-link); }
+.kpigrid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+@media (max-width:900px){ .kpigrid{ grid-template-columns:1fr 1fr; } }
+.kpi { border-radius:12px; border:1px solid var(--cp-border); background:var(--cp-surface); padding:14px; text-align:center; }
+.kpi .v { font-size:20px; font-weight:800; color:var(--cp-success); }
+.kpi .l { font-size:11px; color:var(--cp-text-muted); margin-top:3px; line-height:1.4; }
+.reg { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+@media (max-width:900px){ .reg{ grid-template-columns:1fr 1fr; } }
+.regc { border-radius:10px; border:1px solid var(--cp-border); background:var(--cp-surface); padding:11px 12px; }
+.regc .rt { font-size:12px; font-weight:800; margin-bottom:2px; }
+.regc .rn { font-size:9.5px; font-weight:800; color:var(--cp-accent); }
+.regc .rf { font-size:9.5px; color:var(--cp-text-soft); font-family:Consolas,monospace; line-height:1.5; margin-top:4px; word-break:break-all; }
+.regc.risk { border-top:3px solid var(--cp-danger); }
+.fwlist { list-style:none; margin:0; padding:0; }
+.fwlist li { display:flex; gap:10px; padding:7px 0; border-bottom:1px dashed var(--cp-border); font-size:12px; }
+.fwlist li:last-child { border-bottom:none; }
+.fwlist .id { font-family:Consolas,monospace; font-size:10.5px; font-weight:700; color:var(--cp-accent); flex:none; width:64px; }
+.fwlist .tx { color:var(--cp-text-muted); }
+.fwlist .tx b { color:var(--cp-text); }
+</style>
+</head>
+<body><div class="gb-layout"><aside class="gb-side"><div class="gb-side-inner">
+    <div class="gb-brand"><div class="gb-logo">A365</div><div class="gb-btxt">Agent 365 가이드북</div></div>
+    <div class="gb-bsub">에이전트를 관찰·관리·보호하는 컨트롤 플레인</div>
+    <div class="gb-glabel">시작</div>
+    <nav class="gb-nav">
+      <a href="index.html" class=""><span class="ic">🏠</span><span class="lb">홈<small>Agent 365 개요</small></span></a>
+      <div class="gb-glabel">심화 문서</div>
+      <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
+      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
+      <a href="data-security.html" class=""><span class="ic">🗄️</span><span class="lb">③ 데이터 보안 · Purview<small>DSPM · 라벨 · DLP</small></span></a>
+      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">④ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
+      <a href="governance.html" class="on"><span class="ic">🏛️</span><span class="lb">⑤ 거버넌스 프레임워크<small>AgentOps 컨트롤 플레인</small></span></a>
+      <div class="gb-glabel">부록</div>
+      <a href="demo-scenarios.html" class=""><span class="ic">🧪</span><span class="lb">데모 시나리오<small>계층별 탐지 검증</small></span></a>
+    </nav>
+    <div class="gb-sfoot">공식 근거
+      <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview/" target="_blank" rel="noopener">MS Learn — Agent 365 ↗</a>
+    </div>
+    <button class="gb-themetoggle" id="themeToggle" type="button" aria-label="테마 전환">
+      <span class="ti" id="themeIcon">🌙</span><span id="themeLabel">다크 모드</span>
+    </button>
+  </div></aside><main class="gb-main">
+<div class="wrap">
+  <div class="sub-hero"><span class="eb">✦ 심화 문서 ⑤</span><h1>거버넌스 프레임워크</h1><p>여러 플랫폼(Copilot · Foundry · Vertex AI · Bedrock)에 흩어진 에이전트를 <strong>하나의 거버넌스 컨트롤 플레인</strong>으로 관리하는 아키텍처를 제시합니다. 한 번의 에이전트 액션이 <strong>요청 → 게이트 → 실행 → 관측</strong>으로 흐르는 런타임 경로를 기준으로, <strong>Access &amp; Identity · Policy · Controls · Observability</strong> 네 축이 실제로 <strong>어떤 Microsoft 보안 솔루션과 Agent 365 역할</strong>로 동작하는지를 앞선 문서 ②③④와 엮어 설명하고, 마지막에 전체를 한 판으로 매핑합니다.</p></div>
+
+  <div class="note" style="border-left-color:var(--cp-accent);margin-bottom:8px;"><b>표기 원칙</b><span>SECTION 02·03의 게이트별 상세는 앞선 심화 문서와 이어집니다 — 각 셀의 <a href="identity-risk.html" style="color:var(--cp-link);text-decoration:none;">(문서 N ↗)</a> 링크로 해당 문서로 바로 이동할 수 있습니다.</span></div>
+
+  <!-- ================= SECTION 1 : action flow + layered stack ================= -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">거버넌스 아키텍처 개요<span class="axis-extra">한 번의 액션이 요청 → 게이트 → 실행 → 관측으로 흐르는 경로</span></h2></div>
+  <div class="card flowcard">
+    <svg viewBox="0 0 1520 900" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Malgun Gothic, sans-serif" style="background:#ffffff;border-radius:12px;">
+      <defs>
+        <marker id="ga" markerWidth="12" markerHeight="12" refX="8.5" refY="3.4" orient="auto"><path d="M0,0 L8.5,3.4 L0,6.8 Z" fill="#3f5170"/></marker>
+        <marker id="gablock" markerWidth="12" markerHeight="12" refX="8.5" refY="3.4" orient="auto"><path d="M0,0 L8.5,3.4 L0,6.8 Z" fill="#cf3f4f"/></marker>
+        <marker id="gatel" markerWidth="11" markerHeight="11" refX="7.5" refY="3" orient="auto"><path d="M0,0 L7.5,3 L0,6 Z" fill="#3f8a68"/></marker>
+        <marker id="garet" markerWidth="12" markerHeight="12" refX="8.5" refY="3.4" orient="auto"><path d="M0,0 L8.5,3.4 L0,6.8 Z" fill="#2f7d5b"/></marker>
+        <filter id="gsh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1a2740" flood-opacity="0.14"/></filter>
+      </defs>
+      <text x="34" y="42" font-size="28" font-weight="800" fill="#16233d">Agent Action Flow — Runtime Governance</text>
+      <text x="35" y="66" font-size="14" fill="#5c6780">한 번의 에이전트 액션이 요청 → 게이트 통과 → 실행 → 관측으로 흐르는 실제 런타임 경로</text>
+      <line x1="34" y1="82" x2="1486" y2="82" stroke="#e2e7f0" stroke-width="1.5"/>
+      <g font-size="11" font-weight="800" fill="#8a97b3" letter-spacing="1.2">
+        <text x="140" y="112" text-anchor="middle">ORIGIN</text>
+        <text x="410" y="112" text-anchor="middle">INTERCEPT</text>
+        <text x="770" y="112" text-anchor="middle">DECISION GATES</text>
+        <text x="1140" y="112" text-anchor="middle">EXECUTION</text>
+        <text x="1400" y="112" text-anchor="middle">TARGETS</text>
+      </g>
+      <rect x="34" y="132" width="212" height="300" rx="14" fill="#132239" filter="url(#gsh)"/>
+      <text x="140" y="162" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">🤖 AI Agent</text>
+      <text x="140" y="182" font-size="10.5" fill="#9fb2d6" text-anchor="middle">running on a target platform</text>
+      <g text-anchor="middle" font-size="12" font-weight="700" fill="#dbe6f7">
+        <rect x="54" y="198" width="172" height="34" rx="8" fill="#1e3050"/><text x="140" y="220">Copilot</text>
+        <rect x="54" y="238" width="172" height="34" rx="8" fill="#1e3050"/><text x="140" y="260">Azure Foundry</text>
+        <rect x="54" y="278" width="172" height="34" rx="8" fill="#1e3050"/><text x="140" y="300">GCP Vertex AI</text>
+        <rect x="54" y="318" width="172" height="34" rx="8" fill="#1e3050"/><text x="140" y="340">Bedrock Procode</text>
+      </g>
+      <text x="140" y="414" font-size="10" fill="#9fb2d6" text-anchor="middle">emits an action: prompt · tool call · A2A</text>
+      <rect x="300" y="150" width="220" height="264" rx="14" fill="#263a63" filter="url(#gsh)"/>
+      <text x="410" y="180" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">AI Gateway</text>
+      <text x="410" y="199" font-size="10.5" fill="#b9c8e8" text-anchor="middle">Policy Enforcement Point</text>
+      <line x1="326" y1="212" x2="494" y2="212" stroke="#42568a"/>
+      <g font-size="11" fill="#d5e0f5">
+        <text x="410" y="236" text-anchor="middle">모든 액션을 실행 전에 가로챔</text>
+        <rect x="330" y="250" width="160" height="30" rx="7" fill="#32497a"/><text x="410" y="270" text-anchor="middle" font-weight="700">intercept request</text>
+        <rect x="330" y="288" width="160" height="30" rx="7" fill="#32497a"/><text x="410" y="308" text-anchor="middle" font-weight="700">attach agent identity</text>
+        <rect x="330" y="326" width="160" height="30" rx="7" fill="#32497a"/><text x="410" y="346" text-anchor="middle" font-weight="700">route to decision gates</text>
+      </g>
+      <text x="410" y="388" font-size="10" fill="#9db0d8" text-anchor="middle">Protocols: MCP · REST · A2A · Skills</text>
+      <rect x="560" y="132" width="420" height="86" rx="12" fill="#eef6f8" stroke="#bcd9e0" filter="url(#gsh)"/>
+      <rect x="560" y="132" width="7" height="86" rx="3.5" fill="#3f7d8c"/>
+      <circle cx="592" cy="158" r="13" fill="#3f7d8c"/><text x="592" y="163" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">1</text>
+      <text x="616" y="156" font-size="14" font-weight="800" fill="#2c5b66">Access &amp; Identity — who is asking?</text>
+      <text x="616" y="176" font-size="10.8" fill="#3d5158">RBAC Graph · Human User RBAC · Data Sensitivity Label</text>
+      <text x="616" y="194" font-size="10.8" fill="#3d5158">→ authenticate agent + resolve effective permissions</text>
+      <text x="964" y="211" font-size="9.5" fill="#3f7d8c" text-anchor="end" font-style="italic">authenticate</text>
+      <rect x="560" y="230" width="420" height="104" rx="12" fill="#f2eefb" stroke="#d3c6ee" filter="url(#gsh)"/>
+      <rect x="560" y="230" width="7" height="104" rx="3.5" fill="#5b4a8a"/>
+      <circle cx="592" cy="256" r="13" fill="#5b4a8a"/><text x="592" y="261" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">2</text>
+      <text x="616" y="254" font-size="14" font-weight="800" fill="#4a3d6b">Policy — is this action allowed?</text>
+      <text x="616" y="274" font-size="10.8" fill="#4f4470">OWASP Top 10 (LLM + Agentic AI) · MITRE ATLAS</text>
+      <text x="616" y="291" font-size="10.8" fill="#4f4470">Credential Access · Discovery · Collection</text>
+      <text x="616" y="308" font-size="10.8" fill="#4f4470">NIST AI RMF · Govern · Map · Measure · Manage</text>
+      <text x="616" y="326" font-size="10.5" font-weight="700" fill="#5b4a8a">→ evaluate action against threat &amp; compliance frameworks</text>
+      <rect x="560" y="346" width="420" height="96" rx="12" fill="#fbeef0" stroke="#f0ccd3" filter="url(#gsh)"/>
+      <rect x="560" y="346" width="7" height="96" rx="3.5" fill="#a5384a"/>
+      <circle cx="592" cy="372" r="13" fill="#a5384a"/><text x="592" y="377" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">3</text>
+      <text x="616" y="370" font-size="14" font-weight="800" fill="#8a2f3e">Controls — allow, block, or flag?</text>
+      <text x="616" y="390" font-size="10.8" fill="#7a3742">Blocking Agent · Blocking Access · Detection · Monitoring</text>
+      <g font-size="11.5" font-weight="800" text-anchor="middle">
+        <rect x="616" y="402" width="150" height="30" rx="8" fill="#e7f6ee" stroke="#bfe6d0"/><text x="691" y="422" fill="#2f7d5b">✔ ALLOW → execute</text>
+        <rect x="782" y="402" width="120" height="30" rx="8" fill="#fdeaec" stroke="#f2c4cb"/><text x="842" y="422" fill="#cf3f4f">⛔ BLOCK</text>
+      </g>
+      <g stroke="#9aa8c4" stroke-width="2" fill="none" marker-end="url(#ga)">
+        <line x1="770" y1="219" x2="770" y2="228"/><line x1="770" y1="335" x2="770" y2="344"/>
+      </g>
+      <rect x="1020" y="150" width="212" height="200" rx="14" fill="#1e3b30" filter="url(#gsh)"/>
+      <text x="1126" y="180" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">Action Executes</text>
+      <text x="1126" y="199" font-size="10.5" fill="#a8ccb9" text-anchor="middle">only if Controls = ALLOW</text>
+      <g font-size="11" fill="#d7ecdf" text-anchor="middle" font-weight="700">
+        <rect x="1040" y="214" width="172" height="34" rx="8" fill="#2a5442"/><text x="1126" y="236">call tool / connector</text>
+        <rect x="1040" y="254" width="172" height="34" rx="8" fill="#2a5442"/><text x="1126" y="276">query knowledge base</text>
+        <rect x="1040" y="294" width="172" height="34" rx="8" fill="#2a5442"/><text x="1126" y="316">return result to agent</text>
+      </g>
+      <rect x="1286" y="150" width="200" height="200" rx="14" fill="#eaf2fb" stroke="#cbdcf0" filter="url(#gsh)"/>
+      <text x="1386" y="178" font-size="13" font-weight="800" fill="#2f5aa8" text-anchor="middle">Tools &amp; Sources</text>
+      <g font-family="Consolas,monospace" font-size="10.3" fill="#3a4a63" text-anchor="middle">
+        <text x="1386" y="204">Confluence · Jira</text>
+        <text x="1386" y="222">SharePoint · OneDrive</text>
+        <text x="1386" y="240">Dataverse · Salesforce</text>
+      </g>
+      <line x1="1306" y1="272" x2="1466" y2="272" stroke="#d5e2f2"/>
+      <text x="1386" y="294" font-size="10" fill="#6b7690" text-anchor="middle">external SaaS · data ·</text>
+      <text x="1386" y="310" font-size="10" fill="#6b7690" text-anchor="middle">knowledge bases · other agents</text>
+      <path d="M246,282 C270,282 278,282 298,282" stroke="#3f5170" stroke-width="2.8" fill="none" marker-end="url(#ga)"/>
+      <text x="272" y="272" font-size="10.5" font-weight="700" fill="#33465f" text-anchor="middle">action</text>
+      <path d="M520,222 C536,210 542,182 558,178" stroke="#3f5170" stroke-width="2.8" fill="none" marker-end="url(#ga)"/>
+      <path d="M766,417 C880,417 940,300 1018,270" stroke="#2f7d5b" stroke-width="2.8" fill="none" marker-end="url(#garet)"/>
+      <text x="905" y="352" font-size="10.5" font-weight="700" fill="#2f7d5b">✔ allowed</text>
+      <path d="M1232,250 C1252,250 1264,250 1284,250" stroke="#3f5170" stroke-width="2.8" fill="none" marker-end="url(#ga)"/>
+      <path d="M1284,300 C1264,312 1252,320 1234,322" stroke="#2f7d5b" stroke-width="2.4" stroke-dasharray="6 4" fill="none" marker-end="url(#garet)"/>
+      <text x="1258" y="340" font-size="9.5" fill="#2f7d5b" text-anchor="middle">result</text>
+      <path d="M1126,350 C1126,470 1126,470 700,470 C400,470 200,470 140,432" stroke="#2f7d5b" stroke-width="2.2" stroke-dasharray="7 5" fill="none" marker-end="url(#garet)"/>
+      <text x="640" y="463" font-size="10" fill="#2f7d5b" text-anchor="middle">result returned to agent — loop continues</text>
+      <path d="M842,432 C842,505 560,505 470,505 C360,505 300,470 246,392" stroke="#cf3f4f" stroke-width="2.2" stroke-dasharray="6 4" fill="none" marker-end="url(#gablock)"/>
+      <text x="560" y="524" font-size="10.5" font-weight="700" fill="#cf3f4f" text-anchor="middle">⛔ blocked — action denied, agent notified, incident raised</text>
+      <rect x="34" y="602" width="1452" height="266" rx="16" fill="#f2f9f4" stroke="#c9e2d5" filter="url(#gsh)"/>
+      <text x="56" y="632" font-size="15" font-weight="800" fill="#2f6b52">📊 Observability — Central Agent Registry</text>
+      <text x="1464" y="632" font-size="11" fill="#5f7d6c" text-anchor="end" font-style="italic">every stage above streams metadata + telemetry here · normalised across all platforms</text>
+      <g stroke="#3f8a68" stroke-width="2" stroke-dasharray="5 4" fill="none" marker-end="url(#gatel)">
+        <line x1="140" y1="432" x2="140" y2="598"/><line x1="410" y1="414" x2="410" y2="598"/>
+        <line x1="770" y1="540" x2="770" y2="598"/><line x1="1126" y1="470" x2="1126" y2="598"/>
+      </g>
+      <text x="770" y="588" font-size="10" fill="#3f8a68" text-anchor="middle" font-weight="700">telemetry (spans · decisions · errors)</text>
+      <text x="56" y="662" font-size="12" font-weight="800" fill="#2b4636">Agent Registry Schema · 71 fields — normalised record per agent</text>
+      <g font-size="11.5" font-weight="800">
+        <rect x="56" y="674" width="222" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="56" y="674" width="5" height="84" rx="2.5" fill="#2f6b52"/>
+        <text x="74" y="696" fill="#233a5e">Identity &amp; Registry <tspan fill="#2f6b52" font-size="10">· 9</tspan></text>
+        <text x="74" y="716" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">agent_registry_id · agent_id ·</text>
+        <text x="74" y="731" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">agent_type · agent_version ·</text>
+        <text x="74" y="746" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">source_system · console_url</text>
+        <rect x="290" y="674" width="222" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="290" y="674" width="5" height="84" rx="2.5" fill="#2f6b52"/>
+        <text x="308" y="696" fill="#233a5e">Ownership &amp; Org <tspan fill="#2f6b52" font-size="10">· 9</tspan></text>
+        <text x="308" y="716" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">owner_name · owner_email ·</text>
+        <text x="308" y="731" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">owner_team · created_by ·</text>
+        <text x="308" y="746" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">business_service · cost_center</text>
+        <rect x="524" y="674" width="222" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="524" y="674" width="5" height="84" rx="2.5" fill="#2f6b52"/>
+        <text x="542" y="696" fill="#233a5e">Lifecycle &amp; Status <tspan fill="#2f6b52" font-size="10">· 10</tspan></text>
+        <text x="542" y="716" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">status · environment ·</text>
+        <text x="542" y="731" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">created_at · last_used_at ·</text>
+        <text x="542" y="746" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">deprecated_at · deleted_at</text>
+        <rect x="758" y="674" width="222" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="758" y="674" width="5" height="84" rx="2.5" fill="#2f6b52"/>
+        <text x="776" y="696" fill="#233a5e">Runtime &amp; Model <tspan fill="#2f6b52" font-size="10">· 8</tspan></text>
+        <text x="776" y="716" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">model_provider · model_id ·</text>
+        <text x="776" y="731" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">runtime · region ·</text>
+        <text x="776" y="746" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">endpoint_url · network_exposure</text>
+        <rect x="992" y="674" width="222" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="992" y="674" width="5" height="84" rx="2.5" fill="#a5384a"/>
+        <text x="1010" y="696" fill="#233a5e">Risk &amp; Compliance <tspan fill="#a5384a" font-size="10">· 12</tspan></text>
+        <text x="1010" y="716" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">risk_level · approval_status ·</text>
+        <text x="1010" y="731" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">has_pii_access · has_external_access ·</text>
+        <text x="1010" y="746" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">human_review_required · data_classification</text>
+        <rect x="1226" y="674" width="212" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="1226" y="674" width="5" height="84" rx="2.5" fill="#2f6b52"/>
+        <text x="1244" y="696" fill="#233a5e">Connections <tspan fill="#2f6b52" font-size="10">· 3</tspan></text>
+        <text x="1244" y="716" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">tool_count ·</text>
+        <text x="1244" y="731" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">knowledge_base_count ·</text>
+        <text x="1244" y="746" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">data_source_count</text>
+        <rect x="524" y="770" width="454" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="524" y="770" width="5" height="84" rx="2.5" fill="#2f6b52"/>
+        <text x="542" y="792" fill="#233a5e">Telemetry &amp; Health <tspan fill="#2f6b52" font-size="10">· 11</tspan></text>
+        <text x="542" y="812" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">last_7d_invocation_count · total_invocation_count · last_7d_error_count ·</text>
+        <text x="542" y="827" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">avg_latency_ms · success_rate · health_status ·</text>
+        <text x="542" y="842" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">is_orphan · is_unused · snapshot_at</text>
+        <rect x="992" y="770" width="446" height="84" rx="10" fill="#fff" stroke="#d7e6dd"/><rect x="992" y="770" width="5" height="84" rx="2.5" fill="#2f6b52"/>
+        <text x="1010" y="792" fill="#233a5e">Ingestion &amp; Sync <tspan fill="#2f6b52" font-size="10">· 9</tspan></text>
+        <text x="1010" y="812" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">source_file_uri · ingested_at · ingestion_id · schema_version ·</text>
+        <text x="1010" y="827" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">source_row_hash · record_hash · raw_payload_s3_uri ·</text>
+        <text x="1010" y="842" font-family="Consolas,monospace" font-size="9.3" font-weight="400" fill="#4a5a72">sync_status · sync_error_message</text>
+        <rect x="56" y="770" width="446" height="84" rx="10" fill="#eef6f1" stroke="#c9e2d5"/>
+        <text x="74" y="792" fill="#2f6b52" font-size="11.5">What the registry powers</text>
+        <text x="74" y="813" font-size="10.3" font-weight="400" fill="#40614f">· full agent inventory &amp; ownership across every platform</text>
+        <text x="74" y="829" font-size="10.3" font-weight="400" fill="#40614f">· trace of every action, decision &amp; block for audit</text>
+        <text x="74" y="845" font-size="10.3" font-weight="400" fill="#40614f">· root-cause &amp; blast-radius on incidents · orphan / risk detection</text>
+      </g>
+    </svg>
+    <div class="linchpin">🔑 <b>읽는 법:</b> 에이전트가 액션(prompt·tool 호출·A2A)을 내면 <b>AI Gateway</b>(정책 집행 지점)가 실행 전에 가로채 세 게이트 — <b>① Access &amp; Identity</b>(누가?) → <b>② Policy</b>(허용되나?) → <b>③ Controls</b>(허용·차단·플래그) — 를 통과시킵니다. ALLOW일 때만 실행되고, 모든 단계의 메타데이터·텔레메트리가 <b>중앙 레지스트리</b>로 흘러 감사·근본원인·오판(orphan)·위험 탐지를 가능하게 합니다.</div>
+  </div>
+
+  <!-- ================= SECTION 2 : pillars → MS mapping ================= -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">각 게이트는 실제로 어떻게 동작하나<span class="axis-extra">3 필라 → Microsoft 보안 솔루션 · Agent 365 역할 · 실제 액션</span></h2></div>
+
+  <!-- Pillar 1 -->
+  <div class="card">
+    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(63,125,140,0.15);color:#2c5b66;">게이트 ①</span> Access &amp; Identity — "누가 요청하나?" &nbsp;<span class="own pv" style="background:rgba(91,95,199,0.12);color:var(--cp-accent);">Entra 관리자</span></div>
+    <table class="dtbl">
+      <tr><td class="k">신원 부여</td><td><b>Microsoft Entra Agent ID</b> — 에이전트마다 고유 <code>agent identity</code>, <code>blueprint</code>로 다수 에이전트에 CA·거버넌스·감사를 일괄 적용</td></tr>
+      <tr><td class="k">접근 제어</td><td><b>Conditional Access for agents</b> — 실시간 <b>agent identity risk</b> 신호로 접근 제어. <b>Microsoft Managed Policies</b>가 high-risk 에이전트를 기본 차단</td></tr>
+      <tr><td class="k">위험 탐지</td><td><b>Identity Protection for agents</b> — 사용자 위험에서 유래한 위험 + 에이전트 <b>자체 행동</b> 기반 이상/비인가 활동 탐지</td></tr>
+      <tr><td class="k">집행 지점</td><td><b>AI gateway (Azure API Management)</b> — 액션을 실행 전 가로채 <b>신원 부착·토큰 발급·쿼터</b>. OpenAI/Anthropic/Vertex/Bedrock 백엔드까지 관리</td></tr>
+    </table>
+    <div class="impact" style="margin-top:12px">💡 <b>실제 액션 순서:</b> AI gateway가 액션을 intercept → 에이전트 신원 부착 → CA가 <b>agent identity risk</b>를 평가 → high-risk면 차단, 아니면 유효 권한(OBO/앱 전용)을 해석해 다음 게이트로. <a href="identity-risk.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ② ↗)</a></div>
+    <div class="src"><b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/security-for-ai-overview">entra/security-for-ai-overview</a> (CA·Identity Protection) ·
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/what-is-microsoft-entra-agent-id">entra-agent-id(blueprint·멀티플랫폼)</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities">apim/genai-gateway</a></div>
+  </div>
+
+  <!-- Pillar 2 -->
+  <div class="card" style="margin-top:16px">
+    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(91,74,138,0.14);color:#4a3d6b;">게이트 ②</span> Policy — "이 액션이 허용되나?" &nbsp;<span class="own pv" style="background:rgba(91,95,199,0.12);color:var(--cp-accent);">Purview · Defender 관리자</span></div>
+    <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 10px;">액션의 <b>콘텐츠(모델 입출력)</b>와 <b>데이터(민감정보)</b>를 각각 다른 엔진이 평가합니다.</p>
+    <table class="dtbl">
+      <tr><td class="k">콘텐츠 정책</td><td><b>Azure AI Content Safety — Prompt Shields</b> — jailbreak·XPIA를 모델 입출력 단에서 탐지·차단. <b>Defender for Cloud AI threat protection</b>이 이를 XDR 알림으로 표출 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ Layer② ↗)</a></td></tr>
+      <tr><td class="k">데이터 정책</td><td><b>Purview</b> — SIT·EDM으로 민감정보 분류, <b>Sensitivity Labels</b>(EXTRACT 게이트)로 접근 통제, <b>DLP</b>가 민감 데이터의 Copilot 처리를 차단 <a href="data-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ③ ↗)</a></td></tr>
+      <tr><td class="k">위험 점수화</td><td><b>Purview Insider Risk Management</b>(Risky AI usage · Risky Agents) — 위험 프롬프트·민감 응답·외부 공유를 점수화해 Adaptive Protection으로 연결</td></tr>
+    </table>
+    <div class="impact" style="margin-top:12px">💡 <b>실제 액션 순서:</b> 프롬프트·응답·접근 리소스를 분류 엔진이 평가 → 콘텐츠 위협은 Prompt Shields가, 민감 데이터는 Purview DLP가 정책 매칭 → 위반 시 차단·플래그. <a href="data-security.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ③ ↗)</a> <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ④ ↗)</a></div>
+    <div class="src"><b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection">content-safety/prompt-shields</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-threat-protection">defender-for-cloud/ai-threat-protection</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/ai-agent-365">purview/ai-agent-365</a> (DLP·IRM·라벨)</div>
+  </div>
+
+  <!-- Pillar 3 -->
+  <div class="card" style="margin-top:16px">
+    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(165,56,74,0.13);color:#8a2f3e;">게이트 ③</span> Controls — "허용 · 차단 · 플래그" &nbsp;<span class="own pv" style="background:rgba(91,95,199,0.12);color:var(--cp-accent);">Defender 관리자</span></div>
+    <table class="dtbl">
+      <tr><td class="k">런타임 규칙</td><td><b>Microsoft Defender — Security for AI</b> 실시간 보호. <b>Default 규칙(audit)</b>: 차단 없이 <code>BehaviorInfo</code> 기록 · <b>Custom 규칙(block)</b>: 실행 전 tool 호출 차단 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ Layer③ ↗)</a></td></tr>
+      <tr><td class="k">차단 4종</td><td>Secret exfiltration · Malicious content propagation · Evasion techniques · Unsafe email domain</td></tr>
+      <tr><td class="k">결과 표출</td><td>audit 모드 → <b>XDR Alert</b> · block 규칙 → <b><code>BehaviorInfo</code></b> 기록. 모든 결과가 <b>Microsoft Defender 포털(XDR)</b>로 수렴해 조사·상관</td></tr>
+      <tr><td class="k">데이터 차단</td><td><b>Purview DLP</b>가 라벨·SIT 조건으로 민감 데이터 처리 자체를 사전 차단(보완적 통제)</td></tr>
+    </table>
+    <div class="impact" style="margin-top:12px">💡 <b>실제 액션 순서:</b> tool invocation이 tool 경계에 도달 → 규칙 평가 → ALLOW면 실행, 위협이면 차단·플래그 → XDR로 표출. <b>audit 모드에서만 알림</b>, block 규칙이 덮으면 <code>BehaviorInfo</code>만 기록됩니다. <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ④ ↗)</a></div>
+    <div class="src"><b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime">real-time-agent-protection</a> (audit/block 규칙) ·
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">security-for-ai(XDR 표출)</a></div>
+  </div>
+
+  <div class="note" style="margin-top:16px;border-left-color:var(--cp-accent)"><b>Agent 365 — 4개 관리자 역할이 컨트롤 플레인을 나눠 맡습니다</b><span><b>Entra 관리자</b>(신원·CA·거버넌스) · <b>Defender 관리자</b>(위협 탐지·실시간 통제) · <b>Purview 관리자</b>(데이터 분류·DLP·컴플라이언스) · <b>Microsoft 365 관리자</b>(레지스트리·온보딩·수명주기). Agent 365가 이 넷을 하나의 <i>Agent registry</i>로 묶어 <b>Observe · Govern · Secure</b>를 제공합니다.</span></div>
+
+  <!-- ================= SECTION 3 : observability ================= -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">Observability — 중앙 Agent Registry<span class="axis-extra">정규화된 에이전트 레코드 · Agent 365 레지스트리 매핑</span></h2></div>
+  <div class="card">
+    <p style="font-size:12.5px;color:var(--cp-text-muted);margin:0 0 12px;">모든 게이트·실행 단계의 메타데이터·텔레메트리가 <b>중앙 레지스트리</b>로 흘러 정규화된 레코드로 집계됩니다 — 전 플랫폼 에이전트 인벤토리·소유권, 액션·차단 감사, 근본원인·오판(orphan)·위험 탐지의 근거가 됩니다. Observability는 단일 제품이 아니라 <b>여러 Microsoft 솔루션의 관측 데이터가 수렴하는 계층</b>입니다.</p>
+    <div class="subh" style="font-weight:800;margin:2px 0 10px;">어느 Microsoft 솔루션에 매핑되나</div>
+    <table class="dtbl">
+      <tr><td class="k">인벤토리·소유권 <span class="own pv" style="background:rgba(15,123,63,0.13);color:var(--cp-success);">주 매핑</span></td><td><b>Microsoft 365 admin center — Agent registry</b>(Agent 365) — 전 에이전트 단일 뷰 · owner 없음 · unmanaged(shadow) · at-risk 집계</td></tr>
+      <tr><td class="k">데이터 관측</td><td><b>Purview DSPM AI observability</b> — oversharing · exfiltration · 이상 접근 추적 <a href="data-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ③ ↗)</a></td></tr>
+      <tr><td class="k">위협 관측</td><td><b>Microsoft Defender XDR</b> — alert · incident · <code>BehaviorInfo</code> 상관·조사 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ ↗)</a></td></tr>
+      <tr><td class="k">신원 관측</td><td><b>Entra 인벤토리</b> — agent identity 중앙 발견·관리 · shadow AI 방지 <a href="identity-risk.html" style="color:var(--cp-link);text-decoration:none;">(문서 ② ↗)</a></td></tr>
+    </table>
+    <div class="subh" style="font-weight:800;margin:18px 0 10px;border-top:1px solid var(--cp-border);padding-top:14px;">에이전트 레코드 스키마 (8 그룹)</div>
+    <div class="reg">
+      <div class="regc"><div class="rt">Identity &amp; Registry</div><div class="rf">agent_registry_id · agent_id · agent_type · agent_version · source_system · console_url</div></div>
+      <div class="regc"><div class="rt">Ownership &amp; Org</div><div class="rf">owner_name · owner_email · owner_team · created_by · business_service · cost_center</div></div>
+      <div class="regc"><div class="rt">Lifecycle &amp; Status</div><div class="rf">status · environment · created_at · last_used_at · deprecated_at · deleted_at</div></div>
+      <div class="regc"><div class="rt">Runtime &amp; Model</div><div class="rf">model_provider · model_id · runtime · region · endpoint_url · network_exposure</div></div>
+      <div class="regc risk"><div class="rt">Risk &amp; Compliance</div><div class="rf">risk_level · approval_status · has_pii_access · has_external_access · human_review_required · data_classification</div></div>
+      <div class="regc"><div class="rt">Connections</div><div class="rf">tool_count · knowledge_base_count · data_source_count</div></div>
+      <div class="regc"><div class="rt">Telemetry &amp; Health</div><div class="rf">invocation_count · error_count · avg_latency_ms · success_rate · health_status · is_orphan · is_unused</div></div>
+      <div class="regc"><div class="rt">Ingestion &amp; Sync</div><div class="rf">source_file_uri · ingested_at · schema_version · record_hash · sync_status</div></div>
+    </div>
+    <div class="linchpin" style="margin-top:12px"><b>Microsoft Agent 365 레지스트리 매핑:</b> M365 admin center의 <b>Agent registry</b>가 동일 역할 — 전 에이전트를 단일 뷰로 관리하고 <b>owner 없음 · unmanaged(shadow) · at-risk</b>를 집계합니다. 위험 신호는 Entra·Defender·Purview·M365 admin에서 유입됩니다: <b>Shadow agent · No owner · Excessive permissions</b>(Critical) · <b>Prompt injection · Sensitive data access · Conditional access violation</b>(High) 등. <b>DSPM AI observability</b>가 oversharing·exfiltration·이상 접근을 추적합니다.</div>
+    <div class="src"><b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-registry">m365/agent-registry</a> (레지스트리·위험 유형) ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview">agent-365/overview</a> (Observe·Govern·Secure) ·
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/security-for-ai-overview">entra inventory(shadow AI 방지)</a></div>
+  </div>
+
+  <!-- ================= SECTION 4 : full mapped architecture ================= -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">전체 매핑 아키텍처 — 한 판<span class="axis-extra">거버넌스 게이트 × Microsoft 스택 × Agent 365 역할</span></h2></div>
+  <div class="card flowcard">
+    <svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Malgun Gothic, sans-serif" style="background:#ffffff;border-radius:12px;">
+      <defs>
+        <marker id="ma" markerWidth="11" markerHeight="11" refX="7.5" refY="3" orient="auto"><path d="M0,0 L7.5,3 L0,6 Z" fill="#5c6780"/></marker>
+        <marker id="mtel" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3f8a68"/></marker>
+      </defs>
+      <text x="30" y="34" font-size="19" font-weight="800" fill="#16233d">Agent 365 Governance — 한 판 매핑</text>
+      <text x="30" y="55" font-size="12" fill="#5c6780">에이전트 액션이 신원 → 정책 → 통제 게이트를 지나 실행되고, 전 과정이 중앙 레지스트리로 관측됩니다</text>
+      <line x1="30" y1="70" x2="1170" y2="70" stroke="#e2e7f0" stroke-width="1.4"/>
+
+      <!-- role lane labels -->
+      <g font-size="10.5" font-weight="800" letter-spacing=".5">
+        <text x="150" y="92" text-anchor="middle" fill="#5b5fc7">Entra 관리자</text>
+        <text x="470" y="92" text-anchor="middle" fill="#0f6cbd">Purview · Defender 관리자</text>
+        <text x="800" y="92" text-anchor="middle" fill="#c4314b">Defender 관리자</text>
+        <text x="1075" y="92" text-anchor="middle" fill="#0f7b3f">M365 관리자</text>
+      </g>
+
+      <!-- source -->
+      <rect x="30" y="110" width="120" height="150" rx="12" fill="#132239"/>
+      <text x="90" y="138" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle">AI Agent</text>
+      <text x="90" y="157" font-size="9.5" fill="#9fb2d6" text-anchor="middle">Copilot · Foundry</text>
+      <text x="90" y="171" font-size="9.5" fill="#9fb2d6" text-anchor="middle">Vertex AI · Bedrock</text>
+      <text x="90" y="200" font-size="9.5" fill="#dbe6f7" text-anchor="middle">action:</text>
+      <text x="90" y="215" font-size="9.5" fill="#dbe6f7" text-anchor="middle">prompt · tool call</text>
+      <text x="90" y="229" font-size="9.5" fill="#dbe6f7" text-anchor="middle">· A2A</text>
+
+      <!-- gate 1: identity -->
+      <rect x="180" y="110" width="200" height="150" rx="12" fill="#eef6f8" stroke="#3f7d8c" stroke-width="1.6"/>
+      <text x="196" y="134" font-size="12.5" font-weight="800" fill="#2c5b66">① Access &amp; Identity</text>
+      <text x="196" y="156" font-size="10.5" fill="#37525a">Entra Agent ID (blueprint)</text>
+      <text x="196" y="174" font-size="10.5" fill="#37525a">Conditional Access for agents</text>
+      <text x="196" y="192" font-size="10.5" fill="#37525a">Identity Protection (agent risk)</text>
+      <text x="196" y="210" font-size="10.5" fill="#37525a">AI gateway (APIM) = PEP</text>
+      <text x="196" y="236" font-size="9.5" fill="#3f7d8c" font-style="italic">→ authenticate · resolve permissions</text>
+      <text x="370" y="250" font-size="9" fill="#8a97b3" text-anchor="end">문서 ②</text>
+
+      <!-- gate 2: policy -->
+      <rect x="410" y="110" width="240" height="150" rx="12" fill="#f2eefb" stroke="#5b4a8a" stroke-width="1.6"/>
+      <text x="426" y="134" font-size="12.5" font-weight="800" fill="#4a3d6b">② Policy</text>
+      <text x="426" y="156" font-size="10.5" fill="#4f4470"><tspan font-weight="700">콘텐츠</tspan> · Prompt Shields</text>
+      <text x="426" y="172" font-size="9.5" fill="#6b5f8a">jailbreak · XPIA 차단 (문서 ④ L②)</text>
+      <text x="426" y="192" font-size="10.5" fill="#4f4470"><tspan font-weight="700">데이터</tspan> · Purview SIT·EDM·Label·DLP</text>
+      <text x="426" y="208" font-size="9.5" fill="#6b5f8a">민감정보 분류·처리 차단 (문서 ③)</text>
+      <text x="426" y="228" font-size="10.5" fill="#4f4470"><tspan font-weight="700">위험</tspan> · IRM (Risky AI usage)</text>
+      <text x="640" y="250" font-size="9" fill="#8a97b3" text-anchor="end">문서 ③·④</text>
+
+      <!-- gate 3: controls -->
+      <rect x="680" y="110" width="230" height="150" rx="12" fill="#fbeef0" stroke="#a5384a" stroke-width="1.6"/>
+      <text x="696" y="134" font-size="12.5" font-weight="800" fill="#8a2f3e">③ Controls</text>
+      <text x="696" y="156" font-size="10.5" fill="#7a3742">Defender Security for AI</text>
+      <text x="696" y="172" font-size="9.5" fill="#9a5561">Default=audit · Custom=block</text>
+      <text x="696" y="192" font-size="9.5" fill="#7a3742">차단 4종: secret·malicious·evasion·</text>
+      <text x="696" y="206" font-size="9.5" fill="#7a3742">unsafe email domain</text>
+      <text x="696" y="228" font-size="10.5" fill="#7a3742">→ XDR Alert / BehaviorInfo</text>
+      <text x="900" y="250" font-size="9" fill="#8a97b3" text-anchor="end">문서 ④</text>
+
+      <!-- execution -->
+      <rect x="940" y="110" width="120" height="150" rx="12" fill="#1e3b30"/>
+      <text x="1000" y="150" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">Execute</text>
+      <text x="1000" y="172" font-size="9.5" fill="#a8ccb9" text-anchor="middle">ALLOW일 때만</text>
+      <text x="1000" y="192" font-size="9.5" fill="#d7ecdf" text-anchor="middle">tool · KB ·</text>
+      <text x="1000" y="206" font-size="9.5" fill="#d7ecdf" text-anchor="middle">connector</text>
+
+      <!-- flow arrows -->
+      <g stroke="#5c6780" stroke-width="2" fill="none" marker-end="url(#ma)">
+        <line x1="150" y1="185" x2="178" y2="185"/>
+        <line x1="380" y1="185" x2="408" y2="185"/>
+        <line x1="650" y1="185" x2="678" y2="185"/>
+        <line x1="910" y1="185" x2="938" y2="185"/>
+      </g>
+
+      <!-- observability bus -->
+      <rect x="30" y="300" width="1140" height="150" rx="14" fill="#f2f9f4" stroke="#c9e2d5" stroke-width="1.4"/>
+      <text x="50" y="328" font-size="14" font-weight="800" fill="#2f6b52">④ Observability — Agent 365 Central Registry</text>
+      <text x="1150" y="328" font-size="10" fill="#5f7d6c" text-anchor="end" font-style="italic">전 게이트·실행이 메타데이터+텔레메트리를 여기로 스트리밍 · 전 플랫폼 정규화</text>
+      <g font-size="11" font-weight="700">
+        <rect x="50" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <text x="64" y="364" fill="#233a5e">Agent registry (M365 admin)</text>
+        <text x="64" y="381" font-size="9.5" font-weight="400" fill="#40614f">인벤토리 · owner · shadow · at-risk</text>
+        <rect x="325" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <text x="339" y="364" fill="#233a5e">DSPM AI observability</text>
+        <text x="339" y="381" font-size="9.5" font-weight="400" fill="#40614f">oversharing · exfiltration · 이상 접근</text>
+        <rect x="600" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <text x="614" y="364" fill="#233a5e">Defender XDR</text>
+        <text x="614" y="381" font-size="9.5" font-weight="400" fill="#40614f">alert · incident · BehaviorInfo · 상관</text>
+        <rect x="875" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <text x="889" y="364" fill="#233a5e">Entra inventory</text>
+        <text x="889" y="381" font-size="9.5" font-weight="400" fill="#40614f">agent identity · shadow AI 방지</text>
+      </g>
+      <text x="50" y="418" font-size="10.5" fill="#2f6b52" font-weight="700">What it powers ·</text>
+      <text x="150" y="418" font-size="10.5" fill="#40614f">전 플랫폼 인벤토리 · 액션/차단 감사 추적 · 근본원인·blast-radius · orphan/위험 탐지 · 수명주기 거버넌스</text>
+
+      <!-- telemetry arrows down -->
+      <g stroke="#3f8a68" stroke-width="1.8" stroke-dasharray="5 4" fill="none" marker-end="url(#mtel)">
+        <line x1="280" y1="260" x2="280" y2="298"/>
+        <line x1="530" y1="260" x2="530" y2="298"/>
+        <line x1="795" y1="260" x2="795" y2="298"/>
+        <line x1="1000" y1="260" x2="1000" y2="298"/>
+      </g>
+
+      <!-- govern band -->
+      <rect x="30" y="474" width="1140" height="56" rx="12" fill="#f5f3fb" stroke="#d3c6ee" stroke-width="1.2"/>
+      <text x="50" y="498" font-size="12" font-weight="800" fill="#4a3d6b">Govern &amp; Lifecycle (전 과정 관통)</text>
+      <text x="50" y="518" font-size="10.5" fill="#5f5580">Agent 365 온보딩·소유자·만료 · Entra Identity Governance · Purview Compliance Manager · CAF AI Govern(NIST AI RMF 정렬)</text>
+    </svg>
+    <div class="linchpin">🔑 <b>한 판 요약:</b> 에이전트 액션은 <b>Entra Agent ID</b>(신원) → <b>Prompt Shields·Purview</b>(정책) → <b>Defender Security for AI</b>(통제) 게이트를 지나 실행되고, 전 과정이 <b>Agent 365 레지스트리·DSPM·Defender XDR·Entra 인벤토리</b>로 관측됩니다. 네 축을 <b>Entra·Purview·Defender·M365 관리자</b> 4개 역할이 나눠 맡고, 온보딩·수명주기 거버넌스가 전 과정을 관통합니다.</div>
+    <div class="src"><b>출처</b>
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview">agent-365/overview</a> (Observe·Govern·Secure·4역할) ·
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/what-is-microsoft-entra-agent-id">entra-agent-id</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/ai-agent-365">purview/ai-agent-365</a> ·
+      <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime">defender security-for-ai</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/govern">CAF AI Govern</a></div>
+  </div>
+
+  <div class="card src" style="margin-top:18px; text-align:center; font-size:11px;">
+    출처: Microsoft Learn — Agent 365(overview · agent-registry) · Entra Agent ID(security-for-ai-overview) · Azure API Management AI gateway · Azure AI Content Safety Prompt Shields · Defender for Cloud AI threat protection · Defender Security for AI(real-time protection) · Purview(ai-agent-365) · CAF AI Govern &nbsp;|&nbsp; 2026-07
+  </div>
+
+</div>
+</main></div><script>
+(()=>{
+  const btn=document.getElementById("themeToggle");
+  if(!btn) return;
+  const icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");
+  function sync(){const dark=document.documentElement.getAttribute("data-theme")==="dark";
+    icon.textContent=dark?"☀️":"🌙";label.textContent=dark?"라이트 모드":"다크 모드";}
+  sync();
+  btn.addEventListener("click",()=>{
+    const next=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+    document.documentElement.setAttribute("data-theme",next);
+    localStorage.setItem("gbTheme",next);sync();
+  });
+})();
+</script></body></html>
