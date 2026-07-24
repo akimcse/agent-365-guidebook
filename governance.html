@@ -230,6 +230,14 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
 .fwlist .id { font-family:Consolas,monospace; font-size:10.5px; font-weight:700; color:var(--cp-accent); flex:none; width:64px; }
 .fwlist .tx { color:var(--cp-text-muted); }
 .fwlist .tx b { color:var(--cp-text); }
+/* platform brand chips (match SVG pill colors) */
+.pchip { display:inline-block; font-size:10px; font-weight:800; padding:2px 9px; border-radius:999px; color:#fff; white-space:nowrap; }
+.pchip.entra { background:#5b5fc7; }
+.pchip.azure { background:#0078d4; }
+.pchip.purview { background:#0f6cbd; }
+.pchip.defender { background:#c4314b; }
+.pchip.m365 { background:#0f7b3f; }
+.pchip.sm { font-size:9px; padding:1px 7px; }
 </style>
 </head>
 <body><div class="gb-layout"><aside class="gb-side"><div class="gb-side-inner">
@@ -261,7 +269,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
   <div class="note" style="border-left-color:var(--cp-accent);margin-bottom:8px;"><b>표기 원칙</b><span>SECTION 02·03의 게이트별 상세는 앞선 심화 문서와 이어집니다 — 각 셀의 <a href="identity-risk.html" style="color:var(--cp-link);text-decoration:none;">(문서 N ↗)</a> 링크로 해당 문서로 바로 이동할 수 있습니다.</span></div>
 
   <!-- ================= SECTION 1 : action flow + layered stack ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">거버넌스 아키텍처 개요<span class="axis-extra">한 번의 액션이 요청 → 게이트 → 실행 → 관측으로 흐르는 경로</span></h2></div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">에이전트 런타임 거버넌스 모델<span class="axis-extra">플랫폼 독립적 관점 — 요청 → 게이트 → 실행 → 관측</span></h2></div>
   <div class="card flowcard">
     <svg viewBox="0 0 1520 900" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Malgun Gothic, sans-serif" style="background:#ffffff;border-radius:12px;">
       <defs>
@@ -424,28 +432,31 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
 
   <!-- Pillar 1 -->
   <div class="card">
-    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(63,125,140,0.15);color:#2c5b66;">게이트 ①</span> Access &amp; Identity — "누가 요청하나?" &nbsp;<span class="own pv" style="background:rgba(91,95,199,0.12);color:var(--cp-accent);">Entra 관리자</span></div>
+    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(63,125,140,0.15);color:#2c5b66;">게이트 ①</span> Access &amp; Identity — "누가 요청하나?" &nbsp;<span class="chip2" style="font-size:10px;">Entra</span> <span class="chip2" style="font-size:10px;">Azure APIM</span></div>
     <table class="dtbl">
-      <tr><td class="k">신원 부여</td><td><b>Microsoft Entra Agent ID</b> — 에이전트마다 고유 <code>agent identity</code>, <code>blueprint</code>로 다수 에이전트에 CA·거버넌스·감사를 일괄 적용</td></tr>
-      <tr><td class="k">접근 제어</td><td><b>Conditional Access for agents</b> — 실시간 <b>agent identity risk</b> 신호로 접근 제어. <b>Microsoft Managed Policies</b>가 high-risk 에이전트를 기본 차단</td></tr>
-      <tr><td class="k">위험 탐지</td><td><b>Identity Protection for agents</b> — 사용자 위험에서 유래한 위험 + 에이전트 <b>자체 행동</b> 기반 이상/비인가 활동 탐지</td></tr>
-      <tr><td class="k">집행 지점</td><td><b>AI gateway (Azure API Management)</b> — 액션을 실행 전 가로채 <b>신원 부착·토큰 발급·쿼터</b>. OpenAI/Anthropic/Vertex/Bedrock 백엔드까지 관리</td></tr>
+      <tr><td class="k">신원 부여 <span class="chip2" style="font-size:9px;padding:1px 6px;">Entra</span></td><td><b>Entra Agent ID</b> — 에이전트마다 고유 <code>agent identity</code>, <code>agent identity blueprint</code>로 다수 에이전트에 CA·거버넌스·감사를 일괄 적용</td></tr>
+      <tr><td class="k">접근 제어 <span class="chip2" style="font-size:9px;padding:1px 6px;">Entra</span></td><td><b>Entra Conditional Access</b>(agents, Preview) — <b>agent identity risk</b> 신호로 접근 제어. Microsoft Managed Policies가 high-risk 에이전트 기본 차단</td></tr>
+      <tr><td class="k">위험 탐지 <span class="chip2" style="font-size:9px;padding:1px 6px;">Entra</span></td><td><b>Entra ID Protection</b>(workload identity risk) — 사용자 위험 유래 + 에이전트 자체 행동 기반 이상 활동 탐지</td></tr>
+      <tr><td class="k">집행 지점 <span class="chip2" style="font-size:9px;padding:1px 6px;">Azure APIM</span></td><td><b>Azure API Management — AI gateway</b> — 모델 백엔드 앞단에서 신원 부착·토큰 쿼터·MCP/A2A 거버넌스(OpenAI/Anthropic/Vertex/Bedrock 관리)</td></tr>
+      <tr><td class="k">네트워크 차단 <span class="chip2" style="font-size:9px;padding:1px 6px;">Entra</span></td><td><b>Entra Internet Access — Prompt Injection Protection</b> — 네트워크(SSE) 레벨에서 프롬프트 인젝션·jailbreak를 코드 변경 없이 차단</td></tr>
     </table>
-    <div class="impact" style="margin-top:12px">💡 <b>실제 액션 순서:</b> AI gateway가 액션을 intercept → 에이전트 신원 부착 → CA가 <b>agent identity risk</b>를 평가 → high-risk면 차단, 아니면 유효 권한(OBO/앱 전용)을 해석해 다음 게이트로. <a href="identity-risk.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ② ↗)</a></div>
+    <div class="impact" style="margin-top:12px">💡 <b>실제 액션 순서:</b> AI gateway(Azure APIM)가 액션을 intercept → Entra Agent ID로 신원 부착 → Conditional Access가 <b>agent identity risk</b>를 평가 → high-risk면 차단, 아니면 유효 권한(OBO/앱 전용)을 해석해 다음 게이트로. <a href="identity-risk.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ② ↗)</a></div>
     <div class="src"><b>출처</b>
-      <a href="https://learn.microsoft.com/en-us/entra/agent-id/security-for-ai-overview">entra/security-for-ai-overview</a> (CA·Identity Protection) ·
-      <a href="https://learn.microsoft.com/en-us/entra/agent-id/what-is-microsoft-entra-agent-id">entra-agent-id(blueprint·멀티플랫폼)</a> ·
-      <a href="https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities">apim/genai-gateway</a></div>
+      <a href="https://learn.microsoft.com/en-us/entra/agent-id/what-is-microsoft-entra-agent-id">entra-agent-id</a> (Agent ID·blueprint) ·
+      <a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview">entra/conditional-access</a> (agents Preview) ·
+      <a href="https://learn.microsoft.com/en-us/entra/id-protection/concept-workload-identity-risk">id-protection/workload-identity-risk</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities">azure/apim AI gateway</a> ·
+      <a href="https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-ai-prompt-injection-protection">entra Internet Access — Prompt Injection Protection</a></div>
   </div>
 
   <!-- Pillar 2 -->
   <div class="card" style="margin-top:16px">
-    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(91,74,138,0.14);color:#4a3d6b;">게이트 ②</span> Policy — "이 액션이 허용되나?" &nbsp;<span class="own pv" style="background:rgba(91,95,199,0.12);color:var(--cp-accent);">Purview · Defender 관리자</span></div>
-    <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 10px;">액션의 <b>콘텐츠(모델 입출력)</b>와 <b>데이터(민감정보)</b>를 각각 다른 엔진이 평가합니다.</p>
+    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(91,74,138,0.14);color:#4a3d6b;">게이트 ②</span> Policy — "이 액션이 허용되나?" &nbsp;<span class="chip2" style="font-size:10px;">Azure AI Content Safety</span> <span class="chip2" style="font-size:10px;">Purview</span> <span class="chip2" style="font-size:10px;">Defender for Cloud</span></div>
+    <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 10px;">액션의 <b>콘텐츠(모델 입출력)</b>와 <b>데이터(민감정보)</b>를 각각 다른 제품이 평가합니다.</p>
     <table class="dtbl">
-      <tr><td class="k">콘텐츠 정책</td><td><b>Azure AI Content Safety — Prompt Shields</b> — jailbreak·XPIA를 모델 입출력 단에서 탐지·차단. <b>Defender for Cloud AI threat protection</b>이 이를 XDR 알림으로 표출 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ Layer② ↗)</a></td></tr>
-      <tr><td class="k">데이터 정책</td><td><b>Purview</b> — SIT·EDM으로 민감정보 분류, <b>Sensitivity Labels</b>(EXTRACT 게이트)로 접근 통제, <b>DLP</b>가 민감 데이터의 Copilot 처리를 차단 <a href="data-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ③ ↗)</a></td></tr>
-      <tr><td class="k">위험 점수화</td><td><b>Purview Insider Risk Management</b>(Risky AI usage · Risky Agents) — 위험 프롬프트·민감 응답·외부 공유를 점수화해 Adaptive Protection으로 연결</td></tr>
+      <tr><td class="k">콘텐츠 정책 <span class="chip2" style="font-size:9px;padding:1px 6px;">Azure AI</span></td><td><b>Azure AI Content Safety — Prompt Shields</b> — jailbreak·XPIA를 모델 입출력 단에서 탐지·차단. 탐지는 <b>Defender for Cloud — threat protection for AI services</b>가 알림으로 표출 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ Layer② ↗)</a></td></tr>
+      <tr><td class="k">데이터 정책 <span class="chip2" style="font-size:9px;padding:1px 6px;">Purview</span></td><td><b>Purview</b> — SIT·EDM으로 민감정보 분류, <b>Sensitivity Labels</b>(EXTRACT 게이트)로 접근 통제, <b>DLP</b>가 민감 데이터의 Copilot 처리를 차단 <a href="data-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ③ ↗)</a></td></tr>
+      <tr><td class="k">위험 점수화 <span class="chip2" style="font-size:9px;padding:1px 6px;">Purview</span></td><td><b>Purview Insider Risk Management</b> — <code>Risky AI usage</code> · <code>Risky Agents</code>(Preview) 템플릿으로 위험 프롬프트·민감 응답·외부 공유를 점수화해 Adaptive Protection으로 연결</td></tr>
     </table>
     <div class="impact" style="margin-top:12px">💡 <b>실제 액션 순서:</b> 프롬프트·응답·접근 리소스를 분류 엔진이 평가 → 콘텐츠 위협은 Prompt Shields가, 민감 데이터는 Purview DLP가 정책 매칭 → 위반 시 차단·플래그. <a href="data-security.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ③ ↗)</a> <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ④ ↗)</a></div>
     <div class="src"><b>출처</b>
@@ -456,155 +467,148 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
 
   <!-- Pillar 3 -->
   <div class="card" style="margin-top:16px">
-    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(165,56,74,0.13);color:#8a2f3e;">게이트 ③</span> Controls — "허용 · 차단 · 플래그" &nbsp;<span class="own pv" style="background:rgba(91,95,199,0.12);color:var(--cp-accent);">Defender 관리자</span></div>
+    <div class="subh" style="font-weight:800;margin:2px 0 8px;"><span class="ptag engine" style="background:rgba(165,56,74,0.13);color:#8a2f3e;">게이트 ③</span> Controls — "허용 · 차단 · 플래그" &nbsp;<span class="chip2" style="font-size:10px;">Defender</span> <span class="chip2" style="font-size:10px;">Azure AI Content Safety</span> <span class="chip2" style="font-size:10px;">Purview</span></div>
+    <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 10px;">통제는 단일 제품이 아니라 <b>콘텐츠 층·행위(tool) 층·데이터 층</b>이 각기 다른 제품으로 차단합니다.</p>
     <table class="dtbl">
-      <tr><td class="k">런타임 규칙</td><td><b>Microsoft Defender — Security for AI</b> 실시간 보호. <b>Default 규칙(audit)</b>: 차단 없이 <code>BehaviorInfo</code> 기록 · <b>Custom 규칙(block)</b>: 실행 전 tool 호출 차단 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ Layer③ ↗)</a></td></tr>
-      <tr><td class="k">차단 4종</td><td>Secret exfiltration · Malicious content propagation · Evasion techniques · Unsafe email domain</td></tr>
-      <tr><td class="k">결과 표출</td><td>audit 모드 → <b>XDR Alert</b> · block 규칙 → <b><code>BehaviorInfo</code></b> 기록. 모든 결과가 <b>Microsoft Defender 포털(XDR)</b>로 수렴해 조사·상관</td></tr>
-      <tr><td class="k">데이터 차단</td><td><b>Purview DLP</b>가 라벨·SIT 조건으로 민감 데이터 처리 자체를 사전 차단(보완적 통제)</td></tr>
+      <tr><td class="k">행위 층 규칙 <span class="chip2" style="font-size:9px;padding:1px 6px;">Defender</span></td><td><b>Defender — Security for AI — Real-time protection</b>. <b>Default 규칙(audit)</b>: 차단 없이 <code>BehaviorInfo</code> 기록 · <b>Custom 규칙(block)</b>: 실행 전 tool 호출 차단 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ Layer③ ↗)</a></td></tr>
+      <tr><td class="k">차단 4종 <span class="chip2" style="font-size:9px;padding:1px 6px;">Defender</span></td><td>Secret exfiltration · Malicious content propagation · Evasion techniques · Unsafe email domain</td></tr>
+      <tr><td class="k">콘텐츠 층 차단 <span class="chip2" style="font-size:9px;padding:1px 6px;">Azure AI</span></td><td><b>Azure AI Content Safety — Prompt Shields</b>(및 Copilot Studio 내장 모더레이션)가 모델 입출력 단에서 콘텐츠 차단</td></tr>
+      <tr><td class="k">데이터 층 차단 <span class="chip2" style="font-size:9px;padding:1px 6px;">Purview</span></td><td><b>Purview DLP</b>가 라벨·SIT 조건으로 민감 데이터 처리 자체를 사전 차단</td></tr>
+      <tr><td class="k">결과 표출 <span class="chip2" style="font-size:9px;padding:1px 6px;">Defender XDR</span></td><td>audit 모드 → <b>Alert</b> · block 규칙 → <b><code>BehaviorInfo</code></b>. 모든 결과가 <b>Defender XDR</b>로 수렴해 조사·상관</td></tr>
     </table>
     <div class="impact" style="margin-top:12px">💡 <b>실제 액션 순서:</b> tool invocation이 tool 경계에 도달 → 규칙 평가 → ALLOW면 실행, 위협이면 차단·플래그 → XDR로 표출. <b>audit 모드에서만 알림</b>, block 규칙이 덮으면 <code>BehaviorInfo</code>만 기록됩니다. <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;font-size:11px;">(문서 ④ ↗)</a></div>
     <div class="src"><b>출처</b>
-      <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/real-time-agent-protection-during-runtime">real-time-agent-protection</a> (audit/block 규칙) ·
-      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">security-for-ai(XDR 표출)</a></div>
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-real-time-protection">defender/security-for-ai — real-time protection</a> (audit/block 규칙) ·
+      <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection">azure ai content-safety/prompt-shields</a> (콘텐츠 차단) ·
+      <a href="https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp">purview/dlp</a> (데이터 차단) ·
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection">defender-xdr(상관·표출)</a></div>
   </div>
 
-  <div class="note" style="margin-top:16px;border-left-color:var(--cp-accent)"><b>Agent 365 — 4개 관리자 역할이 컨트롤 플레인을 나눠 맡습니다</b><span><b>Entra 관리자</b>(신원·CA·거버넌스) · <b>Defender 관리자</b>(위협 탐지·실시간 통제) · <b>Purview 관리자</b>(데이터 분류·DLP·컴플라이언스) · <b>Microsoft 365 관리자</b>(레지스트리·온보딩·수명주기). Agent 365가 이 넷을 하나의 <i>Agent registry</i>로 묶어 <b>Observe · Govern · Secure</b>를 제공합니다.</span></div>
-
-  <!-- ================= SECTION 3 : observability ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">Observability — 중앙 Agent Registry<span class="axis-extra">정규화된 에이전트 레코드 · Agent 365 레지스트리 매핑</span></h2></div>
-  <div class="card">
-    <p style="font-size:12.5px;color:var(--cp-text-muted);margin:0 0 12px;">모든 게이트·실행 단계의 메타데이터·텔레메트리가 <b>중앙 레지스트리</b>로 흘러 정규화된 레코드로 집계됩니다 — 전 플랫폼 에이전트 인벤토리·소유권, 액션·차단 감사, 근본원인·오판(orphan)·위험 탐지의 근거가 됩니다. Observability는 단일 제품이 아니라 <b>여러 Microsoft 솔루션의 관측 데이터가 수렴하는 계층</b>입니다.</p>
-    <div class="subh" style="font-weight:800;margin:2px 0 10px;">어느 Microsoft 솔루션에 매핑되나</div>
+  <div class="card" style="margin-top:16px;border-top:3px solid var(--cp-accent);">
+    <div class="subh" style="font-weight:800;margin:2px 0 6px;">Agent 365 — 4개 관리자 역할이 컨트롤 플레인을 나눠 맡습니다</div>
+    <p style="font-size:12px;color:var(--cp-text-muted);margin:0 0 12px;"><b>Entra 관리자</b>(신원·CA·거버넌스) · <b>Defender 관리자</b>(위협 탐지·실시간 통제) · <b>Purview 관리자</b>(데이터 분류·DLP·컴플라이언스) · <b>Microsoft 365 관리자</b>(레지스트리·온보딩·수명주기). Agent 365가 이 넷을 하나의 <i>Agent registry</i>로 묶어 <b>Observe · Govern · Secure</b>를 제공합니다. 각 축의 관측 데이터는 아래 Microsoft 솔루션으로 수렴합니다.</p>
     <table class="dtbl">
       <tr><td class="k">인벤토리·소유권 <span class="own pv" style="background:rgba(15,123,63,0.13);color:var(--cp-success);">주 매핑</span></td><td><b>Microsoft 365 admin center — Agent registry</b>(Agent 365) — 전 에이전트 단일 뷰 · owner 없음 · unmanaged(shadow) · at-risk 집계</td></tr>
       <tr><td class="k">데이터 관측</td><td><b>Purview DSPM AI observability</b> — oversharing · exfiltration · 이상 접근 추적 <a href="data-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ③ ↗)</a></td></tr>
-      <tr><td class="k">위협 관측</td><td><b>Microsoft Defender XDR</b> — alert · incident · <code>BehaviorInfo</code> 상관·조사 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ ↗)</a></td></tr>
+      <tr><td class="k">위협 관측</td><td><b>Defender XDR</b> — alert · incident · <code>BehaviorInfo</code> 상관·조사 <a href="runtime-security.html" style="color:var(--cp-link);text-decoration:none;">(문서 ④ ↗)</a></td></tr>
       <tr><td class="k">신원 관측</td><td><b>Entra 인벤토리</b> — agent identity 중앙 발견·관리 · shadow AI 방지 <a href="identity-risk.html" style="color:var(--cp-link);text-decoration:none;">(문서 ② ↗)</a></td></tr>
     </table>
-    <div class="subh" style="font-weight:800;margin:18px 0 10px;border-top:1px solid var(--cp-border);padding-top:14px;">에이전트 레코드 스키마 (8 그룹)</div>
-    <div class="reg">
-      <div class="regc"><div class="rt">Identity &amp; Registry</div><div class="rf">agent_registry_id · agent_id · agent_type · agent_version · source_system · console_url</div></div>
-      <div class="regc"><div class="rt">Ownership &amp; Org</div><div class="rf">owner_name · owner_email · owner_team · created_by · business_service · cost_center</div></div>
-      <div class="regc"><div class="rt">Lifecycle &amp; Status</div><div class="rf">status · environment · created_at · last_used_at · deprecated_at · deleted_at</div></div>
-      <div class="regc"><div class="rt">Runtime &amp; Model</div><div class="rf">model_provider · model_id · runtime · region · endpoint_url · network_exposure</div></div>
-      <div class="regc risk"><div class="rt">Risk &amp; Compliance</div><div class="rf">risk_level · approval_status · has_pii_access · has_external_access · human_review_required · data_classification</div></div>
-      <div class="regc"><div class="rt">Connections</div><div class="rf">tool_count · knowledge_base_count · data_source_count</div></div>
-      <div class="regc"><div class="rt">Telemetry &amp; Health</div><div class="rf">invocation_count · error_count · avg_latency_ms · success_rate · health_status · is_orphan · is_unused</div></div>
-      <div class="regc"><div class="rt">Ingestion &amp; Sync</div><div class="rf">source_file_uri · ingested_at · schema_version · record_hash · sync_status</div></div>
-    </div>
-    <div class="linchpin" style="margin-top:12px"><b>Microsoft Agent 365 레지스트리 매핑:</b> M365 admin center의 <b>Agent registry</b>가 동일 역할 — 전 에이전트를 단일 뷰로 관리하고 <b>owner 없음 · unmanaged(shadow) · at-risk</b>를 집계합니다. 위험 신호는 Entra·Defender·Purview·M365 admin에서 유입됩니다: <b>Shadow agent · No owner · Excessive permissions</b>(Critical) · <b>Prompt injection · Sensitive data access · Conditional access violation</b>(High) 등. <b>DSPM AI observability</b>가 oversharing·exfiltration·이상 접근을 추적합니다.</div>
+    <div class="linchpin" style="margin-top:12px"><b>레지스트리 위험 신호:</b> Entra·Defender·Purview·M365 admin에서 유입 — <b>Shadow agent · No owner · Excessive permissions</b>(Critical) · <b>Prompt injection · Sensitive data access · Conditional access violation</b>(High) 등을 한 뷰로 집계합니다.</div>
     <div class="src"><b>출처</b>
       <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-registry">m365/agent-registry</a> (레지스트리·위험 유형) ·
       <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview">agent-365/overview</a> (Observe·Govern·Secure) ·
       <a href="https://learn.microsoft.com/en-us/entra/agent-id/security-for-ai-overview">entra inventory(shadow AI 방지)</a></div>
   </div>
 
-  <!-- ================= SECTION 4 : full mapped architecture ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">전체 매핑 아키텍처 — 한 판<span class="axis-extra">거버넌스 게이트 × Microsoft 스택 × Agent 365 역할</span></h2></div>
+  <!-- ================= SECTION 3 : full mapped architecture ================= -->
+  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">거버넌스 모델의 Microsoft 솔루션 매핑<span class="axis-extra">각 게이트를 담당하는 실제 제품·플랫폼·기능</span></h2></div>
   <div class="card flowcard">
-    <svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Malgun Gothic, sans-serif" style="background:#ffffff;border-radius:12px;">
+    <svg viewBox="0 0 1090 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Malgun Gothic, sans-serif" style="background:#ffffff;border-radius:12px;">
       <defs>
         <marker id="ma" markerWidth="11" markerHeight="11" refX="7.5" refY="3" orient="auto"><path d="M0,0 L7.5,3 L0,6 Z" fill="#5c6780"/></marker>
         <marker id="mtel" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3f8a68"/></marker>
       </defs>
       <text x="30" y="34" font-size="19" font-weight="800" fill="#16233d">Agent 365 Governance — 한 판 매핑</text>
       <text x="30" y="55" font-size="12" fill="#5c6780">에이전트 액션이 신원 → 정책 → 통제 게이트를 지나 실행되고, 전 과정이 중앙 레지스트리로 관측됩니다</text>
-      <line x1="30" y1="70" x2="1170" y2="70" stroke="#e2e7f0" stroke-width="1.4"/>
+      <line x1="30" y1="70" x2="1060" y2="70" stroke="#e2e7f0" stroke-width="1.4"/>
 
-      <!-- role lane labels -->
-      <g font-size="10.5" font-weight="800" letter-spacing=".5">
-        <text x="150" y="92" text-anchor="middle" fill="#5b5fc7">Entra 관리자</text>
-        <text x="470" y="92" text-anchor="middle" fill="#0f6cbd">Purview · Defender 관리자</text>
-        <text x="800" y="92" text-anchor="middle" fill="#c4314b">Defender 관리자</text>
-        <text x="1075" y="92" text-anchor="middle" fill="#0f7b3f">M365 관리자</text>
+      <!-- platform lane labels -->
+      <g font-size="9.5" font-weight="800" letter-spacing=".3">
+        <text x="285" y="92" text-anchor="middle" fill="#3f7d8c">Entra · Azure APIM</text>
+        <text x="535" y="92" text-anchor="middle" fill="#5b4a8a">Azure AI · Purview · Defender</text>
+        <text x="795" y="92" text-anchor="middle" fill="#a5384a">Defender · Azure AI · Purview</text>
+        <text x="1000" y="92" text-anchor="middle" fill="#0f7b3f">M365 · Agent 365</text>
       </g>
 
       <!-- source -->
-      <rect x="30" y="110" width="120" height="150" rx="12" fill="#132239"/>
-      <text x="90" y="138" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle">AI Agent</text>
-      <text x="90" y="157" font-size="9.5" fill="#9fb2d6" text-anchor="middle">Copilot · Foundry</text>
-      <text x="90" y="171" font-size="9.5" fill="#9fb2d6" text-anchor="middle">Vertex AI · Bedrock</text>
-      <text x="90" y="200" font-size="9.5" fill="#dbe6f7" text-anchor="middle">action:</text>
-      <text x="90" y="215" font-size="9.5" fill="#dbe6f7" text-anchor="middle">prompt · tool call</text>
-      <text x="90" y="229" font-size="9.5" fill="#dbe6f7" text-anchor="middle">· A2A</text>
+      <rect x="30" y="110" width="120" height="162" rx="12" fill="#132239"/>
+      <text x="90" y="146" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle">AI Agent</text>
+      <text x="90" y="166" font-size="9.5" fill="#9fb2d6" text-anchor="middle">Copilot · Foundry</text>
+      <text x="90" y="180" font-size="9.5" fill="#9fb2d6" text-anchor="middle">Vertex AI · Bedrock</text>
+      <text x="90" y="210" font-size="9.5" fill="#dbe6f7" text-anchor="middle">action:</text>
+      <text x="90" y="225" font-size="9.5" fill="#dbe6f7" text-anchor="middle">prompt · tool call</text>
+      <text x="90" y="239" font-size="9.5" fill="#dbe6f7" text-anchor="middle">· A2A</text>
 
       <!-- gate 1: identity -->
-      <rect x="180" y="110" width="200" height="150" rx="12" fill="#eef6f8" stroke="#3f7d8c" stroke-width="1.6"/>
-      <text x="196" y="134" font-size="12.5" font-weight="800" fill="#2c5b66">① Access &amp; Identity</text>
-      <text x="196" y="156" font-size="10.5" fill="#37525a">Entra Agent ID (blueprint)</text>
-      <text x="196" y="174" font-size="10.5" fill="#37525a">Conditional Access for agents</text>
-      <text x="196" y="192" font-size="10.5" fill="#37525a">Identity Protection (agent risk)</text>
-      <text x="196" y="210" font-size="10.5" fill="#37525a">AI gateway (APIM) = PEP</text>
-      <text x="196" y="236" font-size="9.5" fill="#3f7d8c" font-style="italic">→ authenticate · resolve permissions</text>
-      <text x="370" y="250" font-size="9" fill="#8a97b3" text-anchor="end">문서 ②</text>
+      <rect x="180" y="110" width="210" height="162" rx="12" fill="#eef6f8" stroke="#3f7d8c" stroke-width="1.6"/>
+      <text x="196" y="131" font-size="12" font-weight="800" fill="#2c5b66">① Access &amp; Identity</text>
+      <rect x="196" y="140" width="46" height="15" rx="7.5" fill="#3f7d8c"/><text x="219" y="151" font-size="8" font-weight="500" fill="#fff" text-anchor="middle">Entra</text>
+      <text x="196" y="169" font-size="8.3" fill="#37525a">Agent ID · blueprint</text>
+      <text x="196" y="181" font-size="8.3" fill="#37525a">Conditional Access for agents</text>
+      <text x="196" y="193" font-size="8.3" fill="#37525a">ID Protection (agent risk)</text>
+      <text x="196" y="205" font-size="8.3" fill="#37525a">Internet Access — Prompt Injection</text>
+      <rect x="196" y="214" width="74" height="15" rx="7.5" fill="#3f7d8c"/><text x="233" y="225" font-size="8" font-weight="500" fill="#fff" text-anchor="middle">Azure APIM</text>
+      <text x="196" y="243" font-size="8.3" fill="#37525a">AI gateway = 정책 집행 지점(PEP)</text>
+      <text x="196" y="262" font-size="8" fill="#3f7d8c" font-style="italic">→ authenticate · resolve permissions</text>
 
       <!-- gate 2: policy -->
-      <rect x="410" y="110" width="240" height="150" rx="12" fill="#f2eefb" stroke="#5b4a8a" stroke-width="1.6"/>
-      <text x="426" y="134" font-size="12.5" font-weight="800" fill="#4a3d6b">② Policy</text>
-      <text x="426" y="156" font-size="10.5" fill="#4f4470"><tspan font-weight="700">콘텐츠</tspan> · Prompt Shields</text>
-      <text x="426" y="172" font-size="9.5" fill="#6b5f8a">jailbreak · XPIA 차단 (문서 ④ L②)</text>
-      <text x="426" y="192" font-size="10.5" fill="#4f4470"><tspan font-weight="700">데이터</tspan> · Purview SIT·EDM·Label·DLP</text>
-      <text x="426" y="208" font-size="9.5" fill="#6b5f8a">민감정보 분류·처리 차단 (문서 ③)</text>
-      <text x="426" y="228" font-size="10.5" fill="#4f4470"><tspan font-weight="700">위험</tspan> · IRM (Risky AI usage)</text>
-      <text x="640" y="250" font-size="9" fill="#8a97b3" text-anchor="end">문서 ③·④</text>
+      <rect x="420" y="110" width="230" height="162" rx="12" fill="#f2eefb" stroke="#5b4a8a" stroke-width="1.6"/>
+      <text x="436" y="131" font-size="12" font-weight="800" fill="#4a3d6b">② Policy</text>
+      <rect x="436" y="140" width="124" height="15" rx="7.5" fill="#5b4a8a"/><text x="498" y="151" font-size="8" font-weight="500" fill="#fff" text-anchor="middle">Azure AI Content Safety</text>
+      <text x="436" y="169" font-size="8.3" fill="#4f4470"><tspan font-weight="700">콘텐츠 층</tspan> · Prompt Shields (jailbreak·XPIA)</text>
+      <text x="436" y="181" font-size="7.6" fill="#6b5f8a">알림 → Defender for Cloud (문서 ④)</text>
+      <rect x="436" y="190" width="58" height="15" rx="7.5" fill="#5b4a8a"/><text x="465" y="201" font-size="8" font-weight="500" fill="#fff" text-anchor="middle">Purview</text>
+      <text x="436" y="219" font-size="8.3" fill="#4f4470"><tspan font-weight="700">데이터 층</tspan> · SIT·EDM·Label·DLP</text>
+      <text x="436" y="231" font-size="7.6" fill="#6b5f8a">민감정보 분류·처리 차단 (문서 ③)</text>
+      <text x="436" y="248" font-size="8.3" fill="#4f4470"><tspan font-weight="700">위험 점수</tspan> · Insider Risk Mgmt (Risky AI usage)</text>
 
       <!-- gate 3: controls -->
-      <rect x="680" y="110" width="230" height="150" rx="12" fill="#fbeef0" stroke="#a5384a" stroke-width="1.6"/>
-      <text x="696" y="134" font-size="12.5" font-weight="800" fill="#8a2f3e">③ Controls</text>
-      <text x="696" y="156" font-size="10.5" fill="#7a3742">Defender Security for AI</text>
-      <text x="696" y="172" font-size="9.5" fill="#9a5561">Default=audit · Custom=block</text>
-      <text x="696" y="192" font-size="9.5" fill="#7a3742">차단 4종: secret·malicious·evasion·</text>
-      <text x="696" y="206" font-size="9.5" fill="#7a3742">unsafe email domain</text>
-      <text x="696" y="228" font-size="10.5" fill="#7a3742">→ XDR Alert / BehaviorInfo</text>
-      <text x="900" y="250" font-size="9" fill="#8a97b3" text-anchor="end">문서 ④</text>
+      <rect x="680" y="110" width="230" height="162" rx="12" fill="#fbeef0" stroke="#a5384a" stroke-width="1.6"/>
+      <text x="696" y="131" font-size="12" font-weight="800" fill="#8a2f3e">③ Controls</text>
+      <rect x="696" y="140" width="62" height="15" rx="7.5" fill="#a5384a"/><text x="727" y="151" font-size="8" font-weight="500" fill="#fff" text-anchor="middle">Defender</text>
+      <text x="696" y="169" font-size="8.3" fill="#7a3742"><tspan font-weight="700">행위(tool) 층</tspan> · Security for AI</text>
+      <text x="696" y="181" font-size="7.6" fill="#9a5561">audit / block · 차단 4종 → XDR·BehaviorInfo</text>
+      <rect x="696" y="190" width="124" height="15" rx="7.5" fill="#a5384a"/><text x="758" y="201" font-size="8" font-weight="500" fill="#fff" text-anchor="middle">Azure AI Content Safety</text>
+      <text x="696" y="219" font-size="8.3" fill="#7a3742"><tspan font-weight="700">콘텐츠 층</tspan> · Prompt Shields 차단</text>
+      <rect x="696" y="228" width="58" height="15" rx="7.5" fill="#a5384a"/><text x="725" y="239" font-size="8" font-weight="500" fill="#fff" text-anchor="middle">Purview</text>
+      <text x="696" y="257" font-size="8.3" fill="#7a3742"><tspan font-weight="700">데이터 층</tspan> · DLP 차단</text>
 
       <!-- execution -->
-      <rect x="940" y="110" width="120" height="150" rx="12" fill="#1e3b30"/>
-      <text x="1000" y="150" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">Execute</text>
-      <text x="1000" y="172" font-size="9.5" fill="#a8ccb9" text-anchor="middle">ALLOW일 때만</text>
-      <text x="1000" y="192" font-size="9.5" fill="#d7ecdf" text-anchor="middle">tool · KB ·</text>
-      <text x="1000" y="206" font-size="9.5" fill="#d7ecdf" text-anchor="middle">connector</text>
+      <rect x="940" y="110" width="120" height="162" rx="12" fill="#1e3b30"/>
+      <text x="1000" y="165" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">Execute</text>
+      <text x="1000" y="187" font-size="9.5" fill="#a8ccb9" text-anchor="middle">ALLOW일 때만</text>
+      <text x="1000" y="207" font-size="9.5" fill="#d7ecdf" text-anchor="middle">tool · KB ·</text>
+      <text x="1000" y="221" font-size="9.5" fill="#d7ecdf" text-anchor="middle">connector</text>
 
       <!-- flow arrows -->
       <g stroke="#5c6780" stroke-width="2" fill="none" marker-end="url(#ma)">
-        <line x1="150" y1="185" x2="178" y2="185"/>
-        <line x1="380" y1="185" x2="408" y2="185"/>
-        <line x1="650" y1="185" x2="678" y2="185"/>
-        <line x1="910" y1="185" x2="938" y2="185"/>
+        <line x1="150" y1="190" x2="178" y2="190"/>
+        <line x1="390" y1="190" x2="418" y2="190"/>
+        <line x1="650" y1="190" x2="678" y2="190"/>
+        <line x1="910" y1="190" x2="938" y2="190"/>
       </g>
 
       <!-- observability bus -->
-      <rect x="30" y="300" width="1140" height="150" rx="14" fill="#f2f9f4" stroke="#c9e2d5" stroke-width="1.4"/>
+      <rect x="30" y="300" width="1030" height="150" rx="14" fill="#f2f9f4" stroke="#c9e2d5" stroke-width="1.4"/>
       <text x="50" y="328" font-size="14" font-weight="800" fill="#2f6b52">④ Observability — Agent 365 Central Registry</text>
-      <text x="1150" y="328" font-size="10" fill="#5f7d6c" text-anchor="end" font-style="italic">전 게이트·실행이 메타데이터+텔레메트리를 여기로 스트리밍 · 전 플랫폼 정규화</text>
+      <text x="1045" y="328" font-size="10" fill="#5f7d6c" text-anchor="end" font-style="italic">전 게이트·실행이 메타데이터+텔레메트리를 여기로 스트리밍 · 전 플랫폼 정규화</text>
       <g font-size="11" font-weight="700">
-        <rect x="50" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <rect x="50" y="344" width="236" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
         <text x="64" y="364" fill="#233a5e">Agent registry (M365 admin)</text>
         <text x="64" y="381" font-size="9.5" font-weight="400" fill="#40614f">인벤토리 · owner · shadow · at-risk</text>
-        <rect x="325" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
-        <text x="339" y="364" fill="#233a5e">DSPM AI observability</text>
-        <text x="339" y="381" font-size="9.5" font-weight="400" fill="#40614f">oversharing · exfiltration · 이상 접근</text>
-        <rect x="600" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
-        <text x="614" y="364" fill="#233a5e">Defender XDR</text>
-        <text x="614" y="381" font-size="9.5" font-weight="400" fill="#40614f">alert · incident · BehaviorInfo · 상관</text>
-        <rect x="875" y="344" width="255" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
-        <text x="889" y="364" fill="#233a5e">Entra inventory</text>
-        <text x="889" y="381" font-size="9.5" font-weight="400" fill="#40614f">agent identity · shadow AI 방지</text>
+        <rect x="301" y="344" width="236" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <text x="315" y="364" fill="#233a5e">DSPM AI observability</text>
+        <text x="315" y="381" font-size="9.5" font-weight="400" fill="#40614f">oversharing · exfiltration · 이상 접근</text>
+        <rect x="552" y="344" width="236" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <text x="566" y="364" fill="#233a5e">Defender XDR</text>
+        <text x="566" y="381" font-size="9.5" font-weight="400" fill="#40614f">alert · incident · BehaviorInfo · 상관</text>
+        <rect x="803" y="344" width="236" height="46" rx="9" fill="#fff" stroke="#c9e2d5"/>
+        <text x="817" y="364" fill="#233a5e">Entra inventory</text>
+        <text x="817" y="381" font-size="9.5" font-weight="400" fill="#40614f">agent identity · shadow AI 방지</text>
       </g>
       <text x="50" y="418" font-size="10.5" fill="#2f6b52" font-weight="700">What it powers ·</text>
       <text x="150" y="418" font-size="10.5" fill="#40614f">전 플랫폼 인벤토리 · 액션/차단 감사 추적 · 근본원인·blast-radius · orphan/위험 탐지 · 수명주기 거버넌스</text>
 
       <!-- telemetry arrows down -->
       <g stroke="#3f8a68" stroke-width="1.8" stroke-dasharray="5 4" fill="none" marker-end="url(#mtel)">
-        <line x1="280" y1="260" x2="280" y2="298"/>
-        <line x1="530" y1="260" x2="530" y2="298"/>
-        <line x1="795" y1="260" x2="795" y2="298"/>
-        <line x1="1000" y1="260" x2="1000" y2="298"/>
+        <line x1="285" y1="273" x2="285" y2="298"/>
+        <line x1="535" y1="273" x2="535" y2="298"/>
+        <line x1="795" y1="273" x2="795" y2="298"/>
+        <line x1="1000" y1="261" x2="1000" y2="298"/>
       </g>
 
       <!-- govern band -->
-      <rect x="30" y="474" width="1140" height="56" rx="12" fill="#f5f3fb" stroke="#d3c6ee" stroke-width="1.2"/>
+      <rect x="30" y="474" width="1030" height="56" rx="12" fill="#f5f3fb" stroke="#d3c6ee" stroke-width="1.2"/>
       <text x="50" y="498" font-size="12" font-weight="800" fill="#4a3d6b">Govern &amp; Lifecycle (전 과정 관통)</text>
       <text x="50" y="518" font-size="10.5" fill="#5f5580">Agent 365 온보딩·소유자·만료 · Entra Identity Governance · Purview Compliance Manager · CAF AI Govern(NIST AI RMF 정렬)</text>
     </svg>
