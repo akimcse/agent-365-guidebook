@@ -27,3 +27,4 @@ Agent 365(에이전트를 관찰·관리·보호하는 컨트롤 플레인)를 �
 | v4 | 2026-07-20 | 부록 '데모 시나리오' 추가(4계층 탐지 검증) | [`c74d9ab`](https://github.com/akimcse/agent-365-guidebook/commit/c74d9ab) | [run](https://github.com/akimcse/agent-365-guidebook/actions/runs/29723940812) |
 | v5 | 2026-07-20 | 심화 문서 '데이터 보안 · Purview' 추가(런타임 위협 탐지는 ④로 이동) | [`6f39267`](https://github.com/akimcse/agent-365-guidebook/commit/6f39267) | [run](https://github.com/akimcse/agent-365-guidebook/actions/runs/29727491759) |
 | v6 | 2026-07-24 | 심화 문서 '거버넌스 프레임워크' 추가(에이전트 액션 흐름·게이트별 MS 솔루션 매핑·전체 한판 아키텍처) | [`0ef054b`](https://github.com/akimcse/agent-365-guidebook/commit/0ef054b) | [run](https://github.com/akimcse/agent-365-guidebook/actions/runs/30069052308) |
+| v7 | 2026-07-27 | 데이터 보안 SECTION 01 다이어그램을 hub-and-spoke로 교정(분류 엔진 허브가 라벨·정책에 병렬 공급, 라벨 생성/자동적용 구분, IRM 다중 트리거 반영) | COMMIT_PLACEHOLDER | RUN_PLACEHOLDER |

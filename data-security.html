@@ -229,91 +229,118 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
   <div class="note" style="border-left-color:var(--cp-accent);margin-bottom:8px;"><b>이 문서를 읽는 핵심 렌즈 — 소유 경계</b><span>Purview 데이터 보안의 대부분은 <b>Purview 고유</b> 기능이며, <b>M365 Copilot</b> 상호작용은 per-user 라이선스로 커버됩니다(<b>이것이 기본값</b>). <b>Copilot Studio(비 Teams 채널)·Foundry·외부 AI</b> 등 非 M365 AI로 확장하려면 <b><span class="own payg">PAYG</span></b> 청구가 필요합니다. <b><span class="own a365">Agent 365</span></b>는 데이터 통제를 새로 추가하지 않고 DSPM <i>AI observability</i> 인벤토리에 에이전트를 <b>표출</b>합니다(런타임 탐지는 문서④ Defender).<br><b style="color:var(--cp-text);">태그 규칙</b> — 기본(Purview·M365)은 태그 없음. 예외만 표시: <span class="own payg">PAYG</span> 非M365 확장 · <span class="own pv">E5</span> 상위 라이선스 · <span class="unv">Preview</span> 미리보기 · <span class="own a365">Agent 365</span> 인벤토리 표출.</span></div>
 
   <!-- ================= SECTION 1 : layered flow ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">데이터 보안 아키텍처<span class="axis-extra">분류 엔진 → 라벨링 → 정책 집행 → DSPM 집계 · Audit/eDiscovery 포렌식</span></h2></div>
+  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">데이터 보안 아키텍처<span class="axis-extra">분류 엔진을 <b>허브</b>로, 라벨·정책·트리거가 방사형으로 연결 → DSPM 집계 · Audit 포렌식</span></h2></div>
   <div class="card flowcard">
-    <svg viewBox="0 0 1180 290" role="img" aria-label="Purview 데이터 보안 계층 흐름도">
+    <svg viewBox="0 0 1180 500" role="img" aria-label="Purview 데이터 보안 hub-and-spoke 아키텍처">
       <defs>
         <marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#919191"/></marker>
         <marker id="arwB" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5b5fc7"/></marker>
+        <marker id="arwT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#0e7490"/></marker>
       </defs>
-      <!-- column headers -->
-      <text x="95" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#6f6f6f">데이터 소스</text>
-      <text x="345" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#6f6f6f">① 분류·탐지 엔진</text>
-      <text x="590" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#6f6f6f">② 라벨링</text>
-      <text x="820" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#6f6f6f">③ 정책 집행</text>
-      <text x="1075" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#6f6f6f">④ 집계·포렌식</text>
 
-      <!-- source -->
-      <rect x="20" y="90" width="150" height="80" rx="12" fill="var(--cp-surface)" stroke="var(--cp-text-soft)" stroke-width="1.5"/>
-      <text x="32" y="116" fill="var(--cp-text)" font-size="12" font-weight="800">에이전트</text>
-      <text x="32" y="133" fill="var(--cp-text)" font-size="12" font-weight="800">상호작용</text>
-      <text x="32" y="152" fill="var(--cp-text-muted)" font-size="9.5">프롬프트·응답·</text>
-      <text x="32" y="164" fill="var(--cp-text-muted)" font-size="9.5">접근 리소스</text>
-
-      <!-- engines (blue) — two SEPARATE boxes -->
-      <rect x="240" y="36" width="210" height="72" rx="11" fill="var(--cp-surface)" stroke="var(--cp-link)" stroke-width="1.6"/>
-      <text x="252" y="58" fill="var(--cp-text)" font-size="11.5" font-weight="800">Sensitive Info Types</text>
-      <text x="252" y="75" fill="var(--cp-text-muted)" font-size="9.5">built-in · Named Entity · custom</text>
-      <text x="252" y="90" fill="var(--cp-text-muted)" font-size="9.5">· EDM (패턴/정확 매칭)</text>
-
-      <rect x="240" y="120" width="210" height="60" rx="11" fill="var(--cp-surface)" stroke="var(--cp-link)" stroke-width="1.6"/>
-      <text x="252" y="142" fill="var(--cp-text)" font-size="11.5" font-weight="800">Trainable Classifiers</text>
-      <text x="252" y="159" fill="var(--cp-text-muted)" font-size="9.5">ML 기반 콘텐츠 유형 분류</text>
-      <text x="252" y="173" fill="var(--cp-text-muted)" font-size="9.5">(별개 엔진)</text>
-
-      <!-- labeling (green) -->
-      <rect x="490" y="70" width="190" height="76" rx="11" fill="var(--cp-surface)" stroke="var(--cp-success)" stroke-width="1.6"/>
-      <text x="502" y="92" fill="var(--cp-text)" font-size="11.5" font-weight="800">Sensitivity Labels</text>
-      <text x="502" y="109" fill="var(--cp-text-muted)" font-size="9.5">Auto-labeling · EXTRACT 게이트</text>
-      <text x="502" y="124" fill="var(--cp-text-muted)" font-size="9.5">라벨 상속 · Copilot이 준수</text>
-
-      <!-- policies (amber) -->
-      <rect x="720" y="36" width="200" height="46" rx="10" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="1.5"/>
-      <text x="732" y="56" fill="var(--cp-text)" font-size="11" font-weight="800">DLP for Copilot</text>
-      <text x="732" y="72" fill="var(--cp-text-muted)" font-size="9.5">민감 프롬프트·파일 처리 차단</text>
-
-      <rect x="720" y="94" width="200" height="46" rx="10" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="1.5"/>
-      <text x="732" y="114" fill="var(--cp-text)" font-size="11" font-weight="800">Communication Compliance</text>
-      <text x="732" y="130" fill="var(--cp-text-muted)" font-size="9.5">부적절·위험 상호작용 탐지</text>
-
-      <rect x="720" y="152" width="200" height="46" rx="10" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="1.5"/>
-      <text x="732" y="172" fill="var(--cp-text)" font-size="11" font-weight="800">Insider Risk Management</text>
-      <text x="732" y="188" fill="var(--cp-text-muted)" font-size="9.5">Risky AI usage · Risky Agents</text>
-
-      <!-- aggregation (purple) + forensic -->
-      <rect x="960" y="44" width="200" height="70" rx="11" fill="var(--cp-surface)" stroke="var(--cp-accent)" stroke-width="1.8"/>
-      <text x="972" y="66" fill="var(--cp-text)" font-size="12" font-weight="800">DSPM for AI</text>
-      <text x="972" y="83" fill="var(--cp-text-muted)" font-size="9.5">집계·가시성 플레인(분류 아님)</text>
-      <text x="972" y="98" fill="var(--cp-text-muted)" font-size="9.5">Activity Explorer · AI observability</text>
-
-      <rect x="960" y="128" width="200" height="70" rx="11" fill="var(--cp-surface)" stroke="var(--cp-text-soft)" stroke-width="1.5"/>
-      <text x="972" y="150" fill="var(--cp-text)" font-size="12" font-weight="800">Audit · eDiscovery</text>
-      <text x="972" y="167" fill="var(--cp-text-muted)" font-size="9.5">CopilotInteraction · Exchange mailbox</text>
-      <text x="972" y="182" fill="var(--cp-text-muted)" font-size="9.5">JailbreakDetected·XPIADetected</text>
-
-      <!-- arrows -->
-      <g fill="none" stroke="#919191" stroke-width="1.5">
-        <!-- source -> engines -->
-        <path d="M170,120 C205,120 210,72 240,72" marker-end="url(#arw)"/>
-        <path d="M170,140 C205,140 210,150 240,150" marker-end="url(#arw)"/>
-        <!-- source -> Audit direct (blue, key path) -->
-        <path d="M120,170 C120,250 960,250 985,198" stroke="#5b5fc7" stroke-width="1.6" marker-end="url(#arwB)"/>
-        <!-- engines -> labeling -->
-        <path d="M450,72 C470,72 475,100 490,105" marker-end="url(#arw)"/>
-        <path d="M450,150 C470,150 475,112 490,112" marker-end="url(#arw)"/>
-        <!-- labeling/engines -> policies -->
-        <path d="M680,95 C700,95 705,60 720,60" marker-end="url(#arw)"/>
-        <path d="M680,110 L720,116" marker-end="url(#arw)"/>
-        <path d="M680,120 C700,120 705,172 720,174" marker-end="url(#arw)"/>
-        <!-- policies -> DSPM -->
-        <path d="M920,60 C945,60 950,78 960,80" marker-end="url(#arw)"/>
-        <path d="M920,116 L960,90" marker-end="url(#arw)"/>
-        <path d="M920,174 C945,174 950,100 960,95" marker-end="url(#arw)"/>
+      <!-- ===== ARROWS (drawn first, under boxes) ===== -->
+      <g fill="none">
+        <!-- source -> hub -->
+        <path d="M170,263 C225,263 250,260 288,260" stroke="#919191" stroke-width="1.6" marker-end="url(#arw)"/>
+        <!-- hub -> labels (up spoke: auto-apply condition) -->
+        <path d="M400,182 C400,164 418,150 420,142" stroke="#919191" stroke-width="1.6" marker-end="url(#arw)"/>
+        <!-- hub -> policies DIRECT (teal spokes, label not required) -->
+        <path d="M515,232 C585,180 600,102 653,102" stroke="#0e7490" stroke-width="2" marker-end="url(#arwT)"/>
+        <path d="M515,262 C585,262 605,259 653,259" stroke="#0e7490" stroke-width="2" marker-end="url(#arwT)"/>
+        <path d="M515,300 C585,340 605,408 653,408" stroke="#0e7490" stroke-width="2" marker-end="url(#arwT)"/>
+        <!-- labels -> policies (label = one condition of several) -->
+        <path d="M527,92 C585,92 605,98 653,98" stroke="#919191" stroke-width="1.3" marker-end="url(#arw)"/>
+        <path d="M527,128 C612,150 612,392 653,398" stroke="#919191" stroke-width="1.3" marker-end="url(#arw)"/>
+        <!-- external triggers -> IRM -->
+        <path d="M517,418 C560,418 610,416 653,416" stroke="var(--cp-warning)" stroke-width="1.5" marker-end="url(#arw)"/>
+        <!-- policies -> DSPM (convergence) -->
+        <path d="M872,102 C915,102 932,164 953,176" stroke="#919191" stroke-width="1.5" marker-end="url(#arw)"/>
+        <path d="M872,259 C915,259 932,205 953,200" stroke="#919191" stroke-width="1.5" marker-end="url(#arw)"/>
+        <path d="M872,410 C918,410 936,238 953,228" stroke="#919191" stroke-width="1.5" marker-end="url(#arw)"/>
+        <!-- labels -> DSPM (information protection insights, faint) -->
+        <path d="M527,60 C770,34 905,118 953,166" stroke="#c9ccd6" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arw)"/>
+        <!-- source -> Audit direct (blue key path) -->
+        <path d="M100,302 C100,472 850,472 953,394" stroke="#5b5fc7" stroke-width="1.7" marker-end="url(#arwB)"/>
       </g>
-      <text x="540" y="248" text-anchor="middle" font-size="9.5" fill="#5b5fc7" font-weight="700">상호작용은 정책과 무관하게 Audit·eDiscovery에 직접 기록됨</text>
-      <text x="1060" y="36" text-anchor="middle" font-size="8.5" fill="var(--cp-accent)" font-weight="700">DLP·CC·IRM 신호 집계</text>
+
+      <!-- ===== DATA SOURCE ===== -->
+      <rect x="30" y="224" width="140" height="80" rx="12" fill="var(--cp-surface)" stroke="var(--cp-text-soft)" stroke-width="1.5"/>
+      <text x="42" y="252" fill="var(--cp-text)" font-size="12" font-weight="800">에이전트 상호작용</text>
+      <text x="42" y="272" fill="var(--cp-text-muted)" font-size="9.5">프롬프트·응답·</text>
+      <text x="42" y="285" fill="var(--cp-text-muted)" font-size="9.5">접근 리소스</text>
+
+      <!-- ===== HUB: classification engines ===== -->
+      <rect x="288" y="182" width="228" height="156" rx="14" fill="rgba(14,116,144,0.05)" stroke="var(--cp-link)" stroke-width="2"/>
+      <text x="302" y="204" fill="var(--cp-link)" font-size="11" font-weight="800">① 분류·탐지 엔진 — 허브</text>
+      <rect x="304" y="214" width="196" height="52" rx="9" fill="var(--cp-surface)" stroke="var(--cp-link)" stroke-width="1.4"/>
+      <text x="316" y="235" fill="var(--cp-text)" font-size="11" font-weight="800">Sensitive Info Types</text>
+      <text x="316" y="251" fill="var(--cp-text-muted)" font-size="9">built-in·Named Entity·custom·EDM</text>
+      <rect x="304" y="274" width="196" height="52" rx="9" fill="var(--cp-surface)" stroke="var(--cp-link)" stroke-width="1.4"/>
+      <text x="316" y="295" fill="var(--cp-text)" font-size="11" font-weight="800">Trainable Classifiers</text>
+      <text x="316" y="311" fill="var(--cp-text-muted)" font-size="9">ML 분류 · SIT와 별개 엔진</text>
+
+      <!-- ===== LABELS (spoke up) ===== -->
+      <rect x="315" y="36" width="212" height="106" rx="11" fill="var(--cp-surface)" stroke="var(--cp-success)" stroke-width="1.6"/>
+      <text x="327" y="58" fill="var(--cp-text)" font-size="11.5" font-weight="800">② Sensitivity Labels</text>
+      <text x="327" y="76" fill="var(--cp-text-muted)" font-size="9.5">관리자가 정의·게시 (엔진 무관)</text>
+      <text x="327" y="92" fill="var(--cp-text-muted)" font-size="9.5">자동적용 조건: SIT·TC·EDM·속성·</text>
+      <text x="327" y="105" fill="var(--cp-text-muted)" font-size="9.5">확장자·공유옵션 등 · 또는 수동</text>
+      <text x="327" y="123" fill="var(--cp-text-muted)" font-size="9.5">라벨 상속 · Copilot 준수</text>
+
+      <!-- ===== POLICIES (spokes right, fanned) ===== -->
+      <rect x="653" y="72" width="220" height="60" rx="10" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="1.6"/>
+      <text x="665" y="94" fill="var(--cp-text)" font-size="11.5" font-weight="800">DLP for Copilot</text>
+      <text x="665" y="112" fill="var(--cp-text-muted)" font-size="9.5">SIT·TC·라벨을 각각 독립 조건으로</text>
+
+      <rect x="653" y="229" width="220" height="60" rx="10" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="1.6"/>
+      <text x="665" y="251" fill="var(--cp-text)" font-size="11.5" font-weight="800">Communication Compliance</text>
+      <text x="665" y="269" fill="var(--cp-text-muted)" font-size="9.5">SIT·TC·키워드 직접 (라벨 미사용)</text>
+
+      <rect x="653" y="374" width="220" height="86" rx="10" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="1.6"/>
+      <text x="665" y="396" fill="var(--cp-text)" font-size="11.5" font-weight="800">Insider Risk Management</text>
+      <text x="665" y="414" fill="var(--cp-text-muted)" font-size="9.5">SIT 직접 · 라벨 = priority 5종 중 1</text>
+      <text x="665" y="430" fill="var(--cp-text-muted)" font-size="9.5">위험 점수화 · Adaptive Protection</text>
+      <text x="665" y="448" fill="var(--cp-text-muted)" font-size="9.5">(라벨 없이도 동작)</text>
+
+      <!-- ===== IRM external triggers (feeds IRM) ===== -->
+      <rect x="302" y="378" width="215" height="82" rx="10" fill="var(--cp-surface)" stroke="var(--cp-warning)" stroke-width="1.3" stroke-dasharray="5 3"/>
+      <text x="314" y="399" fill="var(--cp-warning)" font-size="10.5" font-weight="800">IRM 외부 트리거 (라벨 무관)</text>
+      <text x="314" y="417" fill="var(--cp-text-muted)" font-size="9.5">DLP 알림 · HR 커넥터 · Comm</text>
+      <text x="314" y="430" fill="var(--cp-text-muted)" font-size="9.5">Compliance 신호</text>
+      <text x="314" y="448" fill="var(--cp-text-muted)" font-size="9.5">Defender for Endpoint · Entra 위험</text>
+
+      <!-- ===== DSPM (convergence) ===== -->
+      <rect x="953" y="150" width="207" height="106" rx="11" fill="var(--cp-surface)" stroke="var(--cp-accent)" stroke-width="1.8"/>
+      <text x="965" y="174" fill="var(--cp-text)" font-size="12" font-weight="800">④ DSPM for AI</text>
+      <text x="965" y="193" fill="var(--cp-text-muted)" font-size="9.5">집계·가시성 플레인 (분류 아님)</text>
+      <text x="965" y="208" fill="var(--cp-text-muted)" font-size="9.5">DLP·CC·IRM·라벨 신호 통합</text>
+      <text x="965" y="223" fill="var(--cp-text-muted)" font-size="9.5">Activity Explorer · AI observability</text>
+      <text x="965" y="242" fill="var(--cp-text-muted)" font-size="9.5">전제조건 아님 · 집행 체인 밖</text>
+
+      <!-- ===== Audit / eDiscovery (direct from source) ===== -->
+      <rect x="953" y="300" width="207" height="96" rx="11" fill="var(--cp-surface)" stroke="var(--cp-text-soft)" stroke-width="1.5"/>
+      <text x="965" y="324" fill="var(--cp-text)" font-size="12" font-weight="800">Audit · eDiscovery</text>
+      <text x="965" y="342" fill="var(--cp-text-muted)" font-size="9.5">CopilotInteraction · Exchange mailbox</text>
+      <text x="965" y="357" fill="var(--cp-text-muted)" font-size="9.5">JailbreakDetected · XPIADetected</text>
+      <text x="965" y="376" fill="var(--cp-text-muted)" font-size="9.5">정책과 무관, 상호작용 직접 기록</text>
+
+      <!-- ===== spoke annotations ===== -->
+      <text x="583" y="196" fill="#0e7490" font-size="9.5" font-weight="700">SIT·TC 직접</text>
+      <text x="590" y="86" fill="#8a8a8a" font-size="9">라벨=조건 중 1</text>
+      <text x="405" y="172" fill="#8a8a8a" font-size="9" text-anchor="middle">자동적용 조건</text>
+      <text x="430" y="490" fill="#5b5fc7" font-size="9.5" font-weight="700" text-anchor="middle">상호작용 → Audit·eDiscovery 직접 기록 (정책 무관)</text>
+
+      <!-- ===== legend ===== -->
+      <g font-size="9" fill="#6f6f6f">
+        <line x1="905" y1="424" x2="935" y2="424" stroke="#0e7490" stroke-width="2"/>
+        <text x="940" y="427">엔진 → 정책 직접 (SIT·TC, 라벨 불필요)</text>
+        <line x1="905" y1="442" x2="935" y2="442" stroke="#919191" stroke-width="1.3"/>
+        <text x="940" y="445">라벨 경유 (조건 중 하나)</text>
+        <line x1="905" y1="460" x2="935" y2="460" stroke="#5b5fc7" stroke-width="1.7"/>
+        <text x="940" y="463">Audit 직접 기록</text>
+      </g>
     </svg>
-    <div class="linchpin">🔑 <b>데이터 출처와 계층:</b> 모든 데이터는 <b>에이전트 상호작용</b>(프롬프트·응답·접근 리소스)에서 시작합니다. <span class="ptag engine">분류 엔진</span> SIT와 Trainable Classifier는 <b>별개 엔진</b>으로 각각 민감 데이터를 <b>탐지</b>하고, <span class="ptag label">라벨링</span>이 라벨을 <b>적용</b>하며, <span class="ptag policy">정책</span>(DLP·CC·IRM)이 이를 <b>소비</b>해 차단·탐지하고 그 신호가 <span class="ptag plane">DSPM</span>으로 <b>집계</b>됩니다. 한편 <b>Audit·eDiscovery는 정책과 무관하게 상호작용을 직접 기록</b>합니다(감사가 켜져 있으면 자동) — 그래서 DSPM은 이 감사 데이터까지 함께 끌어와 보여줍니다. DSPM 자체는 분류 엔진이 아닙니다.</div>
+    <div class="linchpin">🔑 <b>허브-앤-스포크(선형 체인이 아님):</b> <span class="ptag engine">분류 엔진</span> SIT·Trainable Classifier가 <b>허브</b>가 되어 <span class="ptag label">라벨</span>과 <span class="ptag policy">정책</span> <b>양쪽에 병렬로 공급</b>합니다. ⓵ DLP·CC·IRM은 라벨을 거치지 않고 <b>SIT·TC를 직접 조건</b>으로 소비합니다(Teams Chat DLP는 라벨 조건을 아예 못 쓰고 SIT·TC만 사용 — 선형 체인의 반례). ⓶ <b>라벨은 관리자가 정의·게시</b>하며 엔진은 라벨을 "만드는" 게 아니라 <b>자동적용 조건</b>(SIT·TC·EDM·속성·확장자·공유옵션 등)일 뿐이고, 라벨은 정책의 여러 조건 중 <b>하나</b>입니다. ⓷ <b>IRM 위험점수</b>는 라벨뿐 아니라 DLP 알림·HR·Comm Compliance·Defender·Entra 위험으로 트리거되고 priority content <b>5종(라벨은 그중 하나)</b>으로 가점됩니다 — 라벨 없이도 동작. 이 모든 신호가 <span class="ptag plane">DSPM</span>으로 <b>집계</b>되고, <b>Audit·eDiscovery는 정책과 무관하게 상호작용을 직접 기록</b>합니다. DSPM 자체는 분류 엔진이 아닙니다.</div>
     <div class="src"><b>출처</b>
       <a href="https://learn.microsoft.com/en-us/purview/data-classification-overview">data-classification-overview</a> (분류 3방식) ·
       <a href="https://learn.microsoft.com/en-us/purview/sensitive-information-type-learn-about">sensitive-information-type</a> (SIT 4종) ·
