@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>① 유형별 커버리지 지도 — Agent 365 가이드북</title>
+<script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const s=localStorage.getItem("gbTheme");const t=p||s||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+:root{
+  color-scheme: light;
+  --cp-bg:#faf9fb; --cp-bg-elevated:#ffffff; --cp-surface:#ffffff; --cp-surface-soft:#f3f2f6;
+  --cp-border:#e4e2ea; --cp-border-strong:#a9a7b4;
+  --cp-text:#1b1a21; --cp-text-muted:#4a4858; --cp-text-soft:#6b6980;
+  --cp-accent:#5b5fc7; --cp-accent-hover:#4a4eb5; --cp-accent-soft:rgba(91,95,199,0.10); --cp-accent-fg:#ffffff;
+  --cp-success:#0f7b3f; --cp-danger:#c4314b; --cp-warning:#b8860b; --cp-link:#0f6cbd;
+  --cp-highlight:rgba(91,95,199,0.12);
+  --cp-grad:linear-gradient(120deg,#ece9fb 0%,#e8f1fb 52%,#f6fbff 100%);
+  --cp-grad-accent:linear-gradient(120deg,#5b5fc7 0%,#0f6cbd 100%);
+  --cp-shadow:0 18px 48px rgba(38,36,64,0.12);
+}
+html[data-theme="dark"]{
+  color-scheme: dark;
+  --cp-bg:#1c1b22; --cp-bg-elevated:#232230; --cp-surface:#26252f; --cp-surface-soft:#2d2c38;
+  --cp-border:#3a3947; --cp-border-strong:#57556a;
+  --cp-text:#e7e6ee; --cp-text-muted:#a9a7ba; --cp-text-soft:#8f8da3;
+  --cp-accent:#a6a9f2; --cp-accent-hover:#b8bbf6; --cp-accent-soft:rgba(166,169,242,0.14); --cp-accent-fg:#1a1a22;
+  --cp-success:#4ade80; --cp-danger:#f87171; --cp-warning:#fbbf24; --cp-link:#6cb2f0;
+  --cp-highlight:rgba(166,169,242,0.16);
+  --cp-grad:linear-gradient(120deg,#2a2740 0%,#22283c 52%,#20232e 100%);
+  --cp-grad-accent:linear-gradient(120deg,#7c80e0 0%,#3f8ed0 100%);
+  --cp-shadow:0 18px 48px rgba(0,0,0,0.36);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.65;-webkit-font-smoothing:antialiased}
+.gb-layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.gb-side{background:var(--cp-bg-elevated);border-right:1px solid var(--cp-border)}
+.gb-side-inner{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:24px 16px}
+.gb-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 2px}
+.gb-logo{width:34px;height:34px;border-radius:9px;background:var(--cp-grad-accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem;letter-spacing:-.02em}
+.gb-btxt{font-weight:800;font-size:.98rem;letter-spacing:-.01em}
+.gb-bsub{font-size:.72rem;color:var(--cp-text-soft);padding:2px 8px 18px}
+.gb-glabel{font-size:.64rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--cp-text-soft);padding:0 8px;margin:14px 0 7px}
+.gb-nav a{display:flex;align-items:flex-start;gap:10px;text-decoration:none;color:var(--cp-text);padding:10px 12px;border-radius:10px;font-size:.88rem;transition:background .15s;margin-bottom:3px}
+.gb-nav a .ic{font-size:.95rem;line-height:1.5}
+.gb-nav a .lb{font-weight:600}
+.gb-nav a .lb small{display:block;font-weight:400;font-size:.72rem;color:var(--cp-text-soft);margin-top:1px}
+.gb-nav a:hover{background:var(--cp-surface-soft)}
+.gb-nav a.on{background:var(--cp-accent-soft);color:var(--cp-accent)}
+.gb-nav a.on .lb small{color:var(--cp-accent)}
+.gb-sfoot{margin-top:22px;padding:12px 8px 0;border-top:1px solid var(--cp-border);font-size:.72rem;color:var(--cp-text-soft)}
+.gb-sfoot a{color:var(--cp-link);text-decoration:none;display:block;margin-top:4px}
+.gb-themetoggle{display:flex;align-items:center;gap:9px;width:100%;margin-top:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--cp-border);background:var(--cp-surface);color:var(--cp-text);font-family:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:.15s}
+.gb-themetoggle:hover{border-color:var(--cp-accent);color:var(--cp-accent)}
+.gb-themetoggle .ti{font-size:1rem}
+/* section-label → AXIS-style header (subpages 2·3) */
+.axis-head2{display:flex;align-items:baseline;gap:13px;flex-wrap:wrap;margin:38px 0 14px;text-transform:none;letter-spacing:normal;color:var(--cp-text)}
+.axis-head2 .axis-num2{font-size:.74rem;font-weight:800;letter-spacing:.09em;color:var(--cp-accent-fg);background:var(--cp-accent);padding:4px 11px;border-radius:6px;text-transform:uppercase;flex:none}
+.axis-head2 .axis-t2{font-size:1.5rem;font-weight:800;letter-spacing:-.01em}
+.axis-head2 .axis-t2 .axis-extra{display:block;font-size:.82rem;font-weight:500;color:var(--cp-text-soft);margin-top:3px}
+/* embedded original-doc safety: keep wide content inside the constrained column */
+.gb-main .wrap{max-width:1060px;margin:0 auto;padding:36px 40px 80px}
+.gb-main svg{max-width:100%;height:auto;display:block}
+.gb-main img{max-width:100%;height:auto}
+.gb-main table{max-width:100%;table-layout:auto}
+.gb-main .sub-hero{margin-left:0;margin-right:0}
+@media (max-width:1160px){
+  .gb-main .id-grid,.gb-main .find-grid,.gb-main .det-wrap,.gb-main .cplane,.gb-main .role-grid,.gb-main .flow2,.gb-main .notes{grid-template-columns:1fr !important}
+}
+@media (max-width:900px){.gb-main .wrap{padding:22px 18px 60px}}
+.gb-main{min-width:0}
+.sub-hero{background:var(--cp-grad);border:1px solid var(--cp-border);border-radius:20px;padding:34px 36px;margin-bottom:28px}
+.sub-hero .eb{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-accent);background:var(--cp-surface);border:1px solid var(--cp-border);padding:6px 13px;border-radius:999px;margin-bottom:16px}
+.sub-hero h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
+.sub-hero p{font-size:1rem;color:var(--cp-text-muted)}
+@media (max-width:900px){.sub-hero{padding:24px 20px}.sub-hero h1{font-size:1.6rem}}
+@media (max-width:900px){.gb-layout{grid-template-columns:1fr}.gb-side{border-right:none;border-bottom:1px solid var(--cp-border)}.gb-side-inner{position:static;max-height:none;overflow:visible}}
+
+html { scroll-behavior: smooth; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 48px 28px 80px; }
+sup.cite { font-size: 0.62em; font-weight: 700; }
+sup.cite a { color: var(--cp-accent); text-decoration: none; padding: 0 1px; }
+sup.cite a:hover { text-decoration: underline; }
+
+header.page-head { margin-bottom: 40px; }
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--cp-accent); background: var(--cp-accent-soft);
+  border: 1px solid var(--cp-border);
+  padding: 5px 12px; border-radius: 999px; margin-bottom: 16px;
+}
+h1.page-title { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+.page-sub { font-size: 1.0rem; color: var(--cp-text-muted); max-width: 920px; }
+.badge-src {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 16px;
+  font-size: 0.78rem; color: var(--cp-text-soft);
+  background: var(--cp-surface); border: 1px solid var(--cp-border);
+  padding: 6px 12px; border-radius: 8px;
+}
+
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; }
+nav.toc a {
+  font-size: 0.82rem; font-weight: 600; text-decoration: none;
+  color: var(--cp-text); background: var(--cp-surface);
+  border: 1px solid var(--cp-border); padding: 8px 14px; border-radius: 999px;
+  transition: all .15s ease;
+}
+nav.toc a:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+
+section.axis { margin-top: 56px; scroll-margin-top: 24px; }
+.axis-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+.axis-num {
+  font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em;
+  color: var(--cp-accent-fg); background: var(--cp-accent);
+  padding: 3px 10px; border-radius: 6px;
+}
+.axis-head h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.01em; }
+.axis-lead { color: var(--cp-text-muted); font-size: 0.95rem; margin: 8px 0 4px; }
+
+.gov-lens {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--cp-accent-soft); border: 1px solid var(--cp-border);
+  border-left: 3px solid var(--cp-accent);
+  border-radius: 10px; padding: 12px 16px; margin: 16px 0 24px; font-size: 0.9rem;
+}
+.gov-lens strong { color: var(--cp-accent); }
+
+.cards { display: grid; gap: 18px; }
+.cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 980px) { .cards.cols-3, .cards.cols-2 { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--cp-surface); border: 1px solid var(--cp-border);
+  border-radius: 16px; padding: 22px 22px 20px;
+  box-shadow: 0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+  display: flex; flex-direction: column;
+}
+.card .tag {
+  display: inline-block; align-self: flex-start;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--cp-accent-fg); background: var(--cp-accent);
+  padding: 3px 10px; border-radius: 6px; margin-bottom: 12px;
+}
+.card h3 { font-size: 1.28rem; font-weight: 800; margin-bottom: 3px; }
+.card .card-sub { font-size: 0.8rem; color: var(--cp-text-soft); margin-bottom: 16px; min-height: 2.2em; }
+
+.field { margin-bottom: 12px; }
+.field .label {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--cp-accent); margin-bottom: 3px; display: block;
+}
+.field .val { font-size: 0.87rem; color: var(--cp-text); }
+.field .val.muted { color: var(--cp-text-muted); }
+
+.risk-list { list-style: none; margin-top: 4px; }
+.risk-list li { font-size: 0.83rem; color: var(--cp-text-muted); padding-left: 16px; position: relative; margin-bottom: 3px; }
+.risk-list li::before { content: "▸"; position: absolute; left: 0; color: var(--cp-accent); }
+.risk-box { margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--cp-border); }
+
+.drill { margin-top: 26px; }
+.drill h3 { font-size: 1.02rem; font-weight: 800; margin-bottom: 4px; }
+.drill p.note { font-size: 0.85rem; color: var(--cp-text-muted); margin-bottom: 14px; }
+table.grid {
+  width: 100%; border-collapse: collapse; font-size: 0.84rem;
+  background: var(--cp-surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--cp-border);
+}
+table.grid th, table.grid td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--cp-border); vertical-align: top; }
+table.grid thead th {
+  background: var(--cp-surface-soft); font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 0.05em; text-transform: uppercase; color: var(--cp-text-muted);
+}
+table.grid tbody tr:last-child td { border-bottom: none; }
+table.grid td.k { font-weight: 700; color: var(--cp-text); white-space: nowrap; }
+table.grid td .sub { display: block; font-size: 0.73rem; color: var(--cp-text-soft); font-weight: 400; }
+
+.spectrum { display: flex; align-items: center; gap: 12px; margin: 4px 0 24px; font-size: 0.78rem; color: var(--cp-text-muted); }
+.spectrum .bar { flex: 1; height: 7px; border-radius: 999px; background: linear-gradient(90deg, var(--cp-link), var(--cp-success), var(--cp-warning)); }
+
+.takeaway {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--cp-bg-elevated); border: 1px solid var(--cp-border);
+  border-left: 3px solid var(--cp-accent);
+  border-radius: 10px; padding: 14px 18px; margin-top: 22px; font-size: 0.9rem;
+}
+.takeaway strong { color: var(--cp-accent); }
+
+.src-inline { margin-top: 18px; font-size: 0.78rem; color: var(--cp-text-soft); }
+.src-inline a { color: var(--cp-link); text-decoration: none; }
+.src-inline a:hover { text-decoration: underline; }
+
+.callout-note {
+  font-size: 0.82rem; color: var(--cp-text-muted); background: var(--cp-surface-soft);
+  border: 1px dashed var(--cp-border); border-radius: 10px; padding: 12px 16px; margin-top: 16px;
+}
+
+section.refs { margin-top: 64px; }
+section.refs h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: 14px; }
+ol.reflist { list-style: none; counter-reset: ref; }
+ol.reflist li {
+  counter-increment: ref; position: relative; padding: 8px 0 8px 34px;
+  font-size: 0.82rem; color: var(--cp-text-muted); border-bottom: 1px solid var(--cp-border);
+}
+ol.reflist li::before {
+  content: "[" counter(ref) "]"; position: absolute; left: 0; top: 8px;
+  font-weight: 700; color: var(--cp-accent); font-size: 0.78rem;
+}
+ol.reflist li a { color: var(--cp-link); text-decoration: none; word-break: break-all; }
+ol.reflist li a:hover { text-decoration: underline; }
+ol.reflist li .rtitle { color: var(--cp-text); font-weight: 600; }
+
+footer.page-foot { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--cp-border); font-size: 0.8rem; color: var(--cp-text-soft); }
+.divider { height: 1px; background: var(--cp-border); margin: 8px 0; border: 0; }
+</style>
+<style>
+/* ===== coverage map ===== */
+.cvg-legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:12px 16px;margin:0 0 20px;
+  background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:12px;font-size:12.5px;color:var(--cp-text-muted)}
+.cvg-legend b{color:var(--cp-text);font-weight:800;margin-right:2px}
+.cvg-legend .li{display:flex;align-items:center;gap:6px}
+.cvg-legend .sw{width:12px;height:12px;border-radius:4px;flex-shrink:0}
+.sw-g{background:rgba(15,123,63,.20);border:1px solid rgba(15,123,63,.45)}
+.sw-a{background:rgba(184,134,11,.20);border:1px solid rgba(184,134,11,.45)}
+.sw-b{background:rgba(15,108,189,.18);border:1px solid rgba(15,108,189,.45)}
+.sw-r{background:rgba(196,49,75,.18);border:1px solid rgba(196,49,75,.45)}
+
+.cvg-grid{display:flex;flex-direction:column;gap:20px}
+.cvg-card{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;
+  padding:18px 18px 16px;box-shadow:var(--cp-shadow)}
+.cvg-card>.kk{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--cp-text-soft);background:var(--cp-surface-soft);border:1px solid var(--cp-border);
+  border-radius:6px;padding:3px 8px;margin-bottom:8px}
+.cvg-card h3{font-size:17px;font-weight:800;color:var(--cp-text);margin:0 0 4px;letter-spacing:-.01em}
+.cvg-card .sub{font-size:12.5px;color:var(--cp-text-muted);line-height:1.55;margin:0 0 14px}
+
+/* ladder */
+.ladder{position:relative;padding-left:26px;margin:2px 0 4px}
+.ladder:before{content:"";position:absolute;left:9px;top:10px;bottom:12px;width:3px;border-radius:3px;background:var(--cp-border)}
+.tier{position:relative;padding:0 0 14px}
+.tier .num{position:absolute;left:-26px;top:0;width:21px;height:21px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
+  background:var(--cp-surface-soft);color:var(--cp-text-muted);border:1.5px solid var(--cp-border)}
+.tier.t1 .num{background:rgba(15,123,63,.16);color:var(--cp-success);border-color:rgba(15,123,63,.4)}
+.tier.t2 .num{background:rgba(184,134,11,.16);color:var(--cp-warning);border-color:rgba(184,134,11,.4)}
+.tier.t3 .num{background:rgba(15,108,189,.14);color:var(--cp-link);border-color:rgba(15,108,189,.4)}
+.tier.t4 .num{background:rgba(196,49,75,.14);color:var(--cp-danger);border-color:rgba(196,49,75,.4)}
+.tier .th{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:5px}
+.tier .tt{font-size:13.5px;font-weight:800;color:var(--cp-text)}
+.tier .lp{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:6px;white-space:nowrap;
+  background:var(--cp-surface-soft);color:var(--cp-text-muted);border:1px solid var(--cp-border)}
+.tier.t1 .lp{background:rgba(15,123,63,.12);color:var(--cp-success);border-color:rgba(15,123,63,.34)}
+.tier.t2 .lp{background:rgba(184,134,11,.13);color:var(--cp-warning);border-color:rgba(184,134,11,.36)}
+.tier.t3 .lp{background:rgba(15,108,189,.12);color:var(--cp-link);border-color:rgba(15,108,189,.34)}
+.tier.t4 .lp{background:rgba(196,49,75,.12);color:var(--cp-danger);border-color:rgba(196,49,75,.34)}
+.tier .prev{font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;white-space:nowrap;
+  background:var(--cp-surface-soft);color:var(--cp-text-soft);border:1px solid var(--cp-border)}
+.tier .td{font-size:12.5px;color:var(--cp-text-muted);line-height:1.6}
+.tier .li{display:block;padding-left:10px;position:relative;margin-top:3px}
+.tier .li:before{content:"·";position:absolute;left:0;color:var(--cp-text-soft);font-weight:800}
+.tier .loc{display:block;margin-top:6px;font-size:11px;color:var(--cp-text-soft)}
+.tier .loc b{color:var(--cp-text-muted);font-weight:800}
+.tier .pin{color:var(--cp-text);font-weight:700}
+.tier a.dl{color:var(--cp-link);font-weight:700;text-decoration:none;border-bottom:1px dashed currentColor}
+.tier a.dl:hover{opacity:.75}
+
+/* coverage strip */
+.dimwrap{margin-top:14px;padding-top:12px;border-top:1px dashed var(--cp-border)}
+.dimwrap .dt{font-size:10px;font-weight:800;color:var(--cp-text-soft);text-transform:uppercase;letter-spacing:.04em;
+  margin-bottom:7px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.dimwrap .dt .dlg{font-weight:600;text-transform:none;letter-spacing:0;font-size:9.5px}
+.dimgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+@media (max-width:1000px){.dimgrid{grid-template-columns:repeat(5,1fr)}}
+.dcell{border:1px solid var(--cp-border);border-radius:8px;padding:6px 4px;background:var(--cp-surface-soft);
+  text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;cursor:help}
+.dcell .dl{font-size:9px;color:var(--cp-text-muted);line-height:1.2;min-height:22px;display:flex;align-items:center}
+.dcell .dp{font-size:12px;font-weight:800;line-height:1}
+.dcell.cg{background:rgba(15,123,63,.10);border-color:rgba(15,123,63,.32)}
+.dcell.ca{background:rgba(184,134,11,.11);border-color:rgba(184,134,11,.34)}
+.dcell.cb{background:rgba(15,108,189,.10);border-color:rgba(15,108,189,.32)}
+.dcell.cg .dp{color:var(--cp-success)} .dcell.ca .dp{color:var(--cp-warning)} .dcell.cb .dp{color:var(--cp-link)}
+.dcell.n .dp{color:var(--cp-text-soft)}
+.dcell:hover{border-color:var(--cp-border-strong);z-index:50}
+.dcell[data-rec]:after{content:attr(data-rec);position:absolute;bottom:calc(100% + 7px);left:50%;
+  transform:translateX(-50%) translateY(3px);z-index:60;background:#1f2430;color:#fff;font-size:10px;font-weight:600;
+  line-height:1.5;text-align:left;padding:7px 10px;border-radius:8px;white-space:pre-line;
+  min-width:150px;max-width:250px;width:max-content;box-shadow:0 8px 22px rgba(15,23,42,.28);
+  opacity:0;visibility:hidden;transition:opacity .13s,transform .13s}
+.dcell[data-rec]:before{content:"";position:absolute;bottom:calc(100% + 2px);left:50%;
+  transform:translateX(-50%) translateY(3px);z-index:61;border:5px solid transparent;border-top-color:#1f2430;
+  opacity:0;visibility:hidden;transition:opacity .13s,transform .13s}
+.dcell[data-rec]:hover:after,.dcell[data-rec]:hover:before{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.dimgrid>.dcell:nth-child(10n+1)[data-rec]:after,.dimgrid>.dcell:nth-child(10n+2)[data-rec]:after{left:0;transform:translateX(0) translateY(3px)}
+.dimgrid>.dcell:nth-child(10n+1)[data-rec]:hover:after,.dimgrid>.dcell:nth-child(10n+2)[data-rec]:hover:after{transform:translateX(0) translateY(0)}
+.dimgrid>.dcell:nth-child(10n)[data-rec]:after,.dimgrid>.dcell:nth-child(10n+9)[data-rec]:after{left:auto;right:0;transform:translateX(0) translateY(3px)}
+.dimgrid>.dcell:nth-child(10n)[data-rec]:hover:after,.dimgrid>.dcell:nth-child(10n+9)[data-rec]:hover:after{transform:translateX(0) translateY(0)}
+.subhd{font-size:10px;font-weight:800;color:var(--cp-text-soft);text-transform:uppercase;letter-spacing:.04em;
+  margin-bottom:7px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.subhd .dlg{font-weight:600;text-transform:none;letter-spacing:0;font-size:9.5px}
+.csrc{margin-top:12px;padding-top:9px;border-top:1px dashed var(--cp-border);font-size:10px;
+  color:var(--cp-text-soft);line-height:1.75}
+.csrc b{color:var(--cp-text-muted);font-weight:800}
+.csrc a{color:var(--cp-link);font-weight:600;white-space:nowrap;text-decoration:none}
+.csrc a:hover{text-decoration:underline}
+.fnote{margin-top:18px;padding:12px 16px;background:var(--cp-surface-soft);border:1px solid var(--cp-border);
+  border-radius:10px;font-size:11.5px;color:var(--cp-text-soft);line-height:1.7}
+.fnote b{color:var(--cp-text-muted);font-weight:800}
+
+/* ===== sidebar collapse + search (injected) ===== */
+.gb-side{transition:width .18s ease, transform .18s ease}
+body.gb-collapsed .gb-layout{grid-template-columns:0 minmax(0,1fr)}
+body.gb-collapsed .gb-side{width:0;transform:translateX(-100%);overflow:hidden;border-right:none}
+.gb-sidetoggle{position:fixed;top:14px;left:14px;z-index:120;width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;
+  background:var(--cp-surface);color:var(--cp-text-muted);border:1px solid var(--cp-border);
+  box-shadow:0 4px 14px rgba(20,18,40,.10);transition:left .18s ease,background .15s}
+.gb-sidetoggle:hover{background:var(--cp-surface-soft);color:var(--cp-text)}
+body:not(.gb-collapsed) .gb-sidetoggle{left:calc(var(--gb-sidew, 260px) - 48px)}
+@media (max-width:1100px){ body:not(.gb-collapsed) .gb-sidetoggle{left:14px} }
+
+/* search */
+.gb-search{position:relative;margin:0 0 12px}
+.gb-search input{width:100%;padding:8px 30px 8px 30px;border-radius:9px;font-size:12.5px;
+  font-family:inherit;color:var(--cp-text);background:var(--cp-surface-soft);
+  border:1px solid var(--cp-border);outline:none;transition:border-color .15s}
+.gb-search input:focus{border-color:var(--cp-accent)}
+.gb-search .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;
+  color:var(--cp-text-soft);pointer-events:none}
+.gb-search .sx{position:absolute;right:7px;top:50%;transform:translateY(-50%);cursor:pointer;
+  font-size:13px;color:var(--cp-text-soft);display:none;background:none;border:none;padding:2px}
+.gb-search.has .sx{display:block}
+.gb-sresult{margin:-6px 0 10px;max-height:320px;overflow-y:auto;display:none;
+  background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:10px}
+.gb-sresult.on{display:block}
+.gb-sresult .rr{display:block;padding:8px 11px;border-bottom:1px solid var(--cp-border);
+  text-decoration:none;color:var(--cp-text);font-size:12px;line-height:1.5}
+.gb-sresult .rr:last-child{border-bottom:none}
+.gb-sresult .rr:hover{background:var(--cp-accent-soft)}
+.gb-sresult .rr .pg{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;color:var(--cp-accent);margin-bottom:2px}
+.gb-sresult .rr mark{background:var(--cp-highlight);color:inherit;border-radius:3px;padding:0 2px}
+.gb-sempty{padding:12px;font-size:11.5px;color:var(--cp-text-soft);text-align:center}
+.gb-hit{background:var(--cp-highlight);border-radius:3px;padding:0 2px}
+
+/* ===== collapsible detail tables (from v3) ===== */
+details.ltwrap{margin:12px 0 2px}
+details.ltwrap>summary{list-style:none;cursor:pointer;position:relative;padding:6px 18px 6px 0;
+  font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--cp-text-soft);
+  border-bottom:1px solid var(--cp-border)}
+details.ltwrap>summary::-webkit-details-marker{display:none}
+details.ltwrap>summary::after{content:"▾";position:absolute;right:2px;top:50%;transform:translateY(-50%);
+  font-size:10px;transition:transform .15s}
+details.ltwrap[open]>summary::after{transform:translateY(-50%) rotate(180deg)}
+details.ltwrap>summary:hover{color:var(--cp-text)}
+.lt{width:100%;border-collapse:collapse;margin:0;font-size:11.5px}
+.lt thead{display:none}
+.lt tbody td{border-bottom:1px solid var(--cp-border);padding:7px 9px;vertical-align:top;
+  color:var(--cp-text-muted);line-height:1.5}
+.lt tbody tr:last-child td{border-bottom:none}
+.lt tbody tr:nth-child(even){background:var(--cp-surface-soft)}
+.lt td.cat{font-weight:800;color:var(--cp-text);white-space:nowrap;width:1%}
+.lt .subnote{display:block;margin-top:4px;font-size:9.5px;font-weight:400;color:var(--cp-text-soft);line-height:1.45}
+.lt .use-badge{display:inline-block;font-size:9px;font-weight:800;border-radius:5px;padding:2px 6px;margin-top:3px;
+  white-space:nowrap;color:var(--cp-text-soft);background:var(--cp-surface-soft);border:1px solid var(--cp-border)}
+.lt .catlink{display:inline-block;margin-top:3px;font-size:9.5px;font-weight:700;color:var(--cp-link);text-decoration:none}
+.lt .catlink:hover{text-decoration:underline}
+.lt .hilite{color:var(--cp-danger);background:rgba(196,49,75,.10);border-radius:4px;padding:0 3px}
+.lt .prev-tag{font-size:8.5px;font-weight:800;color:var(--cp-text-soft);background:var(--cp-surface-soft);
+  border:1px solid var(--cp-border);border-radius:5px;padding:1px 5px;margin-left:4px}
+.lt .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px}
+</style>
+<body><div class="gb-layout"><aside class="gb-side"><div class="gb-side-inner">
+    <div class="gb-brand"><div class="gb-logo">A365</div><div class="gb-btxt">Agent 365 가이드북</div></div>
+    <div class="gb-bsub">에이전트를 관찰·관리·보호하는 컨트롤 플레인</div>
+    <div class="gb-glabel">시작</div>
+    <nav class="gb-nav">
+      <a href="index.html" class=""><span class="ic">🏠</span><span class="lb">홈<small>Agent 365 개요</small></span></a>
+      <div class="gb-glabel">심화 문서</div>
+      <a href="coverage.html" class="on"><span class="ic">🗺️</span><span class="lb">① 유형별 커버리지 지도<small>4대 유형 · 단계별 라이선스</small></span></a>
+      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② Entra · 신원 · 접근 통제<small>Agent ID · 권한 · 로그 · 차단</small></span></a>
+      <a href="data-security.html" class=""><span class="ic">🗄️</span><span class="lb">③ Purview · 데이터 보안 · 감사<small>DSPM · 감사 · 프롬프트 본문 · DLP</small></span></a>
+      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">④ Defender · 런타임 위협 탐지<small>4계층 탐지 · 실시간 보호 · 헌팅</small></span></a>
+      <a href="shadow-ai.html" class=""><span class="ic">👁️</span><span class="lb">⑤ Shadow AI · 미승인 AI 통제<small>발견 · 위험 평가 · 내용 검사 · 차단</small></span></a>
+      <a href="governance.html" class=""><span class="ic">🏛️</span><span class="lb">⑥ 거버넌스 프레임워크<small>AgentOps 컨트롤 플레인</small></span></a>
+    </nav>
+    <div class="gb-sfoot">공식 근거
+      <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview/" target="_blank" rel="noopener">MS Learn — Agent 365 ↗</a>
+    </div>
+    <button class="gb-themetoggle" id="themeToggle" type="button" aria-label="테마 전환">
+      <span class="ti" id="themeIcon">🌙</span><span id="themeLabel">다크 모드</span>
+    </button>
+  </div></aside><main class="gb-main">
+<div class="wrap">
+
+  <div class="sub-hero"><span class="eb">✦ 심화 문서 ①</span><h1>유형별 커버리지 지도</h1>
+<p>AI 에이전트를 <strong>어디서 실행되는가</strong> 기준으로 네 유형으로 나누고, 각 유형이 <strong>단계별 라이선스에 따라 어디까지 로깅·차단·대응되는지</strong>를 한 장에 정리합니다. 각 단계의 기능명을 누르면 해당 기능을 다루는 심화 문서로 이동합니다.</p></div>
+
+<div class="cvg-legend">
+  <b>기능 색 구분</b>
+  <span class="li"><span class="sw sw-g"></span>발견 · 인벤토리</span>
+  <span class="li"><span class="sw sw-a"></span>로깅 · 규정 준수</span>
+  <span class="li"><span class="sw sw-b"></span>위협 헌팅 · 위험 평가</span>
+  <span class="li"><span class="sw sw-r"></span>차단 · 대응</span>
+  <span class="li" style="margin-left:auto;color:var(--cp-text-soft)">커버리지 칸에 마우스를 올리면 <b>조회 포털과 로그 테이블</b>이 표시됩니다</span>
+</div>
+
+<div class="cvg-grid">
+
+  <!-- ① 네이티브 -->
+  <div class="cvg-card">
+    <span class="kk">Native · Microsoft 플랫폼</span>
+    <h3>네이티브 에이전트</h3>
+    <p class="sub">Copilot Studio · Azure AI Foundry — 신원·감사·원문·tool call·차단이 플랫폼에 <b>기본 통합</b>되어 있으며, 관측 데이터를 별도 계측 없이 전송합니다.</p>
+    <div class="ladder">
+      <div class="tier t1"><span class="num">1</span>
+        <div class="th"><span class="tt">신원 · 인벤토리 (플랫폼 내장)</span><span class="lp">Copilot Studio / Foundry</span></div>
+        <div class="td">
+          <span class="li"><b>Copilot Studio</b>: <a class="dl" href="identity-risk.html#axes">Entra Agent ID</a> 자동 발급 · 감사 기본 ON · Monitor 분석(360일)</span>
+          <span class="li"><b>Foundry</b>: tracing/observability → App Insights(입력·출력·tool call·토큰, <b>opt-in</b>)</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Copilot Studio &gt; Monitor</span> · <span class="pin">Entra 관리센터 &gt; Agents</span> · <span class="pin">Azure AI Foundry 포털 &gt; Observability</span> · <span class="pin">Azure Monitor</span></span>
+        </div>
+      </div>
+      <div class="tier t2"><span class="num">2</span>
+        <div class="th"><span class="tt">프롬프트·응답 원문 · 내용 규정 준수</span><span class="lp">＋ Purview E5 (+PAYG)</span></div>
+        <div class="td">
+          <span class="li"><a class="dl" href="data-security.html#arch">DSPM</a>으로 프롬프트·응답 원문 — CS=트랜스크립트(28일), Foundry=Enterprise AI apps 수집</span>
+          <span class="li">민감정보(SIT)·파일 참조 + 민감도 라벨 · <a class="dl" href="data-security.html#content">DLP for AI</a> · 커뮤니케이션 규정 준수 · eDiscovery</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Purview 포털 &gt; DSPM · Activity Explorer</span></span>
+        </div>
+      </div>
+      <div class="tier t4"><span class="num">3</span>
+        <div class="th"><span class="tt">사용 · 신원 차단</span><span class="lp">＋ Agent 365 (Entra ID P2)</span></div>
+        <div class="td">
+          <span class="li"><b>사용(관리) 차단</b>: <a class="dl" href="identity-risk.html#block">M365 관리센터 Registry 차단·차단 해제</a> <span style="color:var(--cp-text-soft)">(차단 효과는 제작 도구별로 다름)</span></span>
+          <span class="li"><b>신원 차단</b>: <a class="dl" href="identity-risk.html#block">Conditional Access for Agents</a> + ID Protection <span style="color:var(--cp-text-soft)">(Agent Risk=High→토큰 차단)</span></span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">M365 Admin center &gt; Agents</span> · <span class="pin">Entra 관리센터 &gt; 조건부 액세스</span></span>
+        </div>
+      </div>
+      <div class="tier t3"><span class="num">4</span>
+        <div class="th"><span class="tt">위협 헌팅 · 런타임 차단</span><span class="lp">Agent 365 (Defender)</span></div>
+        <div class="td">
+          <span class="li"><a class="dl" href="runtime-security.html#layers">AgentsInfo 인벤토리·위험 점수·보안 권고</a> · <b>Advanced Hunting</b> KQL 조사</span>
+          <span class="li"><a class="dl" href="runtime-security.html#prevent-detect">런타임 차단</a>: Defender Security for AI 실시간 보호 <span style="color:var(--cp-text-soft)">(도구 호출을 실행 전 평가·차단)</span></span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; Advanced Hunting</span> · <span class="pin"><a class="dl" href="runtime-security.html#prevent-detect">Settings &gt; Security for AI</a></span></span>
+        </div>
+      </div>
+    </div>
+    <div class="dimwrap"><div class="dt">Copilot Studio 로깅 커버리지<span class="dlg">최대 구성 기준 · ✓ 가능 · △ 조건부 · – 미지원</span></div><div class="dimgrid"><div class="dcell cg" data-rec="Entra 관리센터 · Defender AH&#10;Entra 인증 로그 · AgentsInfo"><span class="dl">①식별</span><span class="dp">✓</span></div><div class="dcell cg" data-rec="Purview 감사 · Entra 관리센터&#10;CopilotInteraction · AIInvokeAgent(406)"><span class="dl">②접속·실행</span><span class="dp">✓</span></div><div class="dcell cg" data-rec="Copilot Studio > Monitor&#10;분석 데이터 (최대 360일)"><span class="dl">③사용량</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Purview > DSPM&#10;트랜스크립트 (28일)&#10;※감사 레코드엔 스레드 ID만"><span class="dl">④Prompt원문</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Purview > DSPM&#10;트랜스크립트 (28일)&#10;※감사 레코드엔 스레드 ID만"><span class="dl">⑤Response원문</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Purview 감사&#10;AccessedResources&#10;(Name · SensitivityLabelId)"><span class="dl">⑥파일명·첨부</span><span class="dp">✓</span></div><div class="dcell n" data-rec="해당 레코드 없음"><span class="dl">⑦파일내용</span><span class="dp">–</span></div><div class="dcell ca" data-rec="Purview 감사&#10;AccessedResources · AIInferenceCall(407)"><span class="dl">⑧전달데이터</span><span class="dp">△</span></div><div class="dcell cb" data-rec="Purview 감사 · Defender AH&#10;AIExecuteTool(405) · CloudAppEvents"><span class="dl">⑨Action·Tool</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Purview 포털 > 감사&#10;RecordType 405 · 406 · 407"><span class="dl">⑩Audit</span><span class="dp">✓</span></div></div></div>
+    <div class="dimwrap"><div class="dt">Azure AI Foundry 로깅 커버리지<span class="dlg">최대 구성 기준 · ✓ 가능 · △ 조건부 · – 미지원</span></div><div class="dimgrid"><div class="dcell cg" data-rec="Defender AH · Entra 관리센터&#10;AgentsInfo (AgentId·Name·Platform)&#10;※일부 필드 미채움"><span class="dl">①식별</span><span class="dp">△</span></div><div class="dcell cg" data-rec="Foundry 포털 · Azure Monitor&#10;App Insights (invoke_agent 스팬)"><span class="dl">②접속·실행</span><span class="dp">✓</span></div><div class="dcell cg" data-rec="Azure Monitor (App Insights)&#10;토큰·지연·오류 메트릭"><span class="dl">③사용량</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Azure Monitor (App Insights)&#10;tracing ※opt-in 환경변수 필요"><span class="dl">④Prompt원문</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Azure Monitor (App Insights)&#10;tracing ※opt-in 환경변수 필요"><span class="dl">⑤Response원문</span><span class="dp">✓</span></div><div class="dcell n" data-rec="해당 레코드 없음"><span class="dl">⑥파일명·첨부</span><span class="dp">–</span></div><div class="dcell n" data-rec="해당 레코드 없음"><span class="dl">⑦파일내용</span><span class="dp">–</span></div><div class="dcell ca" data-rec="Azure Monitor · Defender AH&#10;App Insights · CloudAppEvents"><span class="dl">⑧전달데이터</span><span class="dp">✓</span></div><div class="dcell cb" data-rec="Azure Monitor · Defender AH&#10;execute_tool · CloudAppEvents"><span class="dl">⑨Action·Tool</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Purview 포털 > 감사&#10;통합 감사 로그"><span class="dl">⑩Audit</span><span class="dp">✓</span></div></div></div>
+    <div class="csrc"><b>출처</b> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-logging-copilot-studio" target="_blank" rel="noopener">Copilot Studio 로깅 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/audit-log-activities#agent-365-activities" target="_blank" rel="noopener">Agent 365 감사활동 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/observability" target="_blank" rel="noopener">Foundry tracing ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/defender-xdr/security-for-ai/ai-agent-detection-protection" target="_blank" rel="noopener">AH 헌팅 테이블 ↗</a>
+    </div>
+  </div>
+
+  <!-- ② SaaS -->
+  <div class="cvg-card">
+    <span class="kk">Cloud app · SaaS GenAI</span>
+    <h3>SaaS AI 앱 · 에이전트</h3>
+    <p class="sub">ChatGPT 웹 · Gemini Enterprise · Claude.ai 등 <b>웹으로 접근하는 AI 앱과 그 위에서 동작하는 에이전트</b> — MDCA+MDE로 발견·차단, Purview·Entra Suite로 내용을 확보합니다.</p>
+    <div class="ladder">
+      <div class="tier t1"><span class="num">1</span>
+        <div class="th"><span class="tt">발견 (Shadow AI)</span><span class="lp">MDCA + MDE P2</span></div>
+        <div class="td">
+          <span class="li"><a class="dl" href="shadow-ai.html#discover">Cloud Discovery</a>(MDE 로그 기반)로 <b>어떤 GenAI SaaS를 쓰나</b> 발견 · 사용량 · 위험도</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; Cloud apps &gt; Cloud Discovery</span></span>
+        </div>
+      </div>
+      <div class="tier t4"><span class="num">2</span>
+        <div class="th"><span class="tt">차단 · 대응</span><span class="lp">MDCA + MDE P2</span></div>
+        <div class="td">
+          <span class="li">앱을 <b>미승인(Unsanctioned) 태깅</b> → <a class="dl" href="shadow-ai.html#block">MDE Network Protection</a>으로 엔드포인트 접근 차단 <span style="color:var(--cp-text-soft)">(반영 최대 3시간)</span></span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; Cloud app catalog</span></span>
+        </div>
+      </div>
+      <div class="tier t3"><span class="num">3</span>
+        <div class="th"><span class="tt">위협 헌팅 · 위험 평가</span><span class="lp">MDCA + MDE P2</span></div>
+        <div class="td">
+          <span class="li"><a class="dl" href="shadow-ai.html#assess"><b>앱 위험 점수</b></a>(90개 이상 요소)·컴플라이언스 속성 평가 · Cloud Discovery 이상 탐지</span>
+          <span class="li" style="color:var(--cp-text-soft)">범위 주의: <b>CloudAppEvents</b> 헌팅은 App connector·세션 제어 연결 앱만 — ChatGPT 웹 등은 <b>DeviceNetworkEvents</b>·검색 수준 위험 점수로 한정</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; Cloud app catalog · Policies &gt; Shadow IT</span></span>
+        </div>
+      </div>
+      <div class="tier t2"><span class="num">4</span>
+        <div class="th"><span class="tt">내용 로깅 · DLP · 프롬프트 원문</span><span class="lp">＋ Purview (+PAYG) ＋ Entra Suite</span><span class="prev">일부 Preview</span></div>
+        <div class="td">
+          <span class="li"><a class="dl" href="data-security.html#arch">DSPM</a>으로 프롬프트·응답 내용·민감정보(SIT) 로깅</span>
+          <span class="li"><a class="dl" href="shadow-ai.html#inspect">Endpoint DLP</a>가 업로드 파일을 <b>SIT·민감도 라벨 기준 전체 스캔</b>하여 감사·경고·차단 <span style="color:var(--cp-text-soft)">(Edge 기본 · Chrome·Firefox는 Purview 확장 설치 시)</span></span>
+          <span class="li"><a class="dl" href="shadow-ai.html#inspect"><b>GSA + TLS 검사</b></a> — Generative AI Insights가 <b>프롬프트 본문</b> 로깅(이벤트당 최대 65KB) <span class="prev-tag">Preview</span> · <b>Scan with Purview</b>로 브라우저 외 앱·API 경로까지 내용 검사 <span class="prev-tag">Preview</span></span>
+          <span class="li" style="color:var(--cp-text-soft)">Collection policy의 콘텐츠 캡처는 <b>첨부 파일 본문 미포함</b> · GSA 단독으로는 파일명·본문 미기록</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Purview 포털 &gt; DSPM · Activity Explorer</span> · <span class="pin">Entra 관리센터 &gt; GSA</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="dimwrap"><div class="dt">로깅 항목 커버리지<span class="dlg">최대 구성 기준 · ✓ 가능 · △ 조건부 · – 미지원</span></div><div class="dimgrid"><div class="dcell cg" data-rec="Defender 포털 > Cloud Discovery&#10;앱 인벤토리"><span class="dl">①식별</span><span class="dp">✓</span></div><div class="dcell cg" data-rec="Defender 포털 > Cloud Discovery&#10;DeviceNetworkEvents (AH)"><span class="dl">②접속·실행</span><span class="dp">✓</span></div><div class="dcell cg" data-rec="Defender 포털 > Cloud Discovery&#10;트래픽·사용량 통계"><span class="dl">③사용량</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Entra 관리센터 > GSA · Purview 감사&#10;NetworkAccessGenerativeAIInsights&#10;AIAppInteraction"><span class="dl">④Prompt원문</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Entra 관리센터 > GSA · Purview 감사&#10;NetworkAccessGenerativeAIInsights&#10;AIAppInteraction"><span class="dl">⑤Response원문</span><span class="dp">✓</span></div><div class="dcell ca" data-rec="Purview > Activity Explorer&#10;Endpoint DLP 활동&#10;※파일명 필드는 미제공"><span class="dl">⑥파일명·첨부</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Purview > Activity Explorer&#10;Endpoint DLP (SIT 스캔)&#10;네트워크 DLP (Scan with Purview)"><span class="dl">⑦파일내용</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Purview > Activity Explorer&#10;Endpoint DLP 활동 · GSA 트래픽 로그"><span class="dl">⑧전달데이터</span><span class="dp">△</span></div><div class="dcell cb" data-rec="Entra 관리센터 > GSA&#10;Gen AI Insights (원격 MCP 오퍼레이션)"><span class="dl">⑨Action·Tool</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Purview 포털 > 감사&#10;AIAppInteraction (180일 · PAYG)"><span class="dl">⑩Audit</span><span class="dp">✓</span></div></div></div>
+    <details class="ltwrap"><summary>커버 대상 카탈로그 (제품별 지원 범위)</summary>
+          <table class="lt">
+            <thead><tr><th>제품 · 용도</th><th>커버 대상 (대표) · <span style="font-weight:600;color:var(--cp-text-soft);text-transform:none;letter-spacing:0">카탈로그는 계속 확장</span></th></tr></thead>
+            <tbody>
+              <tr><td class="cat">MDCA 카탈로그<br><span class="use-badge b-block">발견·차단</span><br><a class="catlink" href="https://learn.microsoft.com/en-us/defender-cloud-apps/risk-score" target="_blank" rel="noopener">카탈로그 ↗</a></td><td>ChatGPT · Gemini · Claude · Copilot · Perplexity · DeepSeek · Midjourney · Character.AI 등<span class="subnote">Generative AI 카테고리(3.1만+ 앱 중) · 개별 등재는 Defender 포털 확인 · 트래픽/커스텀 태깅으로 임의 도메인도 차단</span></td></tr>
+              <tr><td class="cat">Purview 지원<br>AI 사이트<br><span class="use-badge b-log">내용 로깅</span><br><a class="catlink" href="https://learn.microsoft.com/en-us/purview/ai-microsoft-purview-supported-sites" target="_blank" rel="noopener">지원 목록 ↗</a></td><td>ChatGPT · Gemini · Claude(Anthropic) · Copilot · Perplexity · Character.AI · DeepSeek · Poe · Bing Chat 등 <b>수천 개</b> 도메인<span class="subnote">엔터프라이즈판 전용 도메인(Gemini Enterprise 등)은 Purview 공식 목록에 미등재 — 실제 발견·차단은 MDCA 트래픽/커스텀 태깅으로 처리</span></td></tr>
+            </tbody>
+          </table>
+          </details>
+    <div class="csrc"><b>출처</b> ·
+      <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/mde-integration" target="_blank" rel="noopener">MDCA↔MDE 통합 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/defender-cloud-apps/risk-score" target="_blank" rel="noopener">앱 위험 점수 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/endpoint-dlp-learn-about" target="_blank" rel="noopener">Endpoint DLP ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/entra/global-secure-access/concept-generative-ai-insights" target="_blank" rel="noopener">GSA Gen AI Insights ↗</a>
+    </div>
+  </div>
+
+  <!-- ③ 클라우드 3rd-party -->
+  <div class="cvg-card">
+    <span class="kk">Cloud · 3rd-party platform</span>
+    <h3>클라우드 3rd-party 에이전트</h3>
+    <p class="sub">Amazon Bedrock · Google Vertex AI · Salesforce Agentforce 등 외부 플랫폼 에이전트 — Registry Sync로 가시성을 확보하고, SDK 온보딩 시 완전 통제로 확장됩니다.</p>
+    <div class="ladder">
+      <div class="tier t1"><span class="num">1</span>
+        <div class="th"><span class="tt">Registry Sync (가시성)</span><span class="lp">Agent 365</span></div>
+        <div class="td">
+          <span class="li">자격증명 입력 → <a class="dl" href="identity-risk.html#block">Connected platforms 동기화</a> (벤더 네이티브 REST API) · 에이전트 <b>메타데이터 가시성</b></span>
+          <span class="li" style="color:var(--cp-danger)">신원 거버넌스·런타임 탐지는 ✕</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">M365 Admin center &gt; Agents &gt; Connected platforms</span></span>
+        </div>
+      </div>
+      <div class="tier t4"><span class="num">2</span>
+        <div class="th"><span class="tt">차단 · 대응</span><span class="lp">Agent 365 (Entra P2)</span></div>
+        <div class="td">
+          <span class="li"><b>Registry 조치</b>: 설치·제거 · <b>차단·차단 해제</b> · 삭제 <span style="color:var(--cp-text-soft)">(벤더 커넥터에 delete 권한 요구 — 소스 삭제 전파는 문서 미명시)</span></span>
+          <span class="li">SDK 온보딩 시 <a class="dl" href="identity-risk.html#block">Conditional Access for Agents</a>로 신원(토큰) 차단</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">M365 Admin center &gt; Agents</span> · <span class="pin">Entra 관리센터 &gt; 조건부 액세스</span></span>
+        </div>
+      </div>
+      <div class="tier t3"><span class="num">3</span>
+        <div class="th"><span class="tt">＋ Agent 365 SDK 온보딩 (완전 통제)</span><span class="lp">＋ Agent 365 SDK</span></div>
+        <div class="td">
+          <span class="li">에이전트 코드에 <b>SDK 삽입·재배포</b> → <a class="dl" href="identity-risk.html#block">완전 신원 거버넌스</a>(CA·ID Protection·수명주기)</span>
+          <span class="li"><b>OTel 텔레메트리</b>로 <a class="dl" href="runtime-security.html#layers">런타임 위협 탐지·헌팅</a>까지 확장</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; Advanced Hunting</span> · <span class="pin">Purview 포털</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="dimwrap"><div class="dt">로깅 항목 커버리지<span class="dlg">최대 구성 기준 · ✓ 가능 · △ 조건부 · – 미지원</span></div><div class="dimgrid"><div class="dcell cg" data-rec="M365 관리센터 > Agents · Defender AH&#10;Agent 365 Registry · AgentsInfo"><span class="dl">①식별</span><span class="dp">✓</span></div><div class="dcell cb" data-rec="Defender 포털 > Advanced Hunting&#10;CloudAppEvents (InvokeAgent)"><span class="dl">②접속·실행</span><span class="dp">✓</span></div><div class="dcell cb" data-rec="Defender 포털 > Advanced Hunting&#10;CloudAppEvents ※SDK 계측 시"><span class="dl">③사용량</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Purview · Defender (SDK observability)&#10;gen_ai.input.messages&#10;※Advanced Hunting 미노출"><span class="dl">④Prompt원문</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Purview · Defender (SDK observability)&#10;gen_ai.output.messages&#10;※Advanced Hunting 미노출"><span class="dl">⑤Response원문</span><span class="dp">△</span></div><div class="dcell n" data-rec="해당 레코드 없음"><span class="dl">⑥파일명·첨부</span><span class="dp">–</span></div><div class="dcell n" data-rec="해당 레코드 없음"><span class="dl">⑦파일내용</span><span class="dp">–</span></div><div class="dcell cb" data-rec="Defender 포털 > Advanced Hunting&#10;CloudAppEvents (RawEventData)"><span class="dl">⑧전달데이터</span><span class="dp">△</span></div><div class="dcell cb" data-rec="Defender 포털 > Advanced Hunting&#10;CloudAppEvents&#10;ExecuteToolBySDK · ByGateway"><span class="dl">⑨Action·Tool</span><span class="dp">✓</span></div><div class="dcell cb" data-rec="SDK observability (OTel 스팬)&#10;※Purview 통합 감사 미연동"><span class="dl">⑩Audit</span><span class="dp">✓</span></div></div></div>
+    <details class="ltwrap"><summary>지원 플랫폼 · 입력 자격증명</summary>
+          <table class="lt">
+            <thead><tr><th>지원 플랫폼</th><th>입력 자격증명(예)</th></tr></thead>
+            <tbody>
+              <tr><td class="cat">Google Vertex AI</td><td>서비스 계정 키</td></tr>
+              <tr><td class="cat">AWS Bedrock</td><td>Access key ID · Secret</td></tr>
+              <tr><td class="cat">Salesforce Agentforce</td><td>OAuth2 Client Credentials</td></tr>
+              <tr><td class="cat">Databricks Genie</td><td>Service Principal</td></tr>
+              <tr><td class="cat">Anthropic Claude</td><td>워크스페이스 API 키 <span class="prev-tag">Preview</span></td></tr>
+              <tr><td class="cat">Oracle GenAI Agents</td><td>OCI API 키</td></tr>
+            </tbody>
+          </table>
+          </details>
+    <div class="csrc"><b>출처</b> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/admin/connected-platforms" target="_blank" rel="noopener">Connected platforms ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/developer/observability-concepts" target="_blank" rel="noopener">SDK 관측성 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/developer/observability-attribute-reference" target="_blank" rel="noopener">속성 참조(AH 미노출) ↗</a>
+    </div>
+  </div>
+
+  <!-- ④ 로컬 -->
+  <div class="cvg-card">
+    <span class="kk">Endpoint · Local agent</span>
+    <h3>디바이스에서 동작하는 로컬 AI 에이전트</h3>
+    <p class="sub">Claude Code · GitHub Copilot CLI · Cursor 등 엔드포인트에서 실행되는 에이전트 — MDE 기반 발견 · 런타임 보호 · 준비태세 관리를 제공합니다.</p>
+    <div class="ladder">
+      <div class="tier t1"><span class="num">1</span>
+        <div class="th"><span class="tt">발견 · 인벤토리</span><span class="lp">MDE P2</span></div>
+        <div class="td">
+          <span class="li"><b>발견</b>: CLI·Desktop·IDE·VS Code 계열 + MCP 서버 구성 자동 발견 · 인벤토리·구성 가시성</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; Assets</span> (또는 Advanced Hunting <b>AgentsInfo</b>)</span>
+        </div>
+      </div>
+      <div class="tier t4"><span class="num">2</span>
+        <div class="th"><span class="tt">차단 · 대응 (런타임 보호)</span><span class="lp">MDE P2 + Intune</span><span class="prev">런타임 Preview</span></div>
+        <div class="td">
+          <span class="li"><b>MDE 런타임 보호</b>: 프롬프트 인젝션·위험한 도구 호출을 엔드포인트에서 탐지(Audit)·<b>차단(Block 모드)</b></span>
+          <span class="li"><b>Intune</b>을 통한 <b>Sandbox 구성</b> 가능 <span style="color:var(--cp-text-soft)">(아웃바운드 통신 통제 포함)</span></span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; 알림·디바이스 타임라인</span> · <span class="pin">Intune 관리센터</span></span>
+        </div>
+      </div>
+      <div class="tier t3"><span class="num">3</span>
+        <div class="th"><span class="tt">위험 점수 · 보안 권고 · 위협 헌팅</span><span class="lp">＋ Agent 365 (또는 E7)</span></div>
+        <div class="td">
+          <span class="li">발견된 로컬 에이전트에 <b>위험 지표·준비태세(Posture) 관리·보안 권고</b> 부여</span>
+          <span class="li"><a class="dl" href="runtime-security.html#layers">Advanced Hunting</a> — 에이전트 관측성 로그 KQL 헌팅·조사</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Defender 포털 &gt; Advanced Hunting</span></span>
+        </div>
+      </div>
+      <div class="tier t2"><span class="num">4</span>
+        <div class="th"><span class="tt">프롬프트 원문 · 내용 검사 (GSA 경유)</span><span class="lp">＋ Entra Suite ＋ Purview (+PAYG)</span><span class="prev">Preview</span></div>
+        <div class="td">
+          <span class="li"><b>GSA 클라이언트 + TLS 검사</b>로 트래픽 인스펙션 → <b>Generative AI Insights</b>가 MCP/AI 트래픽의 프롬프트·응답 전문 로깅(최대 65KB)</span>
+          <span class="li"><b>Scan with Purview</b> — GSA를 SSE 집행 지점으로 <b>파일·텍스트 내용 검사</b>하여 감사·차단</span>
+          <span class="li" style="color:var(--cp-text-soft)">엔드포인트 DLP 없이 브라우저·앱·API 트래픽 커버 — 단 GSA 단독은 내용 미검사(Basic=MIME 타입만) · HTTP/1.1 한정 · <b>로컬 MCP 서버는 불가</b>(원격만)</span>
+          <span class="loc"><b>확인 위치</b> — <span class="pin">Entra 관리센터 &gt; GSA &gt; Gen AI Insights · 콘텐츠 정책</span> · <span class="pin">Purview 포털 &gt; Activity Explorer</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="dimwrap"><div class="dt">로깅 항목 커버리지<span class="dlg">최대 구성 기준 · ✓ 가능 · △ 조건부 · – 미지원</span></div><div class="dimgrid"><div class="dcell cg" data-rec="Defender 포털 > Assets · AH&#10;MDE 로컬 에이전트 발견 · AgentsInfo"><span class="dl">①식별</span><span class="dp">✓</span></div><div class="dcell cg" data-rec="Defender 포털 > Advanced Hunting&#10;DeviceNetworkEvents · AgentsInfo"><span class="dl">②접속·실행</span><span class="dp">✓</span></div><div class="dcell cg" data-rec="Defender 포털 > Advanced Hunting&#10;AgentsInfo (인벤토리)&#10;※종합 사용량 로그 없음"><span class="dl">③사용량</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Entra 관리센터 > GSA (또는 Sentinel)&#10;NetworkAccessGenerativeAIInsights&#10;※TLS 검사 필요"><span class="dl">④Prompt원문</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Entra 관리센터 > GSA (또는 Sentinel)&#10;NetworkAccessGenerativeAIInsights&#10;※TLS 검사 필요"><span class="dl">⑤Response원문</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Purview > Activity Explorer&#10;네트워크 DLP 활동&#10;※파일명 필드는 미제공"><span class="dl">⑥파일명·첨부</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Purview > Activity Explorer&#10;네트워크 DLP (Scan with Purview)"><span class="dl">⑦파일내용</span><span class="dp">△</span></div><div class="dcell ca" data-rec="Entra GSA · Purview&#10;GSA 트래픽 로그 · 네트워크 DLP"><span class="dl">⑧전달데이터</span><span class="dp">△</span></div><div class="dcell cb" data-rec="Entra GSA (원격 MCP만)&#10;CloudAppEvents ※SDK 계측 시"><span class="dl">⑨Action·Tool</span><span class="dp">△</span></div><div class="dcell cb" data-rec="Defender 포털 > Advanced Hunting&#10;AlertInfo · AlertEvidence · AgentsInfo"><span class="dl">⑩Audit</span><span class="dp">△</span></div></div></div>
+    <details class="ltwrap"><summary>발견되는 로컬 에이전트 목록</summary>
+          <table class="lt">
+            <thead><tr><th>구분</th><th>에이전트 <span style="font-weight:700;color:var(--cp-danger);text-transform:none;letter-spacing:0">· 빨강 = 런타임 보호</span></th></tr></thead>
+            <tbody>
+              <tr><td class="cat">CLI</td><td><b class="hilite">Claude Code</b> · <b class="hilite">Codex CLI</b> · <b class="hilite">GitHub Copilot CLI</b> · Gemini CLI · Junie CLI · Kiro CLI · OpenCode · Warp · Antigravity CLI</td></tr>
+              <tr><td class="cat">Desktop</td><td><b class="hilite">GitHub Copilot app</b> · ChatGPT · Claude · Codex · Goose · Hermes Agent · Ollama · Perplexity · Poe</td></tr>
+              <tr><td class="cat">IDE</td><td>Cursor · Devin (Windsurf) · Kiro IDE · Antigravity IDE</td></tr>
+              <tr><td class="cat">VS Code 확장</td><td>Claude Code · Cline · Codex · Gemini Code Assist · GitHub Copilot · Roo Code</td></tr>
+              <tr><td class="cat">Claw 계열</td><td>OpenClaw · Clawpilot · QClaw · Claw/Nanobot</td></tr>
+            </tbody>
+          </table>
+          </details>
+    <div class="csrc"><b>출처</b> ·
+      <a href="https://learn.microsoft.com/en-us/defender-endpoint/discover-local-ai-agents" target="_blank" rel="noopener">로컬 에이전트 발견 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/defender-endpoint/ai-agent-runtime-protection-overview" target="_blank" rel="noopener">런타임 보호 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/dlp-network-data-security-learn" target="_blank" rel="noopener">네트워크 데이터 보안 ↗</a> ·
+      <a href="https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-network-content-filtering" target="_blank" rel="noopener">GSA 콘텐츠 정책 ↗</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="fnote">
+  <b>보존기간</b> — Defender Advanced Hunting 전 테이블 <b>30일</b>(초과 시 Sentinel 온보딩 또는 Streaming API) · 알림·인시던트(포털) 180일 ·
+  Purview 통합 감사 <b>180일</b>(Audit Premium은 보존 정책으로 최대 10년, 단 서비스 주체(에이전트) 활동은 <b>비-사용자 엔터티로 분류되어 고정 1년</b>이며 사용자 지정 보존 정책이 적용되지 않음) ·
+  Entra 사인인·감사 로그 <b>30일</b>(Risky sign-ins는 P2 기준 90일) · Microsoft Graph 활동 로그는 <b>기본 보존 없음</b>(진단 설정 필수).
+</div>
+</div>
+</main></div><script>
+(()=>{
+  const btn=document.getElementById("themeToggle");
+  if(!btn) return;
+  const icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");
+  function sync(){const dark=document.documentElement.getAttribute("data-theme")==="dark";
+    icon.textContent=dark?"☀️":"🌙";label.textContent=dark?"라이트 모드":"다크 모드";}
+  sync();
+  btn.addEventListener("click",()=>{
+    const next=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+    document.documentElement.setAttribute("data-theme",next);
+    localStorage.setItem("gbTheme",next);sync();
+  });
+})();
+</script>
+<script>
+(function(){
+  // ---------- sidebar collapse ----------
+  var side=document.querySelector('.gb-side');
+  if(side){
+    var w=side.getBoundingClientRect().width;
+    if(w) document.documentElement.style.setProperty('--gb-sidew', w+'px');
+  }
+  var btn=document.createElement('button');
+  btn.className='gb-sidetoggle'; btn.type='button';
+  btn.setAttribute('aria-label','사이드바 토글');
+  btn.textContent='☰';
+  document.body.appendChild(btn);
+  function apply(c){
+    document.body.classList.toggle('gb-collapsed', c);
+    btn.textContent = c ? '☰' : '✕';
+    try{ localStorage.setItem('gbSideCollapsed', c?'1':'0'); }catch(e){}
+  }
+  apply(localStorage.getItem('gbSideCollapsed')==='1');
+  btn.addEventListener('click',function(){ apply(!document.body.classList.contains('gb-collapsed')); });
+
+  // ---------- search ----------
+  var PAGES=[
+    {f:'index.html',       t:'홈'},
+    {f:'coverage.html',    t:'① 커버리지 지도'},
+    {f:'identity-risk.html',t:'② 신원 · 위험'},
+    {f:'data-security.html',t:'③ 데이터 보안'},
+    {f:'runtime-security.html',t:'④ 런타임 위협 탐지'},
+    {f:'shadow-ai.html',   t:'⑤ Shadow AI'},
+    {f:'governance.html',  t:'⑥ 거버넌스'},
+    ];
+  var nav=document.querySelector('.gb-nav');
+  if(!nav) return;
+  var box=document.createElement('div');
+  box.className='gb-search';
+  box.innerHTML='<span class="si">🔍</span><input type="search" id="gbq" placeholder="문서 검색 (제목·본문)" autocomplete="off"/><button class="sx" type="button" aria-label="지우기">✕</button>';
+  var res=document.createElement('div'); res.className='gb-sresult';
+  nav.parentNode.insertBefore(box, nav);
+  nav.parentNode.insertBefore(res, nav);
+
+  var q=box.querySelector('#gbq'), clr=box.querySelector('.sx');
+  var IDX=null, loading=false;
+  var here=(location.pathname.split('/').pop()||'index.html');
+
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function buildFromDoc(doc, page){
+    var out=[];
+    doc.querySelectorAll('h1,h2,h3,.tier .tt,.cvg-card h3,.axis-t2').forEach(function(el){
+      var txt=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(!txt||txt.length<2) return;
+      var anchor='';
+      var sec=el.closest('[id]');
+      if(sec&&sec.id) anchor='#'+sec.id;
+      out.push({p:page.t,f:page.f,a:anchor,h:txt,b:''});
+    });
+    doc.querySelectorAll('p,.td .li,.sub,.axis-lead,.fnote').forEach(function(el){
+      var txt=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(txt.length<12) return;
+      var sec=el.closest('[id]'); var anchor=(sec&&sec.id)?('#'+sec.id):'';
+      out.push({p:page.t,f:page.f,a:anchor,h:'',b:txt.slice(0,220)});
+    });
+    return out;
+  }
+
+  function ensureIndex(cb){
+    if(IDX){cb();return;}
+    if(loading) return;
+    loading=true;
+    IDX=[];
+    var left=PAGES.length;
+    PAGES.forEach(function(pg){
+      if(pg.f===here){
+        IDX=IDX.concat(buildFromDoc(document,pg));
+        if(--left===0){loading=false;cb();}
+        return;
+      }
+      fetch(pg.f).then(function(r){return r.ok?r.text():'';}).then(function(html){
+        if(html){
+          var d=new DOMParser().parseFromString(html,'text/html');
+          IDX=IDX.concat(buildFromDoc(d,pg));
+        }
+      }).catch(function(){}).finally(function(){
+        if(--left===0){loading=false;cb();}
+      });
+    });
+  }
+
+  function render(term){
+    var t=term.trim().toLowerCase();
+    if(!t){res.classList.remove('on');res.innerHTML='';box.classList.remove('has');return;}
+    box.classList.add('has');
+    var hits=[];
+    for(var i=0;i<IDX.length && hits.length<40;i++){
+      var it=IDX[i];
+      var hay=((it.h||'')+' '+(it.b||'')).toLowerCase();
+      if(hay.indexOf(t)>=0) hits.push(it);
+    }
+    hits.sort(function(a,b){ return (b.h?1:0)-(a.h?1:0); });
+    if(!hits.length){res.innerHTML='<div class="gb-sempty">검색 결과가 없습니다</div>';res.classList.add('on');return;}
+    var seen={},html='';
+    hits.forEach(function(it){
+      var body=it.h||it.b;
+      var key=it.f+'|'+body.slice(0,50);
+      if(seen[key])return; seen[key]=1;
+      var idx=body.toLowerCase().indexOf(t);
+      var s=Math.max(0,idx-40), snip=(s>0?'…':'')+body.slice(s,s+140);
+      var re=new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+      html+='<a class="rr" href="'+it.f+it.a+'"><span class="pg">'+esc(it.p)+'</span>'+
+            esc(snip).replace(re,'<mark>$1</mark>')+'</a>';
+    });
+    res.innerHTML=html; res.classList.add('on');
+  }
+
+  var tmr;
+  q.addEventListener('input',function(){
+    clearTimeout(tmr);
+    var v=q.value;
+    tmr=setTimeout(function(){ ensureIndex(function(){ render(v); }); },140);
+  });
+  q.addEventListener('focus',function(){ ensureIndex(function(){}); });
+  clr.addEventListener('click',function(){ q.value='';render('');q.focus(); });
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();
+      if(document.body.classList.contains('gb-collapsed')) apply(false);
+      q.focus();q.select();}
+    if(e.key==='Escape'&&document.activeElement===q){q.value='';render('');q.blur();}
+  });
+})();
+</script>
+</body></html>

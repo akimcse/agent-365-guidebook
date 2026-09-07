@@ -134,6 +134,42 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,"Segoe UI","Malgu
 .faq .fa ul{margin:8px 0 0 18px}
 .faq .fa li{margin:4px 0}
 @media (max-width:900px){.hm{padding:26px 18px 60px}.fgrid,.admin,.quotes,.reslist,.roles,.e7 ul{grid-template-columns:1fr}.hero h1{font-size:1.85rem}}
+
+/* ===== sidebar collapse + search (injected) ===== */
+.gb-side{transition:width .18s ease, transform .18s ease}
+body.gb-collapsed .gb-layout{grid-template-columns:0 minmax(0,1fr)}
+body.gb-collapsed .gb-side{width:0;transform:translateX(-100%);overflow:hidden;border-right:none}
+.gb-sidetoggle{position:fixed;top:14px;left:14px;z-index:120;width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;
+  background:var(--cp-surface);color:var(--cp-text-muted);border:1px solid var(--cp-border);
+  box-shadow:0 4px 14px rgba(20,18,40,.10);transition:left .18s ease,background .15s}
+.gb-sidetoggle:hover{background:var(--cp-surface-soft);color:var(--cp-text)}
+body:not(.gb-collapsed) .gb-sidetoggle{left:calc(var(--gb-sidew, 260px) - 48px)}
+@media (max-width:1100px){ body:not(.gb-collapsed) .gb-sidetoggle{left:14px} }
+
+/* search */
+.gb-search{position:relative;margin:0 0 12px}
+.gb-search input{width:100%;padding:8px 30px 8px 30px;border-radius:9px;font-size:12.5px;
+  font-family:inherit;color:var(--cp-text);background:var(--cp-surface-soft);
+  border:1px solid var(--cp-border);outline:none;transition:border-color .15s}
+.gb-search input:focus{border-color:var(--cp-accent)}
+.gb-search .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;
+  color:var(--cp-text-soft);pointer-events:none}
+.gb-search .sx{position:absolute;right:7px;top:50%;transform:translateY(-50%);cursor:pointer;
+  font-size:13px;color:var(--cp-text-soft);display:none;background:none;border:none;padding:2px}
+.gb-search.has .sx{display:block}
+.gb-sresult{margin:-6px 0 10px;max-height:320px;overflow-y:auto;display:none;
+  background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:10px}
+.gb-sresult.on{display:block}
+.gb-sresult .rr{display:block;padding:8px 11px;border-bottom:1px solid var(--cp-border);
+  text-decoration:none;color:var(--cp-text);font-size:12px;line-height:1.5}
+.gb-sresult .rr:last-child{border-bottom:none}
+.gb-sresult .rr:hover{background:var(--cp-accent-soft)}
+.gb-sresult .rr .pg{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;color:var(--cp-accent);margin-bottom:2px}
+.gb-sresult .rr mark{background:var(--cp-highlight);color:inherit;border-radius:3px;padding:0 2px}
+.gb-sempty{padding:12px;font-size:11.5px;color:var(--cp-text-soft);text-align:center}
+.gb-hit{background:var(--cp-highlight);border-radius:3px;padding:0 2px}
 </style>
 </head>
 <body><div class="gb-layout"><aside class="gb-side"><div class="gb-side-inner">
@@ -143,13 +179,12 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,"Segoe UI","Malgu
     <nav class="gb-nav">
       <a href="index.html" class="on"><span class="ic">🏠</span><span class="lb">홈<small>Agent 365 개요</small></span></a>
       <div class="gb-glabel">심화 문서</div>
-      <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
-      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
-      <a href="data-security.html" class=""><span class="ic">🗄️</span><span class="lb">③ 데이터 보안 · Purview<small>DSPM · 라벨 · DLP</small></span></a>
-      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">④ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
-      <a href="governance.html" class=""><span class="ic">🏛️</span><span class="lb">⑤ 거버넌스 프레임워크<small>AgentOps 컨트롤 플레인</small></span></a>
-      <div class="gb-glabel">부록</div>
-      <a href="demo-scenarios.html" class=""><span class="ic">🧪</span><span class="lb">데모 시나리오<small>계층별 탐지 검증</small></span></a>
+      <a href="coverage.html" class=""><span class="ic">🗺️</span><span class="lb">① 유형별 커버리지 지도<small>4대 유형 · 단계별 라이선스</small></span></a>
+      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② Entra · 신원 · 접근 통제<small>Agent ID · 권한 · 로그 · 차단</small></span></a>
+      <a href="data-security.html" class=""><span class="ic">🗄️</span><span class="lb">③ Purview · 데이터 보안 · 감사<small>DSPM · 감사 · 프롬프트 본문 · DLP</small></span></a>
+      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">④ Defender · 런타임 위협 탐지<small>4계층 탐지 · 실시간 보호 · 헌팅</small></span></a>
+      <a href="shadow-ai.html" class=""><span class="ic">👁️</span><span class="lb">⑤ Shadow AI · 미승인 AI 통제<small>발견 · 위험 평가 · 내용 검사 · 차단</small></span></a>
+      <a href="governance.html" class=""><span class="ic">🏛️</span><span class="lb">⑥ 거버넌스 프레임워크<small>AgentOps 컨트롤 플레인</small></span></a>
     </nav>
     <div class="gb-sfoot">공식 근거
       <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
@@ -236,4 +271,135 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,"Segoe UI","Malgu
     localStorage.setItem("gbTheme",next);sync();
   });
 })();
-</script></body></html>
+</script>
+<script>
+(function(){
+  // ---------- sidebar collapse ----------
+  var side=document.querySelector('.gb-side');
+  if(side){
+    var w=side.getBoundingClientRect().width;
+    if(w) document.documentElement.style.setProperty('--gb-sidew', w+'px');
+  }
+  var btn=document.createElement('button');
+  btn.className='gb-sidetoggle'; btn.type='button';
+  btn.setAttribute('aria-label','사이드바 토글');
+  btn.textContent='☰';
+  document.body.appendChild(btn);
+  function apply(c){
+    document.body.classList.toggle('gb-collapsed', c);
+    btn.textContent = c ? '☰' : '✕';
+    try{ localStorage.setItem('gbSideCollapsed', c?'1':'0'); }catch(e){}
+  }
+  apply(localStorage.getItem('gbSideCollapsed')==='1');
+  btn.addEventListener('click',function(){ apply(!document.body.classList.contains('gb-collapsed')); });
+
+  // ---------- search ----------
+  var PAGES=[
+    {f:'index.html',       t:'홈'},
+    {f:'coverage.html',    t:'① 커버리지 지도'},
+    {f:'identity-risk.html',t:'② 신원 · 위험'},
+    {f:'data-security.html',t:'③ 데이터 보안'},
+    {f:'runtime-security.html',t:'④ 런타임 위협 탐지'},
+    {f:'shadow-ai.html',   t:'⑤ Shadow AI'},
+    {f:'governance.html',  t:'⑥ 거버넌스'},
+    ];
+  var nav=document.querySelector('.gb-nav');
+  if(!nav) return;
+  var box=document.createElement('div');
+  box.className='gb-search';
+  box.innerHTML='<span class="si">🔍</span><input type="search" id="gbq" placeholder="문서 검색 (제목·본문)" autocomplete="off"/><button class="sx" type="button" aria-label="지우기">✕</button>';
+  var res=document.createElement('div'); res.className='gb-sresult';
+  nav.parentNode.insertBefore(box, nav);
+  nav.parentNode.insertBefore(res, nav);
+
+  var q=box.querySelector('#gbq'), clr=box.querySelector('.sx');
+  var IDX=null, loading=false;
+  var here=(location.pathname.split('/').pop()||'index.html');
+
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function buildFromDoc(doc, page){
+    var out=[];
+    doc.querySelectorAll('h1,h2,h3,.tier .tt,.cvg-card h3,.axis-t2').forEach(function(el){
+      var txt=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(!txt||txt.length<2) return;
+      var anchor='';
+      var sec=el.closest('[id]');
+      if(sec&&sec.id) anchor='#'+sec.id;
+      out.push({p:page.t,f:page.f,a:anchor,h:txt,b:''});
+    });
+    doc.querySelectorAll('p,.td .li,.sub,.axis-lead,.fnote').forEach(function(el){
+      var txt=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(txt.length<12) return;
+      var sec=el.closest('[id]'); var anchor=(sec&&sec.id)?('#'+sec.id):'';
+      out.push({p:page.t,f:page.f,a:anchor,h:'',b:txt.slice(0,220)});
+    });
+    return out;
+  }
+
+  function ensureIndex(cb){
+    if(IDX){cb();return;}
+    if(loading) return;
+    loading=true;
+    IDX=[];
+    var left=PAGES.length;
+    PAGES.forEach(function(pg){
+      if(pg.f===here){
+        IDX=IDX.concat(buildFromDoc(document,pg));
+        if(--left===0){loading=false;cb();}
+        return;
+      }
+      fetch(pg.f).then(function(r){return r.ok?r.text():'';}).then(function(html){
+        if(html){
+          var d=new DOMParser().parseFromString(html,'text/html');
+          IDX=IDX.concat(buildFromDoc(d,pg));
+        }
+      }).catch(function(){}).finally(function(){
+        if(--left===0){loading=false;cb();}
+      });
+    });
+  }
+
+  function render(term){
+    var t=term.trim().toLowerCase();
+    if(!t){res.classList.remove('on');res.innerHTML='';box.classList.remove('has');return;}
+    box.classList.add('has');
+    var hits=[];
+    for(var i=0;i<IDX.length && hits.length<40;i++){
+      var it=IDX[i];
+      var hay=((it.h||'')+' '+(it.b||'')).toLowerCase();
+      if(hay.indexOf(t)>=0) hits.push(it);
+    }
+    hits.sort(function(a,b){ return (b.h?1:0)-(a.h?1:0); });
+    if(!hits.length){res.innerHTML='<div class="gb-sempty">검색 결과가 없습니다</div>';res.classList.add('on');return;}
+    var seen={},html='';
+    hits.forEach(function(it){
+      var body=it.h||it.b;
+      var key=it.f+'|'+body.slice(0,50);
+      if(seen[key])return; seen[key]=1;
+      var idx=body.toLowerCase().indexOf(t);
+      var s=Math.max(0,idx-40), snip=(s>0?'…':'')+body.slice(s,s+140);
+      var re=new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+      html+='<a class="rr" href="'+it.f+it.a+'"><span class="pg">'+esc(it.p)+'</span>'+
+            esc(snip).replace(re,'<mark>$1</mark>')+'</a>';
+    });
+    res.innerHTML=html; res.classList.add('on');
+  }
+
+  var tmr;
+  q.addEventListener('input',function(){
+    clearTimeout(tmr);
+    var v=q.value;
+    tmr=setTimeout(function(){ ensureIndex(function(){ render(v); }); },140);
+  });
+  q.addEventListener('focus',function(){ ensureIndex(function(){}); });
+  clr.addEventListener('click',function(){ q.value='';render('');q.focus(); });
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();
+      if(document.body.classList.contains('gb-collapsed')) apply(false);
+      q.focus();q.select();}
+    if(e.key==='Escape'&&document.activeElement===q){q.value='';render('');q.blur();}
+  });
+})();
+</script>
+</body></html>

@@ -4,7 +4,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-<title>③ 데이터 보안 · Purview — Agent 365 가이드북</title>
+<title>③ Purview · 데이터 보안 · 감사 — Agent 365 가이드북</title>
 <script>(()=>{const p=new URLSearchParams(location.search).get("scoutTheme");const s=localStorage.getItem("gbTheme");const t=p||s||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();</script>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <style>
@@ -14,7 +14,7 @@
   --cp-border:#e4e2ea; --cp-border-strong:#a9a7b4;
   --cp-text:#1b1a21; --cp-text-muted:#4a4858; --cp-text-soft:#6b6980;
   --cp-accent:#5b5fc7; --cp-accent-hover:#4a4eb5; --cp-accent-soft:rgba(91,95,199,0.10); --cp-accent-fg:#ffffff;
-  --cp-success:#0f7b3f; --cp-danger:#c4314b; --cp-warning:#b8860b; --cp-link:#0f6cbd;
+  --cp-purple:#7c3aed; --cp-success:#0f7b3f; --cp-danger:#c4314b; --cp-warning:#b8860b; --cp-link:#0f6cbd;
   --cp-highlight:rgba(91,95,199,0.12);
   --cp-grad:linear-gradient(120deg,#ece9fb 0%,#e8f1fb 52%,#f6fbff 100%);
   --cp-grad-accent:linear-gradient(120deg,#5b5fc7 0%,#0f6cbd 100%);
@@ -26,7 +26,7 @@ html[data-theme="dark"]{
   --cp-border:#3a3947; --cp-border-strong:#57556a;
   --cp-text:#e7e6ee; --cp-text-muted:#a9a7ba; --cp-text-soft:#8f8da3;
   --cp-accent:#a6a9f2; --cp-accent-hover:#b8bbf6; --cp-accent-soft:rgba(166,169,242,0.14); --cp-accent-fg:#1a1a22;
-  --cp-success:#4ade80; --cp-danger:#f87171; --cp-warning:#fbbf24; --cp-link:#6cb2f0;
+  --cp-purple:#c4a6ff; --cp-success:#4ade80; --cp-danger:#f87171; --cp-warning:#fbbf24; --cp-link:#6cb2f0;
   --cp-highlight:rgba(166,169,242,0.16);
   --cp-grad:linear-gradient(120deg,#2a2740 0%,#22283c 52%,#20232e 100%);
   --cp-grad-accent:linear-gradient(120deg,#7c80e0 0%,#3f8ed0 100%);
@@ -199,6 +199,74 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
 .bcard { border-radius:12px; border:1px solid var(--cp-border); padding:14px 16px; background:var(--cp-surface); }
 .bcard h4 { font-size:13px; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
 .bcard ul { margin:0 0 0 16px; padding:0; font-size:11.5px; color:var(--cp-text-muted); line-height:1.6; }
+
+.ops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin:12px 0 2px}
+.ops-box{background:transparent;border:1px solid var(--cp-border);border-radius:10px;padding:13px 15px;text-align:left}
+.ops-box h4{font-size:12.5px;font-weight:800;color:var(--cp-text);margin:0 0 7px;letter-spacing:-.01em}
+.ops-box p{font-size:12px;color:var(--cp-text-muted);line-height:1.65;margin:0 0 6px}
+.ops-box .path{display:block;margin-top:6px;font-size:11px;color:var(--cp-text-soft);line-height:1.6;
+  overflow-wrap:anywhere;word-break:break-word}
+.ops-box .path b{color:var(--cp-text-muted);font-weight:800}
+.ops-box .pin{color:var(--cp-text);font-weight:700}
+.dtbl .no{color:var(--cp-danger);font-weight:800}
+.dtbl .yes{color:var(--cp-success);font-weight:800}
+.dtbl .cond{color:var(--cp-warning);font-weight:800}
+.dtbl .mono{font-family:Consolas,"Courier New",monospace;font-size:11px;color:var(--cp-text)}
+.prev-tag{display:inline-block;margin-left:5px;padding:1px 6px;border-radius:5px;font-size:9.5px;font-weight:800;
+  letter-spacing:.02em;background:rgba(184,134,11,.14);color:var(--cp-warning);vertical-align:1px}
+h3.sh{font-size:13.5px;font-weight:800;color:var(--cp-text);margin:0 0 2px;
+  padding-top:14px;border-top:1px solid var(--cp-border)}
+.card{text-align:left}
+/* ===== sidebar collapse + search (injected) ===== */
+.gb-side{transition:width .18s ease, transform .18s ease}
+body.gb-collapsed .gb-layout{grid-template-columns:0 minmax(0,1fr)}
+body.gb-collapsed .gb-side{width:0;transform:translateX(-100%);overflow:hidden;border-right:none}
+.gb-sidetoggle{position:fixed;top:14px;left:14px;z-index:120;width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;
+  background:var(--cp-surface);color:var(--cp-text-muted);border:1px solid var(--cp-border);
+  box-shadow:0 4px 14px rgba(20,18,40,.10);transition:left .18s ease,background .15s}
+.gb-sidetoggle:hover{background:var(--cp-surface-soft);color:var(--cp-text)}
+body:not(.gb-collapsed) .gb-sidetoggle{left:calc(var(--gb-sidew, 260px) - 48px)}
+@media (max-width:1100px){ body:not(.gb-collapsed) .gb-sidetoggle{left:14px} }
+
+/* search */
+.gb-search{position:relative;margin:0 0 12px}
+.gb-search input{width:100%;padding:8px 30px 8px 30px;border-radius:9px;font-size:12.5px;
+  font-family:inherit;color:var(--cp-text);background:var(--cp-surface-soft);
+  border:1px solid var(--cp-border);outline:none;transition:border-color .15s}
+.gb-search input:focus{border-color:var(--cp-accent)}
+.gb-search .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;
+  color:var(--cp-text-soft);pointer-events:none}
+.gb-search .sx{position:absolute;right:7px;top:50%;transform:translateY(-50%);cursor:pointer;
+  font-size:13px;color:var(--cp-text-soft);display:none;background:none;border:none;padding:2px}
+.gb-search.has .sx{display:block}
+.gb-sresult{margin:-6px 0 10px;max-height:320px;overflow-y:auto;display:none;
+  background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:10px}
+.gb-sresult.on{display:block}
+.gb-sresult .rr{display:block;padding:8px 11px;border-bottom:1px solid var(--cp-border);
+  text-decoration:none;color:var(--cp-text);font-size:12px;line-height:1.5}
+.gb-sresult .rr:last-child{border-bottom:none}
+.gb-sresult .rr:hover{background:var(--cp-accent-soft)}
+.gb-sresult .rr .pg{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;color:var(--cp-accent);margin-bottom:2px}
+.gb-sresult .rr mark{background:var(--cp-highlight);color:inherit;border-radius:3px;padding:0 2px}
+.gb-sempty{padding:12px;font-size:11.5px;color:var(--cp-text-soft);text-align:center}
+.gb-hit{background:var(--cp-highlight);border-radius:3px;padding:0 2px}
+
+
+.lic{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;
+  white-space:nowrap;border:1px solid;margin-left:7px;vertical-align:3px}
+.lic.base{background:var(--cp-surface-soft);color:var(--cp-text-muted);border-color:var(--cp-border)}
+.lic.a365{background:rgba(124,58,237,.12);color:var(--cp-purple);border-color:rgba(124,58,237,.34)}
+.lic.addon{background:rgba(184,134,11,.13);color:var(--cp-warning);border-color:rgba(184,134,11,.36)}
+.licleg{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:0 0 16px;padding:9px 14px;
+  border:1px solid var(--cp-border);border-radius:10px;background:var(--cp-surface-soft);
+  font-size:11.5px;color:var(--cp-text-soft)}
+.licleg .lic{margin-left:0}
+.licleg span.t{font-weight:700;color:var(--cp-text-muted)}
+
+.lic.soon{background:transparent;color:var(--cp-purple);border-color:var(--cp-purple);border-style:dashed}
+.lic.row{margin-left:0;margin-top:4px;display:inline-block;font-size:9.5px;padding:1px 7px}
 </style>
 </head>
 <body><div class="gb-layout"><aside class="gb-side"><div class="gb-side-inner">
@@ -208,13 +276,12 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     <nav class="gb-nav">
       <a href="index.html" class=""><span class="ic">🏠</span><span class="lb">홈<small>Agent 365 개요</small></span></a>
       <div class="gb-glabel">심화 문서</div>
-      <a href="taxonomy.html" class=""><span class="ic">🗂️</span><span class="lb">① 에이전트 유형 분류<small>실행위치·역할·제작방식</small></span></a>
-      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② 에이전트 신원 · 위험<small>Entra · Risky Agents</small></span></a>
-      <a href="data-security.html" class="on"><span class="ic">🗄️</span><span class="lb">③ 데이터 보안 · Purview<small>DSPM · 라벨 · DLP</small></span></a>
-      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">④ 런타임 위협 탐지<small>Defender · Copilot Studio</small></span></a>
-      <a href="governance.html" class=""><span class="ic">🏛️</span><span class="lb">⑤ 거버넌스 프레임워크<small>AgentOps 컨트롤 플레인</small></span></a>
-      <div class="gb-glabel">부록</div>
-      <a href="demo-scenarios.html" class=""><span class="ic">🧪</span><span class="lb">데모 시나리오<small>계층별 탐지 검증</small></span></a>
+      <a href="coverage.html" class=""><span class="ic">🗺️</span><span class="lb">① 유형별 커버리지 지도<small>4대 유형 · 단계별 라이선스</small></span></a>
+      <a href="identity-risk.html" class=""><span class="ic">🪪</span><span class="lb">② Entra · 신원 · 접근 통제<small>Agent ID · 권한 · 로그 · 차단</small></span></a>
+      <a href="data-security.html" class="on"><span class="ic">🗄️</span><span class="lb">③ Purview · 데이터 보안 · 감사<small>DSPM · 감사 · 프롬프트 본문 · DLP</small></span></a>
+      <a href="runtime-security.html" class=""><span class="ic">🛡️</span><span class="lb">④ Defender · 런타임 위협 탐지<small>4계층 탐지 · 실시간 보호 · 헌팅</small></span></a>
+      <a href="shadow-ai.html" class=""><span class="ic">👁️</span><span class="lb">⑤ Shadow AI · 미승인 AI 통제<small>발견 · 위험 평가 · 내용 검사 · 차단</small></span></a>
+      <a href="governance.html" class=""><span class="ic">🏛️</span><span class="lb">⑥ 거버넌스 프레임워크<small>AgentOps 컨트롤 플레인</small></span></a>
     </nav>
     <div class="gb-sfoot">공식 근거
       <a href="https://www.microsoft.com/ko-kr/microsoft-agent-365" target="_blank" rel="noopener">Microsoft Agent 365 ↗</a>
@@ -225,12 +292,12 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     </button>
   </div></aside><main class="gb-main">
 <div class="wrap">
-  <div class="sub-hero"><span class="eb">✦ 심화 문서 ③</span><h1>데이터 보안 · Purview</h1><p>에이전트가 다루는 <strong>데이터</strong>를 Microsoft Purview로 어떻게 <strong>분류·보호·감사</strong>하는지 정리합니다. 실제 분류·탐지 엔진(SIT·Trainable Classifier·EDM)과 이를 소비하는 정책(DLP·Communication Compliance·IRM), 이를 집계해 보여주는 DSPM을 계층으로 구분하고, <strong>어디까지가 Purview 고유 기능이고 어디서부터 Agent 365가 필요한지</strong>를 명확히 합니다.</p></div>
-
-  <div class="note" style="border-left-color:var(--cp-accent);margin-bottom:8px;"><b>이 문서를 읽는 핵심 렌즈 — 소유 경계</b><span>Purview 데이터 보안의 대부분은 <b>Purview 고유</b> 기능이며, <b>M365 Copilot</b> 상호작용은 per-user 라이선스로 커버됩니다(<b>이것이 기본값</b>). <b>Copilot Studio(비 Teams 채널)·Foundry·외부 AI</b> 등 非 M365 AI로 확장하려면 <b><span class="own payg">PAYG</span></b> 청구가 필요합니다. <b><span class="own a365">Agent 365</span></b>는 데이터 통제를 새로 추가하지 않고 DSPM <i>AI observability</i> 인벤토리에 에이전트를 <b>표출</b>합니다(런타임 탐지는 문서④ Defender).<br><b style="color:var(--cp-text);">태그 규칙</b> — 기본(Purview·M365)은 태그 없음. 예외만 표시: <span class="own payg">PAYG</span> 非M365 확장 · <span class="own pv">E5</span> 상위 라이선스 · <span class="unv">Preview</span> 미리보기 · <span class="own a365">Agent 365</span> 인벤토리 표출.</span></div>
+  <div class="sub-hero"><span class="eb">✦ 심화 문서 ③</span><h1>Purview · 데이터 보안 · 감사</h1><p>에이전트가 다루는 <strong>데이터</strong>를 Microsoft Purview로 어떻게 <strong>분류·보호·감사</strong>하는지 정리합니다. 실제 분류·탐지 엔진(SIT·Trainable Classifier·EDM)과 이를 소비하는 정책(DLP·Communication Compliance·IRM), 이를 집계해 보여주는 DSPM을 계층으로 구분하고, <strong>어디까지가 Purview 고유 기능이고 어디서부터 Agent 365가 필요한지</strong>를 명확히 합니다.</p></div>
 
   <!-- ================= SECTION 1 : layered flow ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">데이터 보안 아키텍처<span class="axis-extra">분류 엔진을 <b>허브</b>로, 라벨·정책·트리거가 방사형으로 연결 → DSPM 집계 · Audit 포렌식</span></h2></div>
+  <div class="licleg"><span class="t">라이선스 표기</span><span><span class="lic base">제품 기본</span> 해당 제품 라이선스만으로 사용</span><span><span class="lic a365">Agent 365</span> Microsoft Agent 365 필요</span><span><span class="lic soon">시행 예정</span> 문서상 Agent 365 요구이나 아직 미시행</span><span><span class="lic addon">추가</span> 별도 구매·종량제(PAYG) 필요</span></div>
+
+  <div class="axis-head2" id="arch"><span class="axis-num2">SECTION 01</span><h2 class="axis-t2">데이터 보안 아키텍처<span class="lic base">Purview</span></h2></div>
   <div class="card flowcard">
     <svg viewBox="0 0 1180 500" role="img" aria-label="Purview 데이터 보안 hub-and-spoke 아키텍처">
       <defs>
@@ -341,7 +408,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
         <text x="940" y="463">Audit 직접 기록</text>
       </g>
     </svg>
-    <div class="linchpin">🔑 <b>허브-앤-스포크(선형 체인이 아님):</b> <span class="ptag engine">분류 엔진</span> SIT·Trainable Classifier가 <b>허브</b>가 되어 <span class="ptag label">라벨</span>과 <span class="ptag policy">정책</span> <b>양쪽에 병렬로 공급</b>합니다. ⓵ DLP·CC·IRM은 라벨을 거치지 않고 <b>SIT·TC를 직접 조건</b>으로 소비합니다(Teams Chat DLP는 라벨 조건을 아예 못 쓰고 SIT·TC만 사용 — 선형 체인의 반례). ⓶ <b>라벨은 관리자가 정의·게시</b>하며 엔진은 라벨을 "만드는" 게 아니라 <b>자동적용 조건</b>(SIT·TC·EDM·속성·확장자·공유옵션 등)일 뿐이고, 라벨은 정책의 여러 조건 중 <b>하나</b>입니다. ⓷ <b>IRM 위험점수</b>는 라벨뿐 아니라 DLP 알림·HR·Comm Compliance·Defender·Entra 위험으로 트리거되고 priority content <b>5종(라벨은 그중 하나)</b>으로 가점됩니다 — 라벨 없이도 동작. 이 모든 신호가 <span class="ptag plane">DSPM</span>으로 <b>집계</b>되고, <b>Audit·eDiscovery는 정책과 무관하게 상호작용을 직접 기록</b>합니다. DSPM 자체는 분류 엔진이 아닙니다.</div>
+    <div class="linchpin">🔑 <b>허브-앤-스포크(선형 체인이 아님):</b> <span class="ptag engine">분류 엔진</span> SIT·Trainable Classifier가 <b>허브</b>가 되어 <span class="ptag label">라벨</span>과 <span class="ptag policy">정책</span> <b>양쪽에 병렬로 공급</b>합니다. 이 모든 신호가 <span class="ptag plane">DSPM</span>으로 <b>집계</b>되고, <b>Audit·eDiscovery는 정책과 무관하게 상호작용을 직접 기록</b>합니다.</div>
     <div class="src"><b>출처</b>
       <a href="https://learn.microsoft.com/en-us/purview/data-classification-overview">data-classification-overview</a> (분류 3방식) ·
       <a href="https://learn.microsoft.com/en-us/purview/sensitive-information-type-learn-about">sensitive-information-type</a> (SIT 4종) ·
@@ -350,161 +417,7 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
   </div>
 
   <!-- ================= SECTION 2 : building blocks ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">구성 요소 — 엔진 · 라벨 · 정책 · 플레인<span class="axis-extra">역할별로 무엇을 담당하는지</span></h2></div>
-
-  <div class="subh" style="font-size:13px;font-weight:800;margin:2px 0 8px;"><span class="ptag engine">분류 엔진</span> 민감 데이터를 실제로 탐지</div>
-  <div class="cplane">
-    <div class="l3 n1" style="border-top-color:var(--cp-link)">
-      <span class="lnum">Engine</span>
-      <h3>Sensitive Information Types (SITs)</h3>
-      <div class="lsub">패턴 기반 분류자 · 4종</div>
-      <dl>
-        <dt>built-in</dt><dd>MS 사전 제작 300+ 종(SSN·카드번호 등). 편집 불가·복사만</dd>
-        <dt>Named Entity</dt><dd>이름·주소·의료용어 등 <b>PII</b> · credential SIT <span class="own pv">E5</span></dd>
-        <dt>custom</dt><dd>regex·키워드·사전·함수로 직접 정의</dd>
-        <dt>EDM</dt><dd><b>정형 고객 데이터</b>를 실제 DB 값과 정확히 매칭(최대 100M행·해시 업로드)</dd>
-      </dl>
-    </div>
-    <div class="l3 n1" style="border-top-color:var(--cp-link)">
-      <span class="lnum">Engine</span>
-      <h3>Trainable Classifiers</h3>
-      <div class="lsub">ML 기반 콘텐츠 유형 분류</div>
-      <dl>
-        <dt>사전학습</dt><dd>Financial·Legal·HR·자금세탁 등 "Ready to use"</dd>
-        <dt>커스텀</dt><dd>시드 데이터로 학습(영어만 지원)</dd>
-        <dt>제약</dt><dd><b>암호화 항목은 분류 불가</b></dd>
-        <dt>소비처</dt><dd>Auto-labeling · DLP · Comms Compliance 조건으로 사용</dd>
-      </dl>
-    </div>
-  </div>
-
-  <div class="subh" style="font-size:13px;font-weight:800;margin:18px 0 8px;"><span class="ptag label">라벨링</span> 엔진 결과로 라벨을 적용 &nbsp;·&nbsp; <span class="ptag policy">정책</span> 결과를 소비해 차단·탐지 &nbsp;·&nbsp; <span class="ptag plane">플레인</span> 집계</div>
-  <div class="cplane">
-    <div class="l3 n1" style="border-top-color:var(--cp-success)">
-      <span class="lnum">Labeling</span>
-      <h3>Sensitivity Labels</h3>
-      <div class="lsub">분류 결과를 콘텐츠에 찍는 "스탬프"</div>
-      <dl>
-        <dt>EXTRACT</dt><dd>암호화 콘텐츠를 응답에 포함하려면 VIEW+<b>EXTRACT</b> 필요. 없으면 링크 참조만</dd>
-        <dt>상속</dt><dd>새 콘텐츠 생성 시 소스의 최고 우선순위 라벨 자동 상속</dd>
-        <dt>Auto-label</dt><dd>client-side(Office 앱) + service-side(SharePoint/OneDrive/Exchange 스캔)</dd>
-      </dl>
-    </div>
-    <div class="l3 n1" style="border-top-color:var(--cp-warning)">
-      <span class="lnum">Policy</span>
-      <h3>DLP for Copilot</h3>
-      <div class="lsub">M365 Copilot 위치 · Custom 템플릿 전용</div>
-      <dl>
-        <dt>라벨 차단</dt><dd>라벨 붙은 파일/이메일 처리 제외(링크는 유지) <span class="own pv">GA</span></dd>
-        <dt>SIT 차단</dt><dd>프롬프트 SIT 시 응답 차단 <span class="unv">Preview</span> · 웹 검색 그라운딩 차단 <span class="own pv">GA</span></dd>
-        <dt>외부메일</dt><dd>외부 이메일 그라운딩 제외(인젝션 방지) <span class="unv">Preview</span></dd>
-      </dl>
-    </div>
-    <div class="l3 n1" style="border-top-color:var(--cp-warning)">
-      <span class="lnum">Policy</span>
-      <h3>Communication Compliance</h3>
-      <div class="lsub">부적절·위험 상호작용 탐지 <span class="own payg">非M365=PAYG</span></div>
-      <dl>
-        <dt>탐지 조건</dt><dd>SIT·키워드·Trainable Classifier·Content Safety·<b>Prompt Shields</b></dd>
-        <dt>템플릿</dt><dd>"Detect Microsoft 365 Copilot ... interactions"</dd>
-        <dt>확인</dt><dd>Policies → <b>Pending 탭</b>(프롬프트·응답 별도)</dd>
-      </dl>
-    </div>
-    <div class="l3 n1" style="border-top-color:var(--cp-warning)">
-      <span class="lnum">Policy</span>
-      <h3>Insider Risk Management</h3>
-      <div class="lsub">위험 점수화 → Adaptive Protection</div>
-      <dl>
-        <dt>Risky AI usage</dt><dd>AI 사이트 브라우징·민감정보 프롬프트/응답 탐지, 위험 점수 기여</dd>
-        <dt>Risky Agents <span class="unv">Preview</span></dt><dd>CS·Foundry 에이전트의 위험 프롬프트·민감 응답·외부 공유·기준선 초과 탐지</dd>
-        <dt>기본 적용</dt><dd>Risky Agents 템플릿은 전 조직 기본 적용</dd>
-      </dl>
-    </div>
-    <div class="l3 n1" style="border-top-color:var(--cp-accent)">
-      <span class="lnum">Plane</span>
-      <h3>DSPM for AI</h3>
-      <div class="lsub">집계·가시성 플레인(분류 아님) <span class="own a365">Agent 365 인벤토리 표출</span></div>
-      <dl>
-        <dt>역할</dt><dd>DLP·IRM·라벨·조사 신호를 <b>consolidate</b>해 단일 뷰 제공</dd>
-        <dt>4대 질문</dt><dd>어떤 데이터·어디 저장·누가 접근·어떻게 보호</dd>
-        <dt>AI observability</dt><dd>에이전트별 oversharing·exfiltration·이상 접근 추적(Agent 365 포함)</dd>
-      </dl>
-    </div>
-    <div class="l3 n1" style="border-top-color:var(--cp-text-soft)">
-      <span class="lnum">Forensic</span>
-      <h3>Audit · eDiscovery</h3>
-      <div class="lsub">포렌식 추적 · 법적 보존</div>
-      <dl>
-        <dt>Audit</dt><dd><code>CopilotInteraction</code> · 스키마에 <code>JailbreakDetected</code>·<code>XPIADetected</code>·<code>SensitivityLabelId</code></dd>
-        <dt>eDiscovery</dt><dd>프롬프트·응답이 사용자 <b>Exchange Online mailbox</b>에 저장. <code>IPM.SkypeTeams.Message.Copilot.Studio.*</code>로 검색</dd>
-      </dl>
-    </div>
-  </div>
-  <div class="src" style="margin-top:12px"><b>출처</b>
-    <a href="https://learn.microsoft.com/en-us/purview/sit-learn-about-exact-data-match-based-sits">EDM</a> (정형 매칭) ·
-    <a href="https://learn.microsoft.com/en-us/purview/trainable-classifiers-learn-about">trainable-classifiers</a> (ML 분류) ·
-    <a href="https://learn.microsoft.com/en-us/purview/ai-m365-copilot-considerations">EXTRACT</a> (라벨 게이트) ·
-    <a href="https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about">dlp-copilot</a> (처리 차단) ·
-    <a href="https://learn.microsoft.com/en-us/purview/insider-risk-management-policy-templates">IRM(Risky AI usage·Risky Agents)</a> (위험 점수) ·
-    <a href="https://learn.microsoft.com/en-us/purview/audit-copilot">audit-copilot</a> (감사 스키마) ·
-    <a href="https://learn.microsoft.com/en-us/purview/edisc-search-copilot-data">edisc-search-copilot</a> (mailbox 저장)</div>
-
-  <!-- ================= SECTION 3 : risk-type matrix ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">데이터 위험 유형별 엔진 매핑<span class="axis-extra">위험 유형 → 올바른 Purview 엔진/정책 → Agent 365(에이전트 관점)</span></h2></div>
-  <div class="card">
-    <table class="dtbl">
-      <thead>
-        <tr><th>위험 유형</th><th><span class="ptag engine">분류·탐지 엔진</span></th><th><span class="ptag policy">집행·보호</span></th><th><span class="ptag plane">확인 위치</span></th><th>에이전트 관점</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="k">Oversharing<br><span style="font-weight:400;color:var(--cp-text-soft)">권한 초과</span></td>
-          <td>SITs로 SharePoint 콘텐츠 분류</td>
-          <td>Restricted Content Discovery · 라벨 기반 DLP · auto-labeling</td>
-          <td>DSPM <b>Data Risk Assessments</b>(주간 Top 100)</td>
-          <td>IRM <b>Risky Agents</b> · Defender</td>
-        </tr>
-        <tr>
-          <td class="k">Confidential<br><span style="font-weight:400;color:var(--cp-text-soft)">기밀정보</span></td>
-          <td>SIT·Trainable Classifier</td>
-          <td><b>Sensitivity Labels</b> + <b>DLP</b>(라벨 조건 Copilot 처리 차단)</td>
-          <td>Audit <code>SensitivityLabelId</code> · DSPM</td>
-          <td>기밀 접근·출력 에이전트 이벤트</td>
-        </tr>
-        <tr>
-          <td class="k">PII<br><span style="font-weight:400;color:var(--cp-text-soft)">개인정보</span></td>
-          <td><b>Named Entity SITs</b> + built-in SITs <span class="own pv">E5</span></td>
-          <td>DLP(프롬프트 SIT 차단)</td>
-          <td>DSPM Activity Explorer(SIT)</td>
-          <td>개인정보 Detection Event(에이전트별)</td>
-        </tr>
-        <tr>
-          <td class="k">Customer Data<br><span style="font-weight:400;color:var(--cp-text-soft)">고객정보(정형)</span></td>
-          <td><b>EDM</b>(실제 DB 값 정확 매칭)</td>
-          <td>DLP · auto-labeling(EDM 소비)</td>
-          <td>DSPM · eDiscovery</td>
-          <td>고객정보 Detection Event(에이전트별)</td>
-        </tr>
-        <tr>
-          <td class="k">Data Exfiltration<br><span style="font-weight:400;color:var(--cp-text-soft)">외부 전송</span></td>
-          <td>Network Data Security(SASE/SSE) <span class="own payg">PAYG</span> · SIT</td>
-          <td>DLP(웹 검색 차단) · IRM <b>Risky AI usage</b></td>
-          <td>Audit <code>AIAppInteraction</code> · DSPM</td>
-          <td>tool 호출 시점 유출은 <b>Defender 런타임</b>(문서④)</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="linchpin">🔑 <b>두 관점의 분담:</b> <b>Purview</b>는 데이터 관점(무엇이·어떤 엔진/정책에), <b>Agent 365·Defender</b>는 에이전트 관점(어떤 에이전트가·누구로·무엇을). <b>실시간 tool 호출 유출</b>은 Purview가 아니라 Defender/Agent 365 런타임 담당 — Purview는 상호작용 <b>전·후</b>(라벨 집행·Audit·IRM 위험점수)입니다.</div>
-    <div class="src"><b>출처</b>
-      <a href="https://learn.microsoft.com/en-us/purview/data-security-posture-management-oversharing">DSPM oversharing</a> (권한 초과) ·
-      <a href="https://learn.microsoft.com/en-us/purview/sit-named-entities-learn">Named Entity SIT(PII·E5)</a> (개인정보) ·
-      <a href="https://learn.microsoft.com/en-us/purview/sit-learn-about-exact-data-match-based-sits">EDM(고객정보)</a> (정확 매칭) ·
-      <a href="https://learn.microsoft.com/en-us/purview/insider-risk-management-policy-templates">IRM Risky AI usage·Risky Agents</a> (외부 전송) ·
-      <a href="https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about">DLP 웹검색 차단</a> (유출 차단)</div>
-  </div>
-
-  <!-- ================= SECTION 4 : portal navigation ================= -->
-  <div class="axis-head2"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">Purview 포털에서 확인 · 설정<span class="axis-extra">purview.microsoft.com 기준 정확한 경로</span></h2></div>
+  <div class="axis-head2" id="portal"><span class="axis-num2">SECTION 02</span><h2 class="axis-t2">Purview 포털에서 확인 · 설정<span class="lic base">Purview E5</span></h2></div>
   <div class="card">
     <table class="dtbl">
       <thead><tr><th>기능</th><th>포털 경로</th><th>용도</th></tr></thead>
@@ -521,8 +434,8 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
         <tr><td class="k"><span class="ptag plane">포렌식</span> eDiscovery</td><td><span class="pth">eDiscovery › Cases</span> → 검색(Item class: Copilot activity)</td><td>프롬프트·응답 법적 검색·보존</td></tr>
       </tbody>
     </table>
-    <div class="note" style="margin-top:14px"><b>Audit는 기본 켜짐 · DSPM은 별도 설정 불필요한 집계</b><span>"If your organization enables auditing, you don't need to take extra steps to configure auditing support for Copilot and AI applications." 감사가 켜져 있으면 <code>CopilotInteraction</code>이 자동 기록되고, DSPM Activity Explorer가 이를 끌어와 <b>프롬프트·응답·접근 리소스·라벨</b>을 함께 보여줍니다(권한 필요).</span></div>
-    <div class="note" style="margin-top:10px;border-left-color:var(--cp-warning)"><b>비 M365 AI로 확장 시 <span class="own payg">PAYG</span></b><span><b>M365 Copilot</b> 상호작용은 per-user 라이선스로 커버(추가 청구 없음). <b>Copilot Studio(비 Teams)·Foundry·외부 AI</b>는 동일 기능이나 pay-as-you-go 청구 필요. <b>Foundry</b>는 <span class="pth">Operate › Compliance › Security posture</span>에서 <b>Microsoft Purview 토글</b> On(Account Owner) — 단 <b>정책 강제</b>는 Entra ID user-context 인증 상호작용에만 적용되고, 그 외는 Audit·DSPM에 <b>보이기만</b> 합니다.</span></div>
+    
+    
     <div class="src"><b>출처</b>
       <a href="https://learn.microsoft.com/en-us/purview/data-classification-overview">data-classification-overview(포털 경로)</a> (엔진 경로) ·
       <a href="https://learn.microsoft.com/en-us/purview/dspm-for-ai">dspm-for-ai</a> (DSPM 경로) ·
@@ -531,12 +444,82 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
       <a href="https://learn.microsoft.com/en-us/purview/purview-billing-models">purview-billing-models(PAYG)</a> (과금 모델) ·
       <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/control-plane/how-to-manage-compliance-security">Foundry 토글·인증</a> (연동 설정)</div>
   </div>
+  
+  <div class="axis-head2" id="audit"><span class="axis-num2">SECTION 03</span><h2 class="axis-t2">Agent 365 감사 활동<span class="lic a365">Agent 365</span></h2></div>
+  <div class="card">
+    <p class="axis-lead">Purview 통합 감사 로그에는 <strong>에이전트가 호출되거나 도구를 실행할 때 기록되는 전용 활동 4종</strong>이 정의되어 있습니다. 포털 검색의 <b>Record Types</b>에 활동명을, <b>Operation names</b>에 실제 동작명을 넣어 조회합니다.</p>
+    <table class="dtbl">
+      <thead><tr><th>RecordType</th><th>의미</th><th>Operation 값</th><th>주요 확인 필드</th></tr></thead>
+      <tbody>
+        <tr><td class="k">AIExecuteTool <span style="font-weight:400;color:var(--cp-text-soft)">(405)</span></td>
+          <td>에이전트가 도구(tool) 호출을 실행함</td>
+          <td><span class="mono">ExecuteToolBySDK</span><br><span style="color:var(--cp-text-soft);font-size:11px">게이트웨이·MCP 경유 시 <span class="mono">ExecuteToolByGateway</span> · <span class="mono">ExecuteToolByMCPServer</span></span></td>
+          <td><span class="mono">ToolName · ToolType · ToolId · ToolServerName</span> · <span class="mono">AgentId · AgentName</span> · <span class="mono">ConversationId · ChannelName · ClientIP · ErrorMessage</span></td></tr>
+        <tr><td class="k">AIInvokeAgent <span style="font-weight:400;color:var(--cp-text-soft)">(406)</span></td>
+          <td>사용자·다른 에이전트·이벤트에 의해 에이전트가 호출됨</td>
+          <td><span class="mono">InvokeAgent</span></td>
+          <td><span class="mono">InvokeSource</span> · <span class="mono">TargetAgentId · TargetAgentName</span>(에이전트→에이전트 호출 추적) · <span class="mono">ConversationId · ErrorType</span></td></tr>
+        <tr><td class="k">AIInferenceCall <span style="font-weight:400;color:var(--cp-text-soft)">(407)</span></td>
+          <td>에이전트가 AI 모델을 활용해 응답을 생성하거나 다음 단계를 결정함</td>
+          <td><span class="mono">InferenceCall</span></td>
+          <td><span class="mono">CopilotEventData</span> 내부에 <span class="mono">ConversationId · ThreadId · ChannelName · ResponseId · CompletionTime</span></td></tr>
+        <tr><td class="k">AIGuardrail</td>
+          <td>안전·규정 준수 정책 시행을 위해 요청·응답에 가드레일이 적용됨</td>
+          <td colspan="2"><span style="color:var(--cp-text-soft)">공식 문서에 활동으로 정의되어 있으나 필드 스키마는 문서화되어 있지 않으며, 실측 조회에서도 해당 레코드가 발생하지 않아 미검증</span></td></tr>
+      </tbody>
+    </table>
+    <p class="src" style="margin-top:12px;line-height:1.75"><b>조회 위치</b> — <span style="color:var(--cp-text);font-weight:700">Purview 포털 ▸ 감사(Audit) 검색</span>에서 Record Types에 활동명을 지정합니다.<br>
+      에이전트 인스턴스 생성 시 <b>감사가 자동 활성화</b>되므로 별도 정책 구성은 필요하지 않으나, <b>비-Microsoft AI 앱 감사</b>에는 종량제(pay-as-you-go) 과금 설정이 선행되어야 합니다.</p>
+    <div class="src"><b>출처</b> ·
+      <a href="https://learn.microsoft.com/en-us/purview/audit-log-activities#agent-365-activities" target="_blank" rel="noopener">audit-log-activities</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/audit-copilot" target="_blank" rel="noopener">audit-copilot</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/ai-agent-365" target="_blank" rel="noopener">ai-agent-365</a>
+    </div>
+  </div>
+
+  <div class="axis-head2" id="content"><span class="axis-num2">SECTION 04</span><h2 class="axis-t2">프롬프트·응답 본문 위치<span class="lic base">Purview E5</span><span class="lic a365">AI 관측성 = Agent 365</span><span class="lic addon">＋PAYG</span></h2></div>
+  <div class="card">
+    <p class="axis-lead">“감사 로그에 본문이 없다”는 설명과 “Purview에서 프롬프트·응답을 볼 수 있다”는 설명이 상충하는 것처럼 보이지만, 실제로는 <strong>두 저장소가 분리</strong>되어 있습니다.</p>
+    <div class="ops-grid">
+      <div class="ops-box">
+        <h4>감사 레코드 — 메타데이터만</h4>
+        <p>감사 솔루션의 로그에는 사용자와 에이전트 간 상호작용의 <b>전체 텍스트나 대화 기록이 포함되지 않으며, 대화 스레드 ID만</b> 기록됩니다.</p>
+        <span class="path">호출 사실, 접근 리소스 참조, 민감도 레이블, 정책 적용 여부 등 <b>메타데이터 확인용</b></span>
+      </div>
+      <div class="ops-box">
+        <h4>DSPM — 본문(트랜스크립트)</h4>
+        <p>대화 텍스트는 감사 이벤트와 <b>별도로 저장</b>되며, DSPM에서 해당 이벤트로부터 트랜스크립트에 직접 접근할 수 있습니다.</p>
+        <span class="path"><b>수집 정책의 콘텐츠 캡처를 명시적으로 활성화</b>해야 프롬프트·응답 전체가 저장됩니다. 켜지 않으면 민감정보 탐지 결과로만 제한됩니다.</span>
+        <span class="path"><b>단, 생성형 AI와 공유된 첨부 파일의 본문은 캡처 대상에서 제외</b>됩니다.</span>
+      </div>
+    </div>
+    <table class="dtbl">
+      <thead><tr><th>본문 확인 경로</th><th>조건 · 특징</th></tr></thead>
+      <tbody>
+        <tr><td class="k">DSPM ▸ 활동 탐색기 (AI activities)</td><td>수집 정책에서 콘텐츠 캡처 활성화 시 프롬프트·응답 텍스트 표시</td></tr>
+        <tr><td class="k">eDiscovery</td><td>쿼리 빌더에서 <span class="mono">Add condition ▸ Type ▸ Contains any of ▸ Copilot activity</span> 조건으로 검색·보존·내보내기. 프롬프트·응답은 사용자 Exchange Online 사서함에 저장</td></tr>
+        <tr><td class="k">Copilot Studio 대화 기록</td><td>트랜스크립트 <b>28일</b> 보존 (Monitor 분석 데이터는 최대 360일)</td></tr>
+        <tr><td class="k">Defender 알림의 프롬프트 증거</td><td>탐지를 유발한 프롬프트 구간이 알림 증거로 포함(기본 활성) · 위협 맥락 확인용</td></tr>
+      </tbody>
+    </table>
+    <div class="src"><b>출처</b> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-logging-copilot-studio" target="_blank" rel="noopener">admin-logging-copilot-studio</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/collection-policies-solution-overview" target="_blank" rel="noopener">collection-policies-solution-overview</a> ·
+      <a href="https://learn.microsoft.com/en-us/purview/ai-agent-365" target="_blank" rel="noopener">ai-agent-365</a> ·
+      <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-overview" target="_blank" rel="noopener">analytics-overview</a>
+    </div>
+  </div>
 
   <div class="card src" style="margin-top:18px; text-align:center; font-size:11px;">
     출처: Microsoft Learn — Purview 데이터 분류(SIT·Trainable Classifier·EDM) · Information Protection(labels·auto-labeling) · DLP for Copilot · Communication Compliance · Insider Risk Management · Audit · eDiscovery · DSPM for AI · Purview billing models &nbsp;|&nbsp; 2026-07
   </div>
+  </div>
 
-</main></div><script>
+  
+
+
+  
+  </main></div><script>
 (()=>{
   const btn=document.getElementById("themeToggle");
   if(!btn) return;
@@ -548,6 +531,135 @@ footer.page a { color: var(--cp-link); text-decoration: none; }
     const next=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
     document.documentElement.setAttribute("data-theme",next);
     localStorage.setItem("gbTheme",next);sync();
+  });
+})();
+</script><script>
+(function(){
+  // ---------- sidebar collapse ----------
+  var side=document.querySelector('.gb-side');
+  if(side){
+    var w=side.getBoundingClientRect().width;
+    if(w) document.documentElement.style.setProperty('--gb-sidew', w+'px');
+  }
+  var btn=document.createElement('button');
+  btn.className='gb-sidetoggle'; btn.type='button';
+  btn.setAttribute('aria-label','사이드바 토글');
+  btn.textContent='☰';
+  document.body.appendChild(btn);
+  function apply(c){
+    document.body.classList.toggle('gb-collapsed', c);
+    btn.textContent = c ? '☰' : '✕';
+    try{ localStorage.setItem('gbSideCollapsed', c?'1':'0'); }catch(e){}
+  }
+  apply(localStorage.getItem('gbSideCollapsed')==='1');
+  btn.addEventListener('click',function(){ apply(!document.body.classList.contains('gb-collapsed')); });
+
+  // ---------- search ----------
+  var PAGES=[
+    {f:'index.html',       t:'홈'},
+    {f:'coverage.html',    t:'① 커버리지 지도'},
+    {f:'identity-risk.html',t:'② 신원 · 위험'},
+    {f:'data-security.html',t:'③ 데이터 보안'},
+    {f:'runtime-security.html',t:'④ 런타임 위협 탐지'},
+    {f:'shadow-ai.html',   t:'⑤ Shadow AI'},
+    {f:'governance.html',  t:'⑥ 거버넌스'},
+    ];
+  var nav=document.querySelector('.gb-nav');
+  if(!nav) return;
+  var box=document.createElement('div');
+  box.className='gb-search';
+  box.innerHTML='<span class="si">🔍</span><input type="search" id="gbq" placeholder="문서 검색 (제목·본문)" autocomplete="off"/><button class="sx" type="button" aria-label="지우기">✕</button>';
+  var res=document.createElement('div'); res.className='gb-sresult';
+  nav.parentNode.insertBefore(box, nav);
+  nav.parentNode.insertBefore(res, nav);
+
+  var q=box.querySelector('#gbq'), clr=box.querySelector('.sx');
+  var IDX=null, loading=false;
+  var here=(location.pathname.split('/').pop()||'index.html');
+
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function buildFromDoc(doc, page){
+    var out=[];
+    doc.querySelectorAll('h1,h2,h3,.tier .tt,.cvg-card h3,.axis-t2').forEach(function(el){
+      var txt=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(!txt||txt.length<2) return;
+      var anchor='';
+      var sec=el.closest('[id]');
+      if(sec&&sec.id) anchor='#'+sec.id;
+      out.push({p:page.t,f:page.f,a:anchor,h:txt,b:''});
+    });
+    doc.querySelectorAll('p,.td .li,.sub,.axis-lead,.fnote').forEach(function(el){
+      var txt=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(txt.length<12) return;
+      var sec=el.closest('[id]'); var anchor=(sec&&sec.id)?('#'+sec.id):'';
+      out.push({p:page.t,f:page.f,a:anchor,h:'',b:txt.slice(0,220)});
+    });
+    return out;
+  }
+
+  function ensureIndex(cb){
+    if(IDX){cb();return;}
+    if(loading) return;
+    loading=true;
+    IDX=[];
+    var left=PAGES.length;
+    PAGES.forEach(function(pg){
+      if(pg.f===here){
+        IDX=IDX.concat(buildFromDoc(document,pg));
+        if(--left===0){loading=false;cb();}
+        return;
+      }
+      fetch(pg.f).then(function(r){return r.ok?r.text():'';}).then(function(html){
+        if(html){
+          var d=new DOMParser().parseFromString(html,'text/html');
+          IDX=IDX.concat(buildFromDoc(d,pg));
+        }
+      }).catch(function(){}).finally(function(){
+        if(--left===0){loading=false;cb();}
+      });
+    });
+  }
+
+  function render(term){
+    var t=term.trim().toLowerCase();
+    if(!t){res.classList.remove('on');res.innerHTML='';box.classList.remove('has');return;}
+    box.classList.add('has');
+    var hits=[];
+    for(var i=0;i<IDX.length && hits.length<40;i++){
+      var it=IDX[i];
+      var hay=((it.h||'')+' '+(it.b||'')).toLowerCase();
+      if(hay.indexOf(t)>=0) hits.push(it);
+    }
+    hits.sort(function(a,b){ return (b.h?1:0)-(a.h?1:0); });
+    if(!hits.length){res.innerHTML='<div class="gb-sempty">검색 결과가 없습니다</div>';res.classList.add('on');return;}
+    var seen={},html='';
+    hits.forEach(function(it){
+      var body=it.h||it.b;
+      var key=it.f+'|'+body.slice(0,50);
+      if(seen[key])return; seen[key]=1;
+      var idx=body.toLowerCase().indexOf(t);
+      var s=Math.max(0,idx-40), snip=(s>0?'…':'')+body.slice(s,s+140);
+      var re=new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+      html+='<a class="rr" href="'+it.f+it.a+'"><span class="pg">'+esc(it.p)+'</span>'+
+            esc(snip).replace(re,'<mark>$1</mark>')+'</a>';
+    });
+    res.innerHTML=html; res.classList.add('on');
+  }
+
+  var tmr;
+  q.addEventListener('input',function(){
+    clearTimeout(tmr);
+    var v=q.value;
+    tmr=setTimeout(function(){ ensureIndex(function(){ render(v); }); },140);
+  });
+  q.addEventListener('focus',function(){ ensureIndex(function(){}); });
+  clr.addEventListener('click',function(){ q.value='';render('');q.focus(); });
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();
+      if(document.body.classList.contains('gb-collapsed')) apply(false);
+      q.focus();q.select();}
+    if(e.key==='Escape'&&document.activeElement===q){q.value='';render('');q.blur();}
   });
 })();
 </script></body></html>

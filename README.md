@@ -9,10 +9,12 @@ Agent 365(에이전트를 관찰·관리·보호하는 컨트롤 플레인)를 �
 | 페이지 | 파일 | 내용 |
 |--------|------|------|
 | 홈 | `index.html` | Agent 365 공식 개요(관찰가능성·거버넌스·보안 3필라, 관리 도구, FAQ) |
-| ① 에이전트 유형 분류 | `taxonomy.html` | 실행위치(SaaS/Endpoint/Cloud)·역할·제작방식(Pro/Low-code) 3축 |
-| ② 에이전트 신원 · 위험 | `identity-risk.html` | 에이전트 신원·Sign-in 로그·Risky Agents 흐름 |
-| ③ 데이터 보안 · Purview | `data-security.html` | 분류 엔진·라벨·정책(DLP/CC/IRM)·DSPM 집계·Audit/eDiscovery |
-| ④ 런타임 위협 탐지 | `runtime-security.html` | Copilot Studio/Foundry 런타임 위협 탐지 3계층 아키텍처 |
+| ① 유형별 커버리지 지도 | `coverage.html` | 4대 유형(네이티브·SaaS·3rd-party·로컬)별 단계별 라이선스 래더와 10항목 로깅 커버리지 |
+| ② Entra · 신원 · 접근 통제 | `identity-risk.html` | 에이전트 신원·Sign-in 로그·Risky Agents 흐름 |
+| ③ Purview · 데이터 보안 · 감사 | `data-security.html` | 분류 엔진·라벨·정책(DLP/CC/IRM)·DSPM 집계·Audit/eDiscovery |
+| ④ Defender · 런타임 위협 탐지 | `runtime-security.html` | Copilot Studio·Foundry·로컬 에이전트 런타임 위협 탐지 4계층 아키텍처 |
+| ⑤ Shadow AI · 미승인 AI 통제 | `shadow-ai.html` | 미승인 SaaS AI 앱·로컬 AI 에이전트의 발견·위험 평가·내용 검사·차단 (MDCA·MDE·GSA·Purview) |
+| ⑥ 거버넌스 프레임워크 | `governance.html` | AgentOps 컨트롤 플레인 — Access·Policy·Controls·Observability 4축 매핑 |
 | 부록 · 데모 시나리오 | `demo-scenarios.html` | 계층별 탐지 검증 시나리오·커스텀 에이전트 구성 |
 
 모든 페이지는 공통 사이드바와 테마를 공유하며, 일부 페이지의 텍스트본은 `content/*.md`에 있습니다.
@@ -30,3 +32,4 @@ Agent 365(에이전트를 관찰·관리·보호하는 컨트롤 플레인)를 �
 | v7 | 2026-07-27 | 데이터 보안 SECTION 01 다이어그램을 hub-and-spoke로 교정(분류 엔진 허브가 라벨·정책에 병렬 공급, 라벨 생성/자동적용 구분, IRM 다중 트리거 반영) | [`68facf6`](https://github.com/akimcse/agent-365-guidebook/commit/68facf6) | [run](https://github.com/akimcse/agent-365-guidebook/actions/runs/30250838204) |
 | v8 | 2026-07-30 | 데모 시나리오 SECTION 03을 층별 탭+아코디언으로 재구성 · Zava 데모 테넌트 실증 시나리오 16종(4계층×4) 추가 | [`a4b37ff`](https://github.com/akimcse/agent-365-guidebook/commit/a4b37ff) | [run](https://github.com/akimcse/agent-365-guidebook/actions/runs/30520641871) |
 | v9 | 2026-07-30 | 데모 시나리오에 Zava 실증 내역 반영(콘텐츠층 제일브레이크·XPIA 카나리·ASCII, 데이터층 라벨 IRM 차단) — 에이전트 UI·포털 스크린샷 첨부, 실증완료/미실증 번호 상태 구분, 포털 확인 슬롯 추가 | [`3088353`](https://github.com/akimcse/agent-365-guidebook/commit/3088353) | [run](https://github.com/akimcse/agent-365-guidebook/actions/runs/30528701274) |
+| v10 | 2026-09-07 | **이론서 → 실무 가이드 전면 개편.** 에이전트 유형 분류(taxonomy)를 4필라 커버리지 지도(`coverage.html`)로 교체 · 2·3·4장을 Entra/Purview/Defender 실무 관점으로 재구성 · 런타임 위협 탐지를 4계층으로 개정(SVG 아키텍처 신규) · **Shadow AI 장 신설**(`shadow-ai.html` — 미승인 SaaS AI 앱·로컬 AI 에이전트의 발견·위험 평가·내용 검사·차단) · 전 섹션에 라이선스 배지 체계 도입(제품 기본/Agent 365/시행 예정/추가) · 사이드바 접기 토글 및 크로스문서 검색(Ctrl+K) 추가 | | |
